@@ -1488,6 +1488,157 @@ select.finput {
   .rt, .netto-table, .aandacht-table { page-break-inside: auto; }
   .rt tr, .netto-table tr, .aandacht-table tr { page-break-inside: avoid; }
 }
+
+/* ── Nieuwe subsidiekaarten ── */
+.sub-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+@media (max-width: 640px) { .sub-grid { grid-template-columns: 1fr; } }
+
+.sub-card-new {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--blue);
+  border-radius: var(--r-md);
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.sub-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.sub-badge-new {
+  background: var(--blue);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: var(--f-head);
+  padding: 3px 9px;
+  border-radius: var(--r-xs);
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.sub-card-titles { flex: 1; }
+.sub-name-new {
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--f-head);
+  color: var(--ink);
+  line-height: 1.3;
+}
+.sub-type-new {
+  font-size: 11px;
+  color: var(--ink-4);
+  font-family: var(--f-head);
+  margin-top: 2px;
+}
+.sub-voordeel {
+  font-size: 13px;
+  color: var(--ink-2);
+  line-height: 1.5;
+  padding: 8px 10px;
+  background: var(--blue-faint);
+  border-radius: var(--r-xs);
+  border-left: 3px solid var(--blue-mid);
+}
+.sub-toepassing {
+  font-size: 11px;
+  color: var(--ink-4);
+  font-family: var(--f-head);
+}
+.sub-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  font-size: 11.5px;
+  color: var(--red);
+  background: var(--red-bg);
+  border-radius: var(--r-xs);
+  padding: 7px 10px;
+  line-height: 1.5;
+  border-left: 3px solid var(--red);
+}
+.sub-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.sub-steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--ink-2);
+  line-height: 1.5;
+}
+.sub-step-num {
+  background: var(--blue);
+  color: white;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.sub-footer-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin-top: 2px;
+  padding-top: 8px;
+  border-top: 1px solid var(--rule);
+}
+.sub-combine {
+  font-size: 10.5px;
+  color: var(--green);
+  font-family: var(--f-head);
+}
+.sub-nocombine {
+  font-size: 10.5px;
+  color: var(--amber);
+  font-family: var(--f-head);
+}
+.sub-url {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--blue);
+  font-family: var(--f-head);
+  text-decoration: none;
+  font-weight: 600;
+}
+.sub-url:hover { text-decoration: underline; }
+
+/* Print aanpassing voor nieuwe subsidiekaarten */
+@media print {
+  .sub-grid { grid-template-columns: 1fr 1fr !important; gap: 7pt !important; }
+  .sub-card-new { border-top: 2pt solid #1B597B !important; padding: 8pt 10pt !important; gap: 5pt !important; page-break-inside: avoid; }
+  .sub-badge-new { font-size: 7pt !important; padding: 2pt 6pt !important; }
+  .sub-name-new { font-size: 8.5pt !important; }
+  .sub-type-new { font-size: 7pt !important; }
+  .sub-voordeel { font-size: 8pt !important; padding: 5pt 7pt !important; }
+  .sub-toepassing { font-size: 7pt !important; }
+  .sub-alert { font-size: 7.5pt !important; padding: 4pt 7pt !important; }
+  .sub-steps li { font-size: 7.5pt !important; }
+  .sub-footer-row { padding-top: 4pt !important; }
+  .sub-url { display: none !important; }
+}
 </style>
 </head>
 <body>
@@ -1724,6 +1875,170 @@ select.finput {
 // =============================================================================
 //  SYSTEEM PROMPT — stuur dit mee naar de agent
 // =============================================================================
+// =============================================================================
+//  SUBSIDIE DATABASE — alle Nederlandse regelingen 2025/2026
+//  AI gebruikt dit als referentie; frontend toont altijd de actuele kaarten
+// =============================================================================
+const SUBSIDIE_DB = [
+  {
+    code: 'ISDE',
+    naam: 'Investeringssubsidie Duurzame Energie en Energiebesparing',
+    type: 'Directe subsidie',
+    doelgroep: 'zakelijk',
+    van_toepassing_op: ['warmtepomp', 'zonneboiler', 'pelletkachel', 'warmtenet', 'ventilatie'],
+    voordeel: '± € 1.500 – € 5.000 directe subsidie afhankelijk van type warmtepomp',
+    alert: 'AANVRAGEN VÓÓR ondertekening offerte — daarna vervalt het recht!',
+    stappen: [
+      'Controleer apparaat op RVO meldcodelijst (meldcode verplicht op offerte + factuur)',
+      'Aanvraag via Mijn RVO met eHerkenning niveau 2+ — vóór akkoord op offerte',
+      'Installatie door erkend installatiebedrijf (RVO-geregistreerd)',
+      'Vaststellingsaanvraag indienen met factuur → uitbetaling binnen 8 weken na besluit',
+    ],
+    combineerbaar_met: ['KIA', 'MIA'],
+    niet_combineerbaar_met: ['EIA'],
+    url: 'https://www.rvo.nl/subsidies-financiering/isde',
+  },
+  {
+    code: 'EIA',
+    naam: 'Energie-investeringsaftrek',
+    type: 'Fiscale aftrek (VPB/IB)',
+    doelgroep: 'zakelijk',
+    van_toepassing_op: ['isolatie', 'beglazing', 'klimaatinstallatie', 'zonnepanelen', 'energiemanagement', 'led', 'ventilatie', 'warmteterugwinning'],
+    voordeel: '40% aftrek op de fiscale winst — bij € 48k investering ca. € 4.950 voordeel (25,8% VPB)',
+    alert: null,
+    stappen: [
+      'Controleer bedrijfsmiddel op Energielijst 2026 (rvo.nl/energielijst)',
+      'Melding via eLoket RVO binnen 3 maanden na ondertekening offerte',
+      'EIA-verklaring ontvangen en aanleveren bij accountant',
+      'Accountant verwerkt EIA in de VPB- of IB-aangifte',
+    ],
+    combineerbaar_met: ['KIA', 'MIA'],
+    niet_combineerbaar_met: ['ISDE'],
+    url: 'https://www.rvo.nl/subsidies-financiering/eia',
+  },
+  {
+    code: 'KIA',
+    naam: 'Kleinschaligheidsinvesteringsaftrek',
+    type: 'Fiscale aftrek (VPB/IB)',
+    doelgroep: 'zakelijk',
+    van_toepassing_op: ['alle maatregelen'],
+    voordeel: '28% extra aftrek op de fiscale winst — combineerbaar met EIA en MIA/Vamil (percentage afhankelijk van investeringshoogte)',
+    alert: null,
+    stappen: [
+      'Geen aparte aanvraag nodig',
+      'Accountant verwerkt KIA automatisch in de jaarlijkse VPB- of IB-aangifte',
+      'Let op: aftrekpercentage wijzigt op basis van totale investeringshoogte (€ 2.901 – € 71.683)',
+    ],
+    combineerbaar_met: ['EIA', 'MIA', 'ISDE'],
+    niet_combineerbaar_met: [],
+    url: 'https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/investeringsaftrek/',
+  },
+  {
+    code: 'MIA/Vamil',
+    naam: 'Milieu-investeringsaftrek + Vrije afschrijving',
+    type: 'Fiscale aftrek (VPB/IB)',
+    doelgroep: 'zakelijk',
+    van_toepassing_op: ['gevelisolatie', 'dakisolatie', 'duurzame bouwmaterialen', 'groen dak', 'elektrische voertuigen'],
+    voordeel: 'Tot 45% MIA-aftrek + 75% versnelde afschrijving (Vamil) = extra liquiditeitsvoordeel',
+    alert: null,
+    stappen: [
+      'Controleer of de maatregel op de Milieulijst staat (rvo.nl/milieulijst)',
+      'Aanmelden bij RVO via eLoket binnen 3 maanden na ondertekening offerte',
+      'Vamil: kies het afschrijvingstijdstip voor optimaal liquiditeitsvoordeel',
+      'Verwerking in VPB-aangifte door de accountant',
+    ],
+    combineerbaar_met: ['KIA', 'EIA'],
+    niet_combineerbaar_met: [],
+    url: 'https://www.rvo.nl/subsidies-financiering/mia-en-vamil',
+  },
+  {
+    code: 'BMKB-Groen',
+    naam: 'Borgstelling MKB Krediet (Groen)',
+    type: 'Financieringsgarantie',
+    doelgroep: 'zakelijk',
+    van_toepassing_op: ['gehele verduurzamingsinvestering'],
+    voordeel: 'Overheid staat 75% garant — bank verstrekt krediet makkelijker, max. looptijd 12 jaar, max. krediet € 1,5 mln',
+    alert: null,
+    stappen: [
+      'Contact opnemen met de bank of financieringsadviseur',
+      'Bank vraagt BMKB-Groen garantie aan bij RVO namens de ondernemer',
+      'Maximale looptijd 12 jaar, maximaal krediet € 1,5 miljoen',
+    ],
+    combineerbaar_met: ['EIA', 'KIA', 'ISDE', 'MIA'],
+    niet_combineerbaar_met: [],
+    url: 'https://www.rvo.nl/subsidies-financiering/bmkb',
+  },
+  {
+    code: 'SDE++',
+    naam: 'Stimulering Duurzame Energieproductie en Klimaattransitie',
+    type: 'Exploitatiesubsidie',
+    doelgroep: 'zakelijk',
+    van_toepassing_op: ['zonnepanelen (>15 kWp)', 'windenergie', 'warmtepomp (grote installaties)'],
+    voordeel: 'Vaste subsidie per geproduceerde kWh over 15 jaar — interessant bij grotere installaties',
+    alert: 'Aanvraag alleen tijdens openstellingsronde (voorjaar/najaar)',
+    stappen: [
+      'Check openstellingsperiode op rvo.nl/sde',
+      'Aanvraag indienen via eLoket RVO tijdens openstellingsronde',
+      'Na goedkeuring: installatie realiseren binnen gestelde termijn',
+      'Productie registreren via CertiQ of vergelijkbaar systeem',
+    ],
+    combineerbaar_met: ['EIA', 'KIA'],
+    niet_combineerbaar_met: [],
+    url: 'https://www.rvo.nl/subsidies-financiering/sde',
+  },
+  {
+    code: 'Salderingsregeling',
+    naam: 'Salderingsregeling zonnepanelen',
+    type: 'Nettometing teruglevering',
+    doelgroep: 'zakelijk + particulier',
+    van_toepassing_op: ['zonnepanelen'],
+    voordeel: 'Teruggeleverde stroom wegstrepen tegen afgenomen stroom — loopt af per 2027 (afbouw)',
+    alert: 'Regeling wordt stapsgewijs afgebouwd — hoe eerder installatie, hoe meer voordeel',
+    stappen: [
+      'Informeer bij netbeheerder naar de actuele salderingspercentages',
+      'Aanvraag slimme meter indien nog niet aanwezig',
+    ],
+    combineerbaar_met: ['EIA', 'KIA', 'SDE++'],
+    niet_combineerbaar_met: [],
+    url: 'https://www.rvo.nl/onderwerpen/zonne-energie/salderingsregeling',
+  },
+  {
+    code: 'WBSO',
+    naam: 'Wet Bevordering Speur- en Ontwikkelingswerk',
+    type: 'Fiscale aftrek loonkosten',
+    doelgroep: 'zakelijk (R&D)',
+    van_toepassing_op: ['innovatieve energietechnieken', 'R&D duurzaamheid'],
+    voordeel: '32% aftrek op S&O-loonkosten (eerste schijf) — relevant bij eigen ontwikkeling',
+    alert: null,
+    stappen: [
+      'Aanvraag indienen vóór start van het project via eLoket RVO',
+      'S&O-uren bijhouden in urenadministratie',
+      'Jaarlijkse mededeling indienen bij RVO',
+    ],
+    combineerbaar_met: ['EIA', 'KIA'],
+    niet_combineerbaar_met: [],
+    url: 'https://www.rvo.nl/subsidies-financiering/wbso',
+  },
+];
+
+// Matcht subsidies op basis van maatregelen uit het rapport
+function matchSubsidies(maatregelen) {
+  const namen = (maatregelen || []).map(m => (m.naam || '').toLowerCase());
+  const relevant = [];
+  for (const sub of SUBSIDIE_DB) {
+    const matches = sub.van_toepassing_op.some(toepassingStr => {
+      const tl = toepassingStr.toLowerCase();
+      // directe match op maatregel naam
+      if (namen.some(n => n.includes(tl) || tl.includes(n.split(' ')[0]))) return true;
+      // 'alle maatregelen' altijd van toepassing als er maatregelen zijn
+      if (tl === 'alle maatregelen' && namen.length > 0) return true;
+      return false;
+    });
+    if (matches) relevant.push(sub);
+  }
+  return relevant;
+}
+
 const SYSTEEM_PROMPT = `Je bent een senior verduurzamingsadviseur bij MB Adviesgroep. \
 Analyseer de meegestuurde PDF-documenten (energiescan en eventueel brochure/gebouwinfo) \
 grondig en retourneer ALLEEN geldig JSON zonder markdown of backticks.
@@ -1980,22 +2295,51 @@ async function generate() {
 // =============================================================================
 
 function lbg(l) {
-  const m = {'A+++':'#006400','A++':'#1B7A1B','A+':'#2E9E2E','A':'#2E7D32','B':'#4CAF50','C':'#8BC34A','D':'#CDDC39','E':'#FFC107','F':'#FF5722','G':'#D32F2F'};
+  // EU energielabel kleuren: groen (A) → rood (G)
+  const m = {
+    'A++++':'#006400','A+++':'#007A00','A++':'#00930A','A+':'#2AB82A',
+    'A':'#2E7D32',
+    'B':'#6DB33F','C':'#C2C923','D':'#F0D20A','E':'#F0970A','F':'#E55A0A','G':'#CC2222'
+  };
   return m[l] || '#888';
 }
 function ico(n) {
   const nm = (n||'').toLowerCase();
-  if (nm.includes('gevel'))        return '&#127968;';
-  if (nm.includes('dak'))          return '&#127959;';
-  if (nm.includes('warmtepomp'))   return '&#9832;';
-  if (nm.includes('beglazing') || nm.includes('glas')) return '&#129695;';
-  if (nm.includes('zonnepanel'))   return '&#9728;';
-  if (nm.includes('thermostaat'))  return '&#127777;';
-  if (nm.includes('ventilatie'))   return '&#128168;';
-  if (nm.includes('energiemanagement')) return '&#128202;';
-  if (nm.includes('aanwezigheid')) return '&#128100;';
-  if (nm.includes('klimaat'))      return '&#10052;';
-  return '&#9889;';
+  // Gevelisolatie
+  if (nm.includes('gevel'))
+    return '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="4" width="12" height="10" rx="1"/><path d="M8 4L2 8M8 4L14 8"/><path d="M6 14V9h4v5"/></svg>';
+  // Dakisolatie
+  if (nm.includes('dak'))
+    return '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 8L8 2l7 6"/><rect x="4" y="8" width="8" height="6" rx="1"/></svg>';
+  // Warmtepomp
+  if (nm.includes('warmtepomp'))
+    return '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="5"/><path d="M8 5v3l2 2"/><path d="M3 3l2 2M11 11l2 2"/></svg>';
+  // Beglazing
+  if (nm.includes('beglazing') || nm.includes('glas'))
+    return '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="2" width="12" height="12" rx="1"/><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>';
+  // Zonnepanelen
+  if (nm.includes('zonnepanel') || nm.includes('solar') || nm.includes('pv'))
+    return '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="3"/><line x1="8" y1="1" x2="8" y2="3"/><line x1="8" y1="13" x2="8" y2="15"/><line x1="1" y1="8" x2="3" y2="8"/><line x1="13" y1="8" x2="15" y2="8"/><line x1="3" y1="3" x2="4.5" y2="4.5"/><line x1="11.5" y1="11.5" x2="13" y2="13"/><line x1="13" y1="3" x2="11.5" y2="4.5"/><line x1="4.5" y1="11.5" x2="3" y2="13"/></svg>';
+  // Thermostaat
+  if (nm.includes('thermostaat'))
+    return '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 2v7.5"/><circle cx="8" cy="12" r="2.5"/><path d="M10 5h2M10 7h2"/></svg>';
+  // Ventilatie
+  if (nm.includes('ventilatie'))
+    return '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="2"/><path d="M8 6C8 4 9.5 2 11 2c1.5 0 2 1 1.5 2.5C12 6 10 6 8 6z"/><path d="M6 8C4 8 2 6.5 2 5c0-1.5 1-2 2.5-1.5C6 4 6 6 6 8z"/><path d="M9.7 9C10.7 10.7 10.5 13 9 14c-1.3.9-2.2.3-2.3-1.3C6.5 11 8.2 10 9.7 9z"/></svg>';
+  // Energiemanagement
+  if (nm.includes('energiemanagement') || nm.includes('management'))
+    return '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="3" width="14" height="10" rx="1"/><path d="M4 10l2-3 2 2 2-4 2 3"/></svg>';
+  // Aanwezigheidsdetectie
+  if (nm.includes('aanwezigheid') || nm.includes('detectie') || nm.includes('sensor'))
+    return '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="6" r="2.5"/><path d="M3.5 14c0-2.5 2-4 4.5-4s4.5 1.5 4.5 4"/><path d="M12 3a5 5 0 010 6M4 3a5 5 0 000 6" stroke-dasharray="2 1"/></svg>';
+  // Klimaatinstallatie
+  if (nm.includes('klimaat') || nm.includes('airco') || nm.includes('koeling'))
+    return '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="4" width="12" height="5" rx="1"/><path d="M5 9v4M8 9v3M11 9v4"/><path d="M4 4V3M8 4V2M12 4V3"/></svg>';
+  // Verlichting
+  if (nm.includes('verlichting') || nm.includes('led') || nm.includes('licht'))
+    return '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 2a4 4 0 014 4c0 1.5-.8 2.8-2 3.5V11H6V9.5A4 4 0 014 6a4 4 0 014-4z"/><path d="M6 12h4M6.5 14h3"/></svg>';
+  // Standaard: bliksem/energie icoon
+  return '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M9 2L4 9h5l-2 5 7-8H9L11 2z"/></svg>';
 }
 function secHead(title) {
   return `<div class="sec-head rpt-section-head"><span class="sec-label">${title}</span><div class="sec-line"></div></div>`;
@@ -2058,12 +2402,11 @@ function renderReport(r) {
       <td class="m-invest">${m.investering||'&#8212;'}</td>
       <td class="m-tvt">${m.tvt||'&#8212;'}</td>
       <td class="m-co2">${m.co2||'&#8212;'}</td>
-      <td class="m-sub">${m.subsidies||''}</td>
     </tr>`).join('');
   let msec = secHead('Geadviseerde maatregelen');
   msec += `<table class="rt"><thead><tr>
     <th>Maatregel</th><th>Besparing/jr</th><th>Investering</th>
-    <th>Terugverdientijd</th><th>CO&#8322;</th><th>Subsidies</th>
+    <th>Terugverdientijd</th><th>CO&#8322;</th>
   </tr></thead><tbody>${mrows}</tbody></table>`;
   if (r.totaal_besparing || r.totaal_investering) {
     msec += `<div class="totals-block">
@@ -2095,28 +2438,49 @@ function renderReport(r) {
   }
   document.getElementById('nettoSection').innerHTML = nettoHtml;
 
-  // Subsidies uitgebreid
-  const subs = (r.subsidies||[]).map(s => {
+  // Subsidies — combineer AI-output met subsidie database
+  // Gebruik database als primaire bron, AI-data als aanvulling
+  const dbSubs = matchSubsidies(r.maatregelen);
+  // Voeg eventuele extra subsidies uit AI toe die niet in DB staan
+  const aiSubCodes = (r.subsidies||[]).map(s => (s.code||'').toUpperCase());
+  const dbCodes = dbSubs.map(s => s.code.toUpperCase());
+  const extraAiSubs = (r.subsidies||[]).filter(s => !dbCodes.includes((s.code||'').toUpperCase()));
+  const allSubs = [...dbSubs, ...extraAiSubs];
+
+  function renderSubCard(s) {
     const stappen = (s.stappen||[]).map((st,i)=>
       `<li><div class="sub-step-num">${i+1}</div><span>${st}</span></li>`).join('');
-    const alert = s.alert
-      ? `<div class="sub-alert"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3M8 11v.5"/></svg>${s.alert}</div>` : '';
-    return `<div class="sub-item">
-      <div>
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-          <div class="sub-badge">${s.code}</div>
-          ${s.type?`<span style="font-size:10px;color:var(--ink-4);font-family:var(--f-head)">${s.type}</span>`:''}
+    const alertHtml = s.alert
+      ? `<div class="sub-alert"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="flex-shrink:0"><path d="M8 2L1.5 13h13L8 2z"/><path d="M8 7v3M8 12v.5"/></svg><span>${s.alert}</span></div>` : '';
+    const combineert = (s.combineerbaar_met||[]).length
+      ? `<div class="sub-combine">Combineerbaar met: ${(s.combineerbaar_met).join(' · ')}</div>` : '';
+    const niCombi = (s.niet_combineerbaar_met||[]).length
+      ? `<div class="sub-nocombine">Niet combineren met: ${(s.niet_combineerbaar_met).join(', ')}</div>` : '';
+    const urlBtn = s.url
+      ? `<a href="${s.url}" target="_blank" class="sub-url">Meer info &rarr;</a>` : '';
+    const toepassingOp = Array.isArray(s.van_toepassing_op)
+      ? s.van_toepassing_op.join(', ')
+      : (s.van_toepassing_op || '');
+    return `<div class="sub-card-new">
+      <div class="sub-card-header">
+        <div class="sub-badge-new">${s.code}</div>
+        <div class="sub-card-titles">
+          <div class="sub-name-new">${s.naam}</div>
+          <div class="sub-type-new">${s.type||''}</div>
         </div>
-        <div class="sub-name">${s.naam}</div>
-        ${s.van_toepassing_op?`<div style="font-size:11.5px;color:var(--ink-4);margin-bottom:4px;font-family:var(--f-head)">Van toepassing op: ${s.van_toepassing_op}</div>`:''}
-        <div class="sub-desc">${s.voordeel||''}</div>
-        ${alert}
-        ${stappen?`<ul class="sub-steps">${stappen}</ul>`:''}
       </div>
+      <div class="sub-voordeel">${s.voordeel||''}</div>
+      <div class="sub-toepassing">Van toepassing op: ${toepassingOp}</div>
+      ${alertHtml}
+      ${stappen ? `<ul class="sub-steps">${stappen}</ul>` : ''}
+      <div class="sub-footer-row">${combineert}${niCombi}${urlBtn}</div>
     </div>`;
-  }).join('');
-  document.getElementById('subsidiesSection').innerHTML = subs
-    ? secHead('Subsidies &amp; fiscale regelingen') + subs : '';
+  }
+
+  const subsHtml = allSubs.map(renderSubCard).join('');
+  document.getElementById('subsidiesSection').innerHTML = subsHtml
+    ? secHead('Subsidies &amp; fiscale regelingen') +
+      `<div class="sub-grid">${subsHtml}</div>` : '';
 
   // Fases
   const phases = (r.fases||[]).map((f,i)=>`
