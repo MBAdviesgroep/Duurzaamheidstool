@@ -2072,63 +2072,31 @@ Alleen pure JSON, geen uitleg, geen markdown.`;
 
 // =============================================================================
 //  callAgent() — stuurt de documenten naar de Vercel backend
-//  Upload: browser vraagt een client-token op bij /api/upload,
-//  dan PUT direct naar Vercel Blob (omzeilt de 4.5MB serverless limiet).
 // =============================================================================
-
-// Hulpfunctie: upload bestand via Vercel Blob client-upload flow
-async function uploadToBlob(file) {
-  // Stap 1: vraag client-token op bij /api/upload (handleUpload protocol)
-  const tokenRes = await fetch('/api/upload', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      type: 'blob.generate-client-token',
-      payload: {
-        pathname: file.name,
-        callbackUrl: window.location.origin + '/api/upload',
-        clientPayload: null,
-        multipart: false,
-      }
-    })
-  });
-  if (!tokenRes.ok) {
-    const errBody = await tokenRes.text().catch(() => '');
-    throw new Error('Token ophalen mislukt: ' + tokenRes.status + (errBody ? ' — ' + errBody : ''));
-  }
-  const { clientToken } = await tokenRes.json();
-  if (!clientToken) throw new Error('Geen clientToken ontvangen van /api/upload');
-
-  // Stap 2: PUT direct naar Vercel Blob CDN met alleen de toegestane headers
-  const putUrl = 'https://blob.vercel-storage.com/' + encodeURIComponent(file.name);
-  const putRes = await fetch(putUrl, {
-    method: 'PUT',
-    headers: {
-      'Authorization': 'Bearer ' + clientToken,
-      'x-api-version': '7',
-    },
-    body: file,
-  });
-  if (!putRes.ok) {
-    const errText = await putRes.text().catch(() => String(putRes.status));
-    throw new Error('Blob PUT mislukt (' + putRes.status + '): ' + errText);
-  }
-  const result = await putRes.json();
-  if (!result.url) throw new Error('Blob gaf geen URL terug');
-  return result.url;
-}
 
 async function callAgent(payload) {
   let energiescanUrl = null;
   let brochureUrl = null;
 
-  // Upload beide bestanden PARALLEL — scheelt de helft van de uploadtijd
-  const [esResult, brResult] = await Promise.all([
-    payload.energiescan_file ? uploadToBlob(payload.energiescan_file) : Promise.resolve(null),
-    payload.brochure_file    ? uploadToBlob(payload.brochure_file)    : Promise.resolve(null),
-  ]);
-  energiescanUrl = esResult;
-  brochureUrl    = brResult;
+  if (payload.energiescan_file) {
+    const uploadRes = await fetch('/api/upload', {
+      method: 'POST',
+      headers: { 'x-filename': payload.energiescan_file.name },
+      body: payload.energiescan_file
+    });
+    if (!uploadRes.ok) throw new Error('Upload energiescan mislukt: ' + uploadRes.status);
+    energiescanUrl = (await uploadRes.json()).url;
+  }
+
+  if (payload.brochure_file) {
+    const uploadRes = await fetch('/api/upload', {
+      method: 'POST',
+      headers: { 'x-filename': payload.brochure_file.name },
+      body: payload.brochure_file
+    });
+    if (!uploadRes.ok) throw new Error('Upload brochure mislukt: ' + uploadRes.status);
+    brochureUrl = (await uploadRes.json()).url;
+  }
 
   const res = await fetch('/api/generate-report', {
     method: 'POST',
