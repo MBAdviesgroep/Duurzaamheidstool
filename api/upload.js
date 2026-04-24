@@ -1,4 +1,4 @@
-import { put } from '@vercel/blob';
+import { handleUpload } from '@vercel/blob/client';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -6,18 +6,21 @@ export default async function handler(req, res) {
   }
 
   try {
-    const filename = req.headers['x-filename'] || 'file.pdf';
+    const body = req.body;
 
-    const blob = await put(filename, req, {
-      access: 'public',
+    const jsonResponse = await handleUpload({
+      body,
+      req,
+      onBeforeGenerateToken: async () => ({
+        allowedContentTypes: ['application/pdf'],
+        maximumSizeInBytes: 25 * 1024 * 1024,
+      }),
+      onUploadCompleted: async () => {},
     });
 
-    return res.status(200).json({
-      url: blob.url,
-    });
-
+    return res.status(200).json(jsonResponse);
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: 'Upload failed' });
+    return res.status(400).json({ error: error.message });
   }
 }
