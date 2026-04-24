@@ -6,6 +6,7 @@
 <title>Verduurzamingsrapport — MB Adviesgroep</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 
 
@@ -1726,6 +1727,235 @@ select.finput {
   .sub-footer-row { padding-top: 4pt !important; }
   .sub-url { display: none !important; }
 }
+
+/* ═══════════════════════════════════════════════════════
+   INTERACTIEVE MAATREGELENSELECTOR
+═══════════════════════════════════════════════════════ */
+.measures-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.measures-toolbar-label {
+  font-size: 10.5px;
+  font-family: var(--f-head);
+  font-weight: 600;
+  color: var(--ink-4);
+  letter-spacing: 0.5px;
+}
+.measures-select-btns { display: flex; gap: 6px; }
+.btn-sel {
+  font-size: 11px;
+  font-family: var(--f-head);
+  font-weight: 600;
+  color: var(--blue);
+  background: var(--blue-faint);
+  border: 1px solid var(--blue-faint2);
+  border-radius: 20px;
+  padding: 4px 12px;
+  cursor: pointer;
+  transition: all var(--t-fast);
+}
+.btn-sel:hover { background: var(--blue-faint2); }
+
+.rt td.m-check { width: 36px; padding-left: 0; padding-right: 0; }
+.m-checkbox {
+  width: 18px; height: 18px;
+  border: 1.5px solid var(--ink-5);
+  border-radius: 4px;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background: var(--surface);
+  position: relative;
+  transition: all var(--t-fast);
+  flex-shrink: 0;
+  display: block;
+}
+.m-checkbox:checked {
+  background: var(--blue);
+  border-color: var(--blue);
+}
+.m-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px; top: 1px;
+  width: 6px; height: 10px;
+  border: 2px solid white;
+  border-top: none; border-left: none;
+  transform: rotate(40deg);
+}
+.rt tbody tr.row-unchecked td { opacity: 0.38; }
+.rt tbody tr.row-unchecked td.m-check { opacity: 1; }
+
+/* Live totalen balk */
+.live-totals-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border: 1.5px solid var(--blue-faint2);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  margin-bottom: 28px;
+  background: var(--surface);
+  transition: all var(--t-mid);
+}
+.lt-cell {
+  padding: 16px 18px 14px;
+  position: relative;
+  border-right: 1px solid var(--rule);
+}
+.lt-cell:last-child { border-right: none; }
+.lt-cell::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2.5px;
+}
+.lt-cell.c-blue::before { background: var(--blue); }
+.lt-cell.c-orange::before { background: var(--orange); }
+.lt-cell.c-green::before { background: var(--green); }
+.lt-lbl {
+  font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--ink-4); font-family: var(--f-head); font-weight: 600;
+  margin-bottom: 7px; display: block;
+}
+.lt-val {
+  font-size: 22px; font-weight: 700; font-family: var(--f-head);
+  color: var(--blue); line-height: 1; letter-spacing: -0.5px;
+  transition: all 0.3s ease;
+}
+.lt-val.orange { color: var(--orange); }
+.lt-val.green { color: var(--green); }
+.lt-sub { font-size: 10.5px; color: var(--ink-4); margin-top: 5px; }
+
+/* ═══════════════════════════════════════════════════════
+   BESPARINGSGRAFIEK
+═══════════════════════════════════════════════════════ */
+.chart-section {
+  margin-bottom: 28px;
+}
+.chart-wrap {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-md);
+  padding: 24px 24px 20px;
+  box-shadow: var(--shadow-sm);
+}
+.chart-canvas-wrap {
+  position: relative;
+  height: 240px;
+}
+.chart-legend {
+  display: flex; gap: 20px; flex-wrap: wrap;
+  margin-top: 14px;
+}
+.chart-legend-item {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 11.5px; color: var(--ink-3);
+  font-family: var(--f-head); font-weight: 500;
+}
+.chart-legend-dot {
+  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+}
+.chart-breakeven-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--green-bg); color: var(--green);
+  font-size: 11px; font-weight: 700; font-family: var(--f-head);
+  letter-spacing: 0.3px; padding: 5px 12px; border-radius: 20px;
+  margin-left: auto;
+}
+
+/* ═══════════════════════════════════════════════════════
+   FINANCIERINGSMODULE
+═══════════════════════════════════════════════════════ */
+.financing-section { margin-bottom: 28px; }
+.financing-card {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.financing-body { padding: 22px 24px 24px; }
+.fin-sliders {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 28px;
+  margin-bottom: 22px;
+}
+.fin-slider-field { display: flex; flex-direction: column; gap: 10px; }
+.fin-slider-header {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.fin-slider-label {
+  font-size: 10.5px; font-weight: 600; letter-spacing: 0.8px;
+  text-transform: uppercase; color: var(--ink-3); font-family: var(--f-head);
+}
+.fin-slider-val {
+  font-size: 14px; font-weight: 700; font-family: var(--f-head); color: var(--blue);
+}
+.fin-slider {
+  width: 100%; height: 4px;
+  -webkit-appearance: none; appearance: none;
+  background: var(--rule); border-radius: 99px; outline: none;
+  cursor: pointer;
+}
+.fin-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--blue); cursor: pointer;
+  box-shadow: 0 1px 4px rgba(27,89,123,0.25);
+  border: 2px solid white;
+}
+.fin-slider::-moz-range-thumb {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--blue); cursor: pointer;
+  box-shadow: 0 1px 4px rgba(27,89,123,0.25);
+  border: 2px solid white;
+}
+
+.fin-results {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border: 1.5px solid var(--blue-faint2);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+.fin-result-cell {
+  padding: 16px 18px 14px;
+  position: relative;
+  background: var(--blue-faint);
+  border-right: 1px solid var(--blue-faint2);
+}
+.fin-result-cell:last-child { border-right: none; background: var(--green-bg); }
+.fin-result-lbl {
+  font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--ink-4); font-family: var(--f-head); font-weight: 600;
+  margin-bottom: 7px; display: block;
+}
+.fin-result-val {
+  font-size: 22px; font-weight: 700; font-family: var(--f-head);
+  color: var(--blue); line-height: 1; letter-spacing: -0.5px;
+}
+.fin-result-cell:last-child .fin-result-val { color: var(--green); }
+.fin-result-sub { font-size: 10.5px; color: var(--ink-4); margin-top: 5px; line-height: 1.4; }
+
+@media (max-width: 640px) {
+  .fin-sliders { grid-template-columns: 1fr; }
+  .fin-results { grid-template-columns: 1fr; }
+  .fin-result-cell { border-right: none; border-bottom: 1px solid var(--blue-faint2); }
+  .live-totals-bar { grid-template-columns: 1fr; }
+  .lt-cell { border-right: none; border-bottom: 1px solid var(--rule); }
+}
+
+@media print {
+  .chart-section, .financing-section, .measures-toolbar, .live-totals-bar { display: none !important; }
+  .m-check { display: none !important; }
+}
 </style>
 </head>
 <body>
@@ -1873,6 +2103,8 @@ select.finput {
         <div class="kpi-panel" id="kpiPanel"></div>
         <div id="introSection"></div>
         <div id="measuresSection"></div>
+        <div id="chartSection" class="chart-section"></div>
+        <div id="financingSection" class="financing-section"></div>
         <div id="nettoSection"></div>
         <div id="subsidiesSection"></div>
         <div id="phasesSection"></div>
@@ -2448,6 +2680,8 @@ function secHead(title) {
 }
 
 function renderReport(r) {
+  _rptData = r;
+  _chartInstance = null; // reset grafiek bij nieuw rapport
   const today = new Date().toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric'});
 
   // Rapport header
@@ -2496,9 +2730,10 @@ function renderReport(r) {
   document.getElementById('introSection').innerHTML = r.samenvatting
     ? `<div class="intro-text">${r.samenvatting}</div>` : '';
 
-  // Maatregelen tabel
-  const mrows = (r.maatregelen||[]).map(m=>`
+  // Maatregelen tabel — met interactieve checkboxes
+  const mrows = (r.maatregelen||[]).map((m,i)=>`
     <tr>
+      <td class="m-check"><input type="checkbox" class="m-checkbox" checked onchange="recalcTotals()"></td>
       <td><div class="m-name"><div class="m-icon">${ico(m.naam)}</div>${m.naam}</div></td>
       <td class="m-save">${m.besparing||'&#8212;'}</td>
       <td class="m-invest">${m.investering||'&#8212;'}</td>
@@ -2506,18 +2741,45 @@ function renderReport(r) {
       <td class="m-co2">${m.co2||'&#8212;'}</td>
     </tr>`).join('');
   let msec = secHead('Geadviseerde maatregelen');
+  msec += `<div class="measures-toolbar">
+    <span class="measures-toolbar-label">Selecteer maatregelen om totalen te berekenen</span>
+    <div class="measures-select-btns">
+      <button class="btn-sel" onclick="selectAllMeasures(true)">Alles aan</button>
+      <button class="btn-sel" onclick="selectAllMeasures(false)">Alles uit</button>
+    </div>
+  </div>`;
   msec += `<table class="rt"><thead><tr>
-    <th>Maatregel</th><th>Besparing/jr</th><th>Investering</th>
+    <th></th><th>Maatregel</th><th>Besparing/jr</th><th>Investering</th>
     <th>Terugverdientijd</th><th>CO&#8322;</th>
   </tr></thead><tbody>${mrows}</tbody></table>`;
-  if (r.totaal_besparing || r.totaal_investering) {
-    msec += `<div class="totals-block">
-      <div><div class="total-label">Totale besparing/jr</div><div class="total-val orange">${r.totaal_besparing||'&#8212;'}</div></div>
-      <div><div class="total-label">Bruto investering</div><div class="total-val">${r.totaal_investering||'&#8212;'}</div></div>
-      <div><div class="total-label">Gem. terugverdientijd</div><div class="total-val">${r.gemiddelde_tvt||'&#8212;'}</div></div>
-    </div>`;
-  }
+  // Live totalen balk (vervangt de statische totals-block)
+  msec += `<div class="live-totals-bar">
+    <div class="lt-cell c-green">
+      <span class="lt-lbl">Besparing / jaar</span>
+      <div class="lt-val green" id="ltBesparing">—</div>
+      <div class="lt-sub">Geselecteerde maatregelen</div>
+    </div>
+    <div class="lt-cell c-orange">
+      <span class="lt-lbl">Investering</span>
+      <div class="lt-val orange" id="ltInvestering">—</div>
+      <div class="lt-sub">Bruto, excl. subsidies</div>
+    </div>
+    <div class="lt-cell c-blue">
+      <span class="lt-lbl">Gem. terugverdientijd</span>
+      <div class="lt-val" id="ltTVT">—</div>
+      <div class="lt-sub">Gewogen gemiddelde</div>
+    </div>
+  </div>`;
   document.getElementById('measuresSection').innerHTML = msec;
+
+  // Render grafiek + financiering secties
+  renderChartSection();
+  renderFinancingSection();
+
+  // Bereken initiële totalen (alle aangevinkt)
+  setTimeout(() => {
+    recalcTotals();
+  }, 50);
 
   // Netto investering tabel
   let nettoHtml = '';
@@ -2621,6 +2883,338 @@ function renderReport(r) {
   }
   document.getElementById('aandachtSection').innerHTML = aHtml;
 }
+
+// =============================================================================
+//  HULPFUNCTIES NIEUWE MODULES
+// =============================================================================
+
+// Parst Dutch/Euro bedragen naar float: "€ 12.500/jr" → 12500
+function parseEuro(str) {
+  if (!str) return 0;
+  const s = String(str);
+  if (s.includes('—') || s.includes('\u2014')) return 0;
+  // Verwijder valuta, eenheden
+  let clean = s.replace(/[€\s]/g, '').replace(/\/[a-z]+.*/i, '').replace(/[a-zA-Z]/g, '');
+  // Dutch: punt = duizend-sep, komma = decimaal
+  // Detecteer of de komma een decimaal is (max 2 cijfers erachter)
+  if (/,\d{1,2}$/.test(clean)) {
+    clean = clean.replace(/\./g, '').replace(',', '.');
+  } else {
+    clean = clean.replace(/\./g, '').replace(',', '');
+  }
+  return parseFloat(clean) || 0;
+}
+
+// Format getal naar euro string: 12500 → "€ 12.500"
+function fmtEuro(n) {
+  if (!n || isNaN(n)) return '—';
+  return '€\u00a0' + Math.round(n).toLocaleString('nl-NL');
+}
+
+// Parst TVT strings: "3,2 jaar" / "3-4 jaar" → gemiddelde in jaren
+function parseTVT(str) {
+  if (!str) return 0;
+  const s = String(str).replace(',', '.').replace(/[a-zA-Z\s]/g, '');
+  const dash = s.indexOf('-');
+  if (dash > -1) {
+    const a = parseFloat(s.slice(0, dash)) || 0;
+    const b = parseFloat(s.slice(dash + 1)) || 0;
+    return (a + b) / 2;
+  }
+  return parseFloat(s) || 0;
+}
+
+// Globale referentie naar het huidige rapport en grafiek-instantie
+let _rptData = null;
+let _chartInstance = null;
+
+// =============================================================================
+//  INTERACTIEVE MAATREGELENSELECTOR
+// =============================================================================
+
+function recalcTotals() {
+  if (!_rptData) return;
+  const checks = document.querySelectorAll('.m-checkbox');
+  let totalBesparing = 0, totalInvestering = 0, tvtWeightedSum = 0;
+  let checked = 0;
+
+  checks.forEach((cb, i) => {
+    const m = (_rptData.maatregelen || [])[i];
+    if (!m) return;
+    const b = parseEuro(m.besparing);
+    const inv = parseEuro(m.investering);
+    const tvt = parseTVT(m.tvt);
+    const row = cb.closest('tr');
+    if (cb.checked) {
+      totalBesparing += b;
+      totalInvestering += inv;
+      tvtWeightedSum += tvt * inv;
+      checked++;
+      row && row.classList.remove('row-unchecked');
+    } else {
+      row && row.classList.add('row-unchecked');
+    }
+  });
+
+  const gemTVT = totalInvestering > 0
+    ? (tvtWeightedSum / totalInvestering).toFixed(1)
+    : 0;
+
+  // Update live totals bar
+  const ltBesparing = document.getElementById('ltBesparing');
+  const ltInvestering = document.getElementById('ltInvestering');
+  const ltTVT = document.getElementById('ltTVT');
+  if (ltBesparing) ltBesparing.textContent = fmtEuro(totalBesparing);
+  if (ltInvestering) ltInvestering.textContent = fmtEuro(totalInvestering);
+  if (ltTVT) ltTVT.textContent = checked > 0 ? (gemTVT + ' jr') : '—';
+
+  // Update grafiek
+  updateChart(totalBesparing, totalInvestering);
+
+  // Update financiering
+  updateFinancing(totalInvestering, totalBesparing);
+}
+
+function selectAllMeasures(val) {
+  document.querySelectorAll('.m-checkbox').forEach(cb => { cb.checked = val; });
+  recalcTotals();
+}
+
+// =============================================================================
+//  BESPARINGSGRAFIEK
+// =============================================================================
+
+function updateChart(jaarBesparing, investering) {
+  const canvas = document.getElementById('besparingChart');
+  if (!canvas) return;
+
+  const jaren = 15;
+  const labels = Array.from({length: jaren + 1}, (_, i) => 'Jaar ' + i);
+  const cumBesparing = labels.map((_, i) => Math.round(jaarBesparing * i));
+  const invLijn = labels.map(() => Math.round(investering));
+
+  // Break-even jaar
+  let breakevenJaar = null;
+  for (let i = 0; i <= jaren; i++) {
+    if (jaarBesparing * i >= investering) { breakevenJaar = i; break; }
+  }
+
+  const badge = document.getElementById('breakevenBadge');
+  if (badge) {
+    badge.textContent = breakevenJaar
+      ? '✓ Break-even: jaar ' + breakevenJaar
+      : investering === 0 ? 'Selecteer maatregelen' : '> 15 jaar';
+    badge.style.background = (breakevenJaar && breakevenJaar <= 10)
+      ? 'var(--green-bg)' : 'var(--amber-bg)';
+    badge.style.color = (breakevenJaar && breakevenJaar <= 10)
+      ? 'var(--green)' : 'var(--amber)';
+  }
+
+  if (_chartInstance) {
+    _chartInstance.data.datasets[0].data = cumBesparing;
+    _chartInstance.data.datasets[1].data = invLijn;
+    _chartInstance.update('active');
+    return;
+  }
+
+  _chartInstance = new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Cumulatieve besparing',
+          data: cumBesparing,
+          borderColor: '#2A7A50',
+          backgroundColor: 'rgba(42,122,80,0.08)',
+          borderWidth: 2.5,
+          pointRadius: 0,
+          pointHoverRadius: 5,
+          fill: true,
+          tension: 0.3,
+        },
+        {
+          label: 'Investering',
+          data: invLijn,
+          borderColor: '#E26836',
+          backgroundColor: 'transparent',
+          borderWidth: 2,
+          borderDash: [6, 4],
+          pointRadius: 0,
+          pointHoverRadius: 0,
+          fill: false,
+          tension: 0,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'white',
+          borderColor: 'rgba(0,0,0,0.08)',
+          borderWidth: 1,
+          titleColor: '#3A3A3A',
+          bodyColor: '#6B6B6B',
+          titleFont: { family: 'Sora, sans-serif', weight: '600', size: 12 },
+          bodyFont: { family: 'Inter, sans-serif', size: 12 },
+          padding: 12,
+          callbacks: {
+            label: ctx => ' ' + ctx.dataset.label + ': ' + fmtEuro(ctx.parsed.y)
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(0,0,0,0.04)' },
+          ticks: {
+            font: { family: 'Inter, sans-serif', size: 10 },
+            color: '#A0A0A0',
+            maxTicksLimit: 8,
+          }
+        },
+        y: {
+          grid: { color: 'rgba(0,0,0,0.04)' },
+          ticks: {
+            font: { family: 'Inter, sans-serif', size: 10 },
+            color: '#A0A0A0',
+            callback: v => '€ ' + (v >= 1000 ? (v/1000).toFixed(0) + 'k' : v),
+          }
+        }
+      }
+    }
+  });
+}
+
+function renderChartSection() {
+  const el = document.getElementById('chartSection');
+  if (!el) return;
+  el.innerHTML = `
+    <div class="sec-head rpt-section-head">
+      <span class="sec-label">Cumulatieve besparing over tijd</span>
+      <div class="sec-line"></div>
+    </div>
+    <div class="chart-wrap">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
+        <div style="font-size:12px;color:var(--ink-4);font-family:var(--f-body);line-height:1.5;">
+          Selecteer maatregelen hierboven om het break-even punt te berekenen
+        </div>
+        <div class="chart-breakeven-badge" id="breakevenBadge" style="background:var(--amber-bg);color:var(--amber);">
+          Selecteer maatregelen
+        </div>
+      </div>
+      <div class="chart-canvas-wrap">
+        <canvas id="besparingChart"></canvas>
+      </div>
+      <div class="chart-legend">
+        <div class="chart-legend-item">
+          <div class="chart-legend-dot" style="background:#2A7A50;"></div>
+          Cumulatieve besparing
+        </div>
+        <div class="chart-legend-item">
+          <div class="chart-legend-dot" style="background:#E26836;border-radius:2px;height:3px;width:16px;"></div>
+          Investering
+        </div>
+      </div>
+    </div>`;
+}
+
+// =============================================================================
+//  FINANCIERINGSMODULE
+// =============================================================================
+
+let _finInvestering = 0;
+let _finBesparing = 0;
+
+function updateFinancing(investering, besparing) {
+  _finInvestering = investering;
+  _finBesparing = besparing;
+  const looptijd = parseInt(document.getElementById('finLooptijd')?.value || 10);
+  const rente = parseFloat(document.getElementById('finRente')?.value || 4) / 100;
+
+  // Annuïteit formule
+  const n = looptijd * 12;
+  const r = rente / 12;
+  const maandlast = r > 0
+    ? Math.round(investering * (r * Math.pow(1+r,n)) / (Math.pow(1+r,n) - 1))
+    : Math.round(investering / n);
+
+  const maandBesparing = Math.round(besparing / 12);
+  const nettoMaand = maandBesparing - maandlast;
+
+  const elMaandlast = document.getElementById('finMaandlast');
+  const elBesparing = document.getElementById('finMaandBesparing');
+  const elNetto = document.getElementById('finNetto');
+  const elNettoSub = document.getElementById('finNettoSub');
+
+  if (elMaandlast) elMaandlast.textContent = fmtEuro(maandlast);
+  if (elBesparing) elBesparing.textContent = fmtEuro(maandBesparing);
+  if (elNetto) {
+    elNetto.textContent = (nettoMaand >= 0 ? '+' : '') + fmtEuro(nettoMaand);
+    elNetto.style.color = nettoMaand >= 0 ? 'var(--green)' : 'var(--red)';
+  }
+  if (elNettoSub) {
+    elNettoSub.textContent = nettoMaand >= 0
+      ? 'Investering betaalt zichzelf terug'
+      : 'Extra maandelijkse bijdrage nodig';
+  }
+}
+
+function renderFinancingSection() {
+  const el = document.getElementById('financingSection');
+  if (!el) return;
+  el.innerHTML = `
+    <div class="sec-head rpt-section-head">
+      <span class="sec-label">Financieringsscenario</span>
+      <div class="sec-line"></div>
+    </div>
+    <div class="financing-card">
+      <div class="financing-body">
+        <div class="fin-sliders">
+          <div class="fin-slider-field">
+            <div class="fin-slider-header">
+              <span class="fin-slider-label">Looptijd lening</span>
+              <span class="fin-slider-val" id="finLooptijdLabel">10 jaar</span>
+            </div>
+            <input type="range" class="fin-slider" id="finLooptijd"
+              min="5" max="20" step="1" value="10"
+              oninput="document.getElementById('finLooptijdLabel').textContent=this.value+' jaar';updateFinancing(_finInvestering,_finBesparing);">
+          </div>
+          <div class="fin-slider-field">
+            <div class="fin-slider-header">
+              <span class="fin-slider-label">Rente (p/jr)</span>
+              <span class="fin-slider-val" id="finRenteLabel">4,0%</span>
+            </div>
+            <input type="range" class="fin-slider" id="finRente"
+              min="2" max="9" step="0.5" value="4"
+              oninput="document.getElementById('finRenteLabel').textContent=parseFloat(this.value).toFixed(1).replace('.',',')+' %';updateFinancing(_finInvestering,_finBesparing);">
+          </div>
+        </div>
+        <div class="fin-results">
+          <div class="fin-result-cell">
+            <span class="fin-result-lbl">Maandlast lening</span>
+            <div class="fin-result-val" id="finMaandlast">—</div>
+            <div class="fin-result-sub">Annuïteit</div>
+          </div>
+          <div class="fin-result-cell">
+            <span class="fin-result-lbl">Maandelijkse besparing</span>
+            <div class="fin-result-val" id="finMaandBesparing">—</div>
+            <div class="fin-result-sub">Op energiekosten</div>
+          </div>
+          <div class="fin-result-cell">
+            <span class="fin-result-lbl">Netto per maand</span>
+            <div class="fin-result-val" id="finNetto" style="color:var(--green);">—</div>
+            <div class="fin-result-sub" id="finNettoSub">Selecteer maatregelen</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+// =============================================================================
 
 function resetTool() {
   document.getElementById('result').classList.remove('on');
