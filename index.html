@@ -1623,20 +1623,19 @@ async function uploadToBlob(file) {
   const { clientToken } = await tokenRes.json();
 
   // Stap 2: PUT het bestand direct naar Vercel Blob (geen serverless function tussenin)
+  // Alleen Authorization + x-api-version zijn toegestaan door Vercel Blob's CORS policy.
+  // Alle andere opties (cache, suffix, content-type) zitten al ingebakken in het clientToken (JWT).
   const putUrl = `https://blob.vercel-storage.com/${encodeURIComponent(file.name)}`;
   const putRes = await fetch(putUrl, {
     method: 'PUT',
     headers: {
       'Authorization': `Bearer ${clientToken}`,
-      'x-api-version': '7',
-      'x-content-type': file.type || 'application/pdf',
-      'x-add-random-suffix': '1',
-      'x-cache-control-max-age': '31536000'
+      'x-api-version': '7'
     },
     body: file
   });
   if (!putRes.ok) {
-    const errText = await putRes.text().catch(() => putRes.status);
+    const errText = await putRes.text().catch(() => String(putRes.status));
     throw new Error('Blob upload mislukt: ' + errText);
   }
   const result = await putRes.json();
