@@ -1500,6 +1500,21 @@ select.finput {
   <div class="disclaimer">Indicatieve analyse op basis van kengetallen. Geen officieel energieadvies.</div>
 </div>
 
+<!-- Vercel Blob client voor directe browser→CDN uploads (omzeilt de 4.5MB serverless limiet) -->
+<script type="importmap">
+{
+  "imports": {
+    "@vercel/blob/client": "https://cdn.jsdelivr.net/npm/@vercel/blob@latest/dist/client.browser.mjs"
+  }
+}
+</script>
+
+<script type="module">
+import { upload } from '@vercel/blob/client';
+// Maak upload globaal beschikbaar voor de rest van het script
+window._blobUpload = upload;
+</script>
+
 <script>
 // =============================================================================
 //  VERCEL BACKEND KOPPELING
@@ -1604,39 +1619,34 @@ Alleen pure JSON, geen uitleg, geen markdown.`;
 
 // =============================================================================
 //  callAgent() — stuurt de documenten naar de Vercel backend
+//  Upload gaat direct van browser naar Vercel Blob CDN (geen 4.5MB serverless limiet)
 // =============================================================================
 async function callAgent(payload) {
   let energiescanUrl = null;
   let brochureUrl = null;
 
+  // Wacht tot de Blob client module geladen is (import map kan iets later resolven)
+  const blobUpload = () => new Promise((resolve) => {
+    const check = () => window._blobUpload ? resolve(window._blobUpload) : setTimeout(check, 50);
+    check();
+  });
+  const upload = await blobUpload();
+
   if (payload.energiescan_file) {
-    const uploadRes = await fetch('/api/upload', {
-      method: 'POST',
-      headers: {
-        'x-filename': payload.energiescan_file.name
-      },
-      body: payload.energiescan_file
+    // Direct browser → Vercel Blob CDN, /api/upload geeft alleen een client-token terug
+    const blob = await upload(payload.energiescan_file.name, payload.energiescan_file, {
+      access: 'public',
+      handleUploadUrl: '/api/upload',
     });
-
-    if (!uploadRes.ok) throw new Error('Upload energiescan mislukt: ' + uploadRes.status);
-
-    const uploadData = await uploadRes.json();
-    energiescanUrl = uploadData.url;
+    energiescanUrl = blob.url;
   }
 
   if (payload.brochure_file) {
-    const uploadRes = await fetch('/api/upload', {
-      method: 'POST',
-      headers: {
-        'x-filename': payload.brochure_file.name
-      },
-      body: payload.brochure_file
+    const blob = await upload(payload.brochure_file.name, payload.brochure_file, {
+      access: 'public',
+      handleUploadUrl: '/api/upload',
     });
-
-    if (!uploadRes.ok) throw new Error('Upload brochure mislukt: ' + uploadRes.status);
-
-    const uploadData = await uploadRes.json();
-    brochureUrl = uploadData.url;
+    brochureUrl = blob.url;
   }
 
   const res = await fetch('/api/generate-report', {
