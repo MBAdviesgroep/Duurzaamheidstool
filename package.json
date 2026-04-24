@@ -2,6 +2,6 @@
   "type": "module",
   "dependencies": {
     "openai": "latest",
-    "formidable": "latest"
+    "@vercel/blob": "latest"
   }
 }
