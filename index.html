@@ -1502,65 +1502,12 @@ select.finput {
 
 <script>
 // =============================================================================
-//  ██╗███╗   ██╗████████╗███████╗ ██████╗ ██████╗  █████╗ ████████╗██╗███████╗
-//  ██║████╗  ██║╚══██╔══╝██╔════╝██╔════╝ ██╔══██╗██╔══██╗╚══██╔══╝██║██╔════╝
-//  ██║██╔██╗ ██║   ██║   █████╗  ██║  ███╗██████╔╝███████║   ██║   ██║█████╗
-//  ██║██║╚██╗██║   ██║   ██╔══╝  ██║   ██║██╔══██╗██╔══██║   ██║   ██║██╔══╝
-//  ██║██║ ╚████║   ██║   ███████╗╚██████╔╝██║  ██║██║  ██║   ██║   ██║███████╗
-//  OPENAI AGENT INTEGRATION POINT
+//  VERCEL BACKEND KOPPELING
 // =============================================================================
-//
-//  HOE TE KOPPELEN:
-//  ─────────────────────────────────────────────────────────────────────────────
-//  1. Stel AGENT_ENDPOINT in op het URL van jouw OpenAI Agent / backend endpoint.
-//     Voorbeeld: 'https://jouw-backend.nl/api/verduurzaming'
-//     Of direct OpenAI Responses API: 'https://api.openai.com/v1/responses'
-//
-//  2. Stel AGENT_API_KEY in (alleen voor directe OpenAI-aanroep zonder proxy).
-//     LETOP: gebruik liever een eigen backend zodat de key niet client-side staat.
-//     Voor backend-proxy: laat leeg ('') en verwerk de key server-side.
-//
-//  3. De functie callAgent(payload) doet de HTTP-aanroep naar jouw endpoint.
-//     - payload.energiescan_b64 : base64-string van de energiescan PDF
-//     - payload.brochure_b64    : base64-string van de brochure PDF (of null)
-//     - payload.notities        : extra tekst van de gebruiker (of '')
-//     - payload.systeem_prompt  : de volledige instructie voor de agent
-//
-//  4. Het endpoint moet een JSON-object teruggeven dat overeenkomt met
-//     de RAPPORT_SCHEMA hieronder. De functie parseAgentResponse() verwerkt
-//     de ruwe OpenAI Responses API output naar dit schema.
-//
-//  5. Wil je streamen? Zie het commentaar bij callAgent() voor SSE-variant.
-//
+//  Deze frontend roept alleen /api/generate-report aan.
+//  De OpenAI API-key staat veilig in Vercel Environment Variables.
+//  Zet dus GEEN API-key in dit HTML-bestand.
 // =============================================================================
-
-const CONFIG = {
-  // ══════════════════════════════════════════════════════════════════════════════
-  //  ✅ STAP 1 — Vul hier jouw OpenAI API key in
-  //             Zoek op: https://platform.openai.com/api-keys
-  //             Formaat:  sk-proj-...  of  sk-...
-  // ══════════════════════════════════════════════════════════════════════════════
-  AGENT_API_KEY: 'sk-JOUW_OPENAI_KEY_HIER',   // ← VERVANG DIT
-
-  // ══════════════════════════════════════════════════════════════════════════════
-  //  ✅ STAP 2 — Endpoint (niet aanpassen voor directe OpenAI-aanroep)
-  //             Wil je een eigen backend? Verander dit naar jouw server-URL.
-  //             De backend ontvangt dan de payload en stuurt rapport-JSON terug.
-  // ══════════════════════════════════════════════════════════════════════════════
-  AGENT_ENDPOINT: 'https://api.openai.com/v1/responses',
-
-  // ══════════════════════════════════════════════════════════════════════════════
-  //  ℹ️  Model — gpt-4o leest PDF's native; niet aanpassen tenzij gewenst
-  //             Alternatieven: 'gpt-4o-mini' (goedkoper, iets minder nauwkeurig)
-  // ══════════════════════════════════════════════════════════════════════════════
-  MODEL: 'gpt-4o',
-
-  // ── Maximum output tokens voor het rapport ───────────────────────────────────
-  MAX_TOKENS: 4096,
-
-  // ── Timeout in milliseconden (2 minuten standaard) ───────────────────────────
-  TIMEOUT_MS: 120000,
-};
 
 // =============================================================================
 //  RAPPORT SCHEMA — dit JSON-formaat verwacht de frontend van de agent
@@ -1656,99 +1603,23 @@ Retourneer exact het volgende JSON-schema — verzin niets, extraheer alles uit 
 Alleen pure JSON, geen uitleg, geen markdown.`;
 
 // =============================================================================
-//  callAgent() — VERVANG DIT VOOR EEN EIGEN BACKEND / AGENT SETUP
+//  callAgent() — stuurt de documenten naar de Vercel backend
 // =============================================================================
-//
-//  Huidige implementatie: directe OpenAI Responses API aanroep.
-//
-//  Voor een EIGEN BACKEND (aanbevolen):
-//  ─────────────────────────────────────
-//  async function callAgent(payload) {
-//    const res = await fetch(CONFIG.AGENT_ENDPOINT, {
-//      method: 'POST',
-//      headers: { 'Content-Type': 'application/json' },
-//      body: JSON.stringify(payload)
-//    });
-//    if (!res.ok) throw new Error('Agent-fout: ' + res.status);
-//    return await res.json(); // jouw backend geeft al het rapport-JSON terug
-//  }
-//
-//  Voor OPENAI ASSISTANTS API (met thread + run):
-//  ─────────────────────────────────────────────
-//  Maak een thread aan met de PDF als file attachment, start een run,
-//  poll op completion, en return de laatste message content als JSON.
-//
 async function callAgent(payload) {
-  // ── Controleer of de API key is ingevuld ─────────────────────────────────────
-  if (!CONFIG.AGENT_API_KEY || CONFIG.AGENT_API_KEY === 'sk-JOUW_OPENAI_KEY_HIER') {
-    throw new Error('Vul eerst jouw OpenAI API key in bij CONFIG.AGENT_API_KEY bovenaan de code.');
-  }
-
-  // ── Bouw de input voor OpenAI Responses API (gpt-4o met file/vision support)
-  const inputContent = [];
-
-  // Voeg energiescan PDF toe als base64 bestand
-  inputContent.push({
-    type: 'input_file',
-    filename: 'energiescan.pdf',
-    file_data: 'data:application/pdf;base64,' + payload.energiescan_b64
+  const res = await fetch('/api/generate-report', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload)
   });
-
-  // Voeg brochure toe indien aanwezig
-  if (payload.brochure_b64) {
-    inputContent.push({
-      type: 'input_file',
-      filename: 'brochure.pdf',
-      file_data: 'data:application/pdf;base64,' + payload.brochure_b64
-    });
-  }
-
-  // Voeg tekstinstructie toe
-  inputContent.push({
-    type: 'input_text',
-    text: 'Analyseer deze documenten en retourneer het volledige JSON-rapport.' +
-          (payload.notities ? ' Extra toelichting: ' + payload.notities : '')
-  });
-
-  const requestBody = {
-    model: CONFIG.MODEL,
-    instructions: payload.systeem_prompt,
-    input: inputContent,
-    max_output_tokens: CONFIG.MAX_TOKENS
-  };
-
-  const headers = {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer ' + CONFIG.AGENT_API_KEY
-  };
-
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), CONFIG.TIMEOUT_MS);
-
-  let res;
-  try {
-    res = await fetch(CONFIG.AGENT_ENDPOINT, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(requestBody),
-      signal: controller.signal
-    });
-  } catch (fetchErr) {
-    clearTimeout(timeout);
-    if (fetchErr.name === 'AbortError') {
-      throw new Error('Tijdslimiet overschreden (2 min). Probeer opnieuw of gebruik een kleinere PDF.');
-    }
-    throw new Error('Netwerkfout: ' + fetchErr.message);
-  } finally {
-    clearTimeout(timeout);
-  }
 
   if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    const msg = err.error?.message || 'HTTP ' + res.status;
-    if (res.status === 401) throw new Error('Ongeldige API key. Controleer CONFIG.AGENT_API_KEY.');
-    if (res.status === 429) throw new Error('Teveel verzoeken of tegoed op. Controleer jouw OpenAI account.');
-    if (res.status === 400) throw new Error('Ongedig verzoek: ' + msg);
+    let msg = 'HTTP ' + res.status;
+    try {
+      const err = await res.json();
+      msg = err.error || err.message || msg;
+    } catch (_) {}
     throw new Error('Agent-fout: ' + msg);
   }
 
@@ -1761,10 +1632,23 @@ async function callAgent(payload) {
 //  Ondersteunt: OpenAI Responses API, Chat Completions API, en custom backends
 // =============================================================================
 function parseAgentResponse(data) {
+  if (!data) throw new Error('Agent gaf geen antwoord terug.');
+
+  // Backend kan direct het rapportobject teruggeven
+  if (data.pand_naam !== undefined) return data;
+
+  // Backend kan { success: true, data: {...} } teruggeven
+  if (data.data && typeof data.data === 'object') return data.data;
+
   let rawText = '';
 
+  // Backend kan { success: true, data: 'JSON-string' } teruggeven
+  if (typeof data.data === 'string') {
+    rawText = data.data;
+  }
+
   // OpenAI Responses API formaat
-  if (data.output) {
+  else if (data.output) {
     const msgBlock = data.output.find(b => b.type === 'message');
     if (msgBlock?.content) {
       const textBlock = msgBlock.content.find(c => c.type === 'output_text');
@@ -1772,24 +1656,18 @@ function parseAgentResponse(data) {
     }
   }
 
-  // OpenAI Chat Completions formaat (fallback)
+  // OpenAI Chat Completions formaat fallback
   else if (data.choices) {
     rawText = data.choices[0]?.message?.content || '';
   }
 
-  // Custom backend: geeft het rapport-JSON direct terug
-  else if (data.pand_naam !== undefined) {
-    return data; // al klaar
-  }
-
-  // Strip markdown code fences indien aanwezig
   const clean = rawText.replace(/```json|```/g, '').trim();
-
   if (!clean) throw new Error('Agent gaf geen inhoud terug.');
 
   try {
     return JSON.parse(clean);
   } catch (e) {
+    console.error('Onverwerkbaar agent-antwoord:', rawText);
     throw new Error('Rapport-JSON kon niet worden verwerkt. Controleer het agent-antwoord.');
   }
 }
