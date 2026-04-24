@@ -1500,21 +1500,6 @@ select.finput {
   <div class="disclaimer">Indicatieve analyse op basis van kengetallen. Geen officieel energieadvies.</div>
 </div>
 
-<!-- Vercel Blob client voor directe browser→CDN uploads (omzeilt de 4.5MB serverless limiet) -->
-<script type="importmap">
-{
-  "imports": {
-    "@vercel/blob/client": "https://cdn.jsdelivr.net/npm/@vercel/blob@latest/dist/client.browser.mjs"
-  }
-}
-</script>
-
-<script type="module">
-import { upload } from '@vercel/blob/client';
-// Maak upload globaal beschikbaar voor de rest van het script
-window._blobUpload = upload;
-</script>
-
 <script>
 // =============================================================================
 //  VERCEL BACKEND KOPPELING
@@ -1619,34 +1604,55 @@ Alleen pure JSON, geen uitleg, geen markdown.`;
 
 // =============================================================================
 //  callAgent() — stuurt de documenten naar de Vercel backend
-//  Upload gaat direct van browser naar Vercel Blob CDN (geen 4.5MB serverless limiet)
+//  Upload: browser vraagt een client-token op bij /api/upload,
+//  dan PUT direct naar Vercel Blob (omzeilt de 4.5MB serverless limiet).
 // =============================================================================
+
+// Hulpfunctie: vraag een upload-token op en PUT het bestand direct naar Blob
+async function uploadToBlob(file) {
+  // Stap 1: haal een client-token op van onze serverless function (is maar ~300 bytes)
+  const tokenRes = await fetch('/api/upload', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      type: 'blob.generate-client-token',
+      payload: { pathname: file.name, callbackUrl: window.location.origin + '/api/upload' }
+    })
+  });
+  if (!tokenRes.ok) throw new Error('Token ophalen mislukt: ' + tokenRes.status);
+  const { clientToken } = await tokenRes.json();
+
+  // Stap 2: PUT het bestand direct naar Vercel Blob (geen serverless function tussenin)
+  const putUrl = `https://blob.vercel-storage.com/${encodeURIComponent(file.name)}`;
+  const putRes = await fetch(putUrl, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `Bearer ${clientToken}`,
+      'x-api-version': '7',
+      'x-content-type': file.type || 'application/pdf',
+      'x-add-random-suffix': '1',
+      'x-cache-control-max-age': '31536000'
+    },
+    body: file
+  });
+  if (!putRes.ok) {
+    const errText = await putRes.text().catch(() => putRes.status);
+    throw new Error('Blob upload mislukt: ' + errText);
+  }
+  const result = await putRes.json();
+  return result.url;
+}
+
 async function callAgent(payload) {
   let energiescanUrl = null;
   let brochureUrl = null;
 
-  // Wacht tot de Blob client module geladen is (import map kan iets later resolven)
-  const blobUpload = () => new Promise((resolve) => {
-    const check = () => window._blobUpload ? resolve(window._blobUpload) : setTimeout(check, 50);
-    check();
-  });
-  const upload = await blobUpload();
-
   if (payload.energiescan_file) {
-    // Direct browser → Vercel Blob CDN, /api/upload geeft alleen een client-token terug
-    const blob = await upload(payload.energiescan_file.name, payload.energiescan_file, {
-      access: 'public',
-      handleUploadUrl: '/api/upload',
-    });
-    energiescanUrl = blob.url;
+    energiescanUrl = await uploadToBlob(payload.energiescan_file);
   }
 
   if (payload.brochure_file) {
-    const blob = await upload(payload.brochure_file.name, payload.brochure_file, {
-      access: 'public',
-      handleUploadUrl: '/api/upload',
-    });
-    brochureUrl = blob.url;
+    brochureUrl = await uploadToBlob(payload.brochure_file);
   }
 
   const res = await fetch('/api/generate-report', {
