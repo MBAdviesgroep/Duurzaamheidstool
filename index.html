@@ -176,7 +176,7 @@ body {
 /* ═══════════════════════════════════════════════════════
    BODY
 ═══════════════════════════════════════════════════════ */
-.body { padding: 44px 40px 48px; }
+.body { padding: 44px 28px 48px; }
 
 /* ═══════════════════════════════════════════════════════
    SECTION HEADERS
@@ -920,6 +920,7 @@ select.finput {
   .lead-grid, .lead-grid.three { grid-template-columns: 1fr; }
   .lead-actions { grid-template-columns: 1fr; }
   .trust-bar { gap: 16px; }
+  .upload-grid { grid-template-columns: 1fr; }
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -960,17 +961,16 @@ select.finput {
 /* Upload zones grid */
 .upload-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px;
   margin-bottom: 28px;
-  align-items: stretch;
 }
 
 .upload-col {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  height: 100%;
+  min-width: 0;
 }
 
 /* Drop zone */
@@ -983,13 +983,13 @@ select.finput {
   background: var(--page);
   transition: border-color var(--t-fast), background var(--t-fast);
   position: relative;
-  min-height: 200px;
-  flex: 1;
+  height: 220px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
+  overflow: hidden;
 }
 .drop-zone:hover, .drop-zone.drag-over {
   border-color: var(--blue);
