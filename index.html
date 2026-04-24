@@ -1122,7 +1122,7 @@ select.finput {
   margin-bottom: 6px; font-family: var(--f-head);
 }
 .rpt-title { font-family: var(--f-serif); font-size: 26px; font-weight: 700;
-  font-family: var(--f-head); letter-spacing: -0.4px;
+  color: rgba(255,255,255,0.92); letter-spacing: -0.4px;
   line-height: 1.1; margin-bottom: 4px;
 }
 .rpt-address {
@@ -2113,9 +2113,39 @@ select.finput {
    PRINT OVERRIDES — nieuwe modules
 ═══════════════════════════════════════════════════════ */
 @media print {
-  .chart-section, .measures-toolbar, .live-totals-bar,
-  .wachten-banner, #maatregelenChartSection { display: none !important; }
+  .measures-toolbar, .live-totals-bar,
+  .wachten-banner { display: none !important; }
   .m-check { display: none !important; }
+  .rt th:first-child { display: none !important; }
+
+  /* ── Page breaks — voorkom afgesneden elementen ── */
+  .sub-list-item { page-break-inside: avoid !important; }
+  .phase-block { page-break-inside: avoid !important; }
+  .vervolg-item { page-break-inside: avoid !important; }
+  .kpi-panel { page-break-inside: avoid !important; }
+  .rpt-section-head { page-break-after: avoid !important; }
+  .punten-block { page-break-inside: avoid !important; }
+  .assumptions { page-break-inside: avoid !important; }
+  .adviseur-card { page-break-inside: avoid !important; }
+  .intro-text { page-break-inside: avoid !important; }
+  .label-vis-card { page-break-inside: avoid !important; }
+  .rente-strip { page-break-inside: avoid !important; }
+  .rt tr { page-break-inside: avoid !important; }
+  .sub-list-item + .rpt-section-head { page-break-before: always !important; }
+
+  /* ── Grafieken in print via canvas→img (JS beforeprint) ── */
+  .chart-section { display: block !important; }
+  #maatregelenChartSection { display: block !important; }
+  .chart-canvas-wrap { height: auto !important; min-height: 180pt !important; }
+  .chart-print-img { width: 100% !important; max-width: 100% !important; display: block !important; }
+  .chart-wrap { page-break-inside: avoid !important; box-shadow: none !important; border: 0.5pt solid #E3DDD8 !important; }
+  .chart-legend { margin-top: 8pt !important; }
+  .chart-legend-item { font-size: 8pt !important; }
+  .chart-breakeven-badge { font-size: 8pt !important; padding: 3pt 8pt !important; }
+
+  /* ── Vervolg + aandacht ── */
+  .vervolg-list { page-break-inside: auto !important; }
+  .aandacht-table { page-break-inside: auto !important; }
 
   /* Cover pagina */
   @page :first { margin: 0 !important; }
@@ -3811,6 +3841,28 @@ function renderAdviseurSection() {
 }
 
 // =============================================================================
+
+// Canvas → img conversie voor print (Chart.js)
+window.addEventListener('beforeprint', () => {
+  document.querySelectorAll('canvas').forEach(canvas => {
+    try {
+      const img = document.createElement('img');
+      img.src = canvas.toDataURL('image/png');
+      img.className = 'chart-print-img';
+      canvas.parentNode.insertBefore(img, canvas);
+      canvas.dataset.printHidden = '1';
+      canvas.style.display = 'none';
+    } catch(e) {}
+  });
+});
+
+window.addEventListener('afterprint', () => {
+  document.querySelectorAll('.chart-print-img').forEach(img => img.remove());
+  document.querySelectorAll('canvas[data-print-hidden]').forEach(canvas => {
+    canvas.style.display = '';
+    delete canvas.dataset.printHidden;
+  });
+});
 
 function resetTool() {
   document.getElementById('result').classList.remove('on');
