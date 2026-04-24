@@ -2076,37 +2076,45 @@ Alleen pure JSON, geen uitleg, geen markdown.`;
 //  dan PUT direct naar Vercel Blob (omzeilt de 4.5MB serverless limiet).
 // =============================================================================
 
-// Hulpfunctie: vraag een upload-token op en PUT het bestand direct naar Blob
+// Hulpfunctie: upload bestand via Vercel Blob client-upload flow
 async function uploadToBlob(file) {
-  // Stap 1: haal een client-token op van onze serverless function (is maar ~300 bytes)
+  // Stap 1: vraag client-token op bij /api/upload (handleUpload protocol)
   const tokenRes = await fetch('/api/upload', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       type: 'blob.generate-client-token',
-      payload: { pathname: file.name, callbackUrl: window.location.origin + '/api/upload' }
+      payload: {
+        pathname: file.name,
+        callbackUrl: window.location.origin + '/api/upload',
+        clientPayload: null,
+        multipart: false,
+      }
     })
   });
-  if (!tokenRes.ok) throw new Error('Token ophalen mislukt: ' + tokenRes.status);
+  if (!tokenRes.ok) {
+    const errBody = await tokenRes.text().catch(() => '');
+    throw new Error('Token ophalen mislukt: ' + tokenRes.status + (errBody ? ' — ' + errBody : ''));
+  }
   const { clientToken } = await tokenRes.json();
+  if (!clientToken) throw new Error('Geen clientToken ontvangen van /api/upload');
 
-  // Stap 2: PUT het bestand direct naar Vercel Blob (geen serverless function tussenin)
-  // Alleen Authorization + x-api-version zijn toegestaan door Vercel Blob's CORS policy.
-  // Alle andere opties (cache, suffix, content-type) zitten al ingebakken in het clientToken (JWT).
-  const putUrl = `https://blob.vercel-storage.com/${encodeURIComponent(file.name)}`;
+  // Stap 2: PUT direct naar Vercel Blob CDN met alleen de toegestane headers
+  const putUrl = 'https://blob.vercel-storage.com/' + encodeURIComponent(file.name);
   const putRes = await fetch(putUrl, {
     method: 'PUT',
     headers: {
-      'Authorization': `Bearer ${clientToken}`,
-      'x-api-version': '7'
+      'Authorization': 'Bearer ' + clientToken,
+      'x-api-version': '7',
     },
-    body: file
+    body: file,
   });
   if (!putRes.ok) {
     const errText = await putRes.text().catch(() => String(putRes.status));
-    throw new Error('Blob upload mislukt: ' + errText);
+    throw new Error('Blob PUT mislukt (' + putRes.status + '): ' + errText);
   }
   const result = await putRes.json();
+  if (!result.url) throw new Error('Blob gaf geen URL terug');
   return result.url;
 }
 
