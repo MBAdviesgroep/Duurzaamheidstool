@@ -1128,19 +1128,21 @@ select.finput {
   font-weight: 300; font-family: var(--f-body);
 }
 .label-track {
-  display: flex; align-items: center; gap: 12px;
+  display: flex; align-items: center; gap: 10px;
   margin-top: 18px; padding-top: 16px;
   border-top: 1px solid rgba(255,255,255,0.12);
 }
 .label-box {
-  width: 48px; height: 36px; border-radius: var(--r-xs);
+  width: 52px; height: 40px; border-radius: var(--r-xs);
   display: flex; align-items: center; justify-content: center;
-  font-size: 18px; font-weight: 800; font-family: var(--f-head); color: white;
+  font-size: 20px; font-weight: 800; font-family: var(--f-head); color: white;
+  letter-spacing: -0.5px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
 }
-.label-arrow { font-size: 16px; color: rgba(255,255,255,0.3); }
+.label-arrow { font-size: 20px; color: rgba(255,255,255,0.8); font-weight: 300; }
 .label-caption {
-  font-size: 11px; color: rgba(255,255,255,0.4);
-  margin-left: 6px; font-family: var(--f-head);
+  font-size: 11px; color: rgba(255,255,255,0.55);
+  margin-left: 4px; font-family: var(--f-head);
 }
 
 /* Measures table */
@@ -2381,17 +2383,27 @@ async function generate() {
 // =============================================================================
 
 function lbg(l) {
-  // Normaliseer: trim, uppercase, vervang speciale plus-tekens door gewone +
-  const label = (l || '').toString().trim()
-    .replace(/\u207A|\uFF0B|\u002B/g, '+')  // speciale plus varianten
+  if (!l) return '#888';
+  // Normaliseer: trim, haal bijzondere tekens weg, maak uppercase
+  // Vervang ALLE soorten plus-achtige tekens (superscript, fullwidth, gewoon) door +
+  const label = l.toString().trim()
+    .replace(/[\u207A\uFF0B\u002B\+]/g, '+')  // alle plus varianten → +
+    .replace(/[^A-Za-z+]/g, '')                   // alleen letters en + bewaren
     .toUpperCase();
   const m = {
-    'A++++':'#006400','A+++':'#007A00','A++':'#00930A','A+':'#2AB82A',
-    'A':'#2E7D32',
-    'B':'#6DB33F','C':'#C2C923','D':'#F0D20A','E':'#F0970A','F':'#E55A0A','G':'#CC2222'
+    'A++++': '#006400',
+    'A+++':  '#007A00',
+    'A++':   '#009910',
+    'A+':    '#2AB82A',
+    'A':     '#2E7D32',
+    'B':     '#6DB33F',
+    'C':     '#C8C923',
+    'D':     '#F0D20A',
+    'E':     '#F0970A',
+    'F':     '#E55A0A',
+    'G':     '#CC2222',
   };
-  // Probeer exacte match, dan zonder plusjes tellen (A++ → A als fallback)
-  return m[label] || m[label.replace(/\++$/, '')] || '#888';
+  return m[label] || '#888';
 }
 function ico(n) {
   const nm = (n||'').toLowerCase();
