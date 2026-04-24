@@ -1,39 +1,41 @@
-import { handleUpload } from '@vercel/blob/client';
+import { generateClientTokenFromReadWriteToken } from '@vercel/blob/client';
  
 export default async function handler(req, res) {
-  // handleUpload verwerkt twee soorten requests:
-  //   1) generate-client-token  – browser vraagt een upload-token aan
-  //   2) upload-complete        – Blob stuurt bevestiging na succesvolle upload
-  const body = await new Promise((resolve, reject) => {
-    let data = '';
-    req.on('data', chunk => (data += chunk));
-    req.on('end', () => {
-      try { resolve(JSON.parse(data)); }
-      catch { resolve({}); }
-    });
-    req.on('error', reject);
-  });
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Only POST allowed' });
+  }
  
   try {
-    const jsonResponse = await handleUpload({
-      body,
-      request: req,
-      onBeforeGenerateToken: async (pathname) => {
-        // Optioneel: voeg auth-checks toe voordat je een token uitgeeft
-        return {
-          allowedContentTypes: ['application/pdf'],
-          maximumSizeInBytes: 50 * 1024 * 1024, // 50 MB
-        };
-      },
-      onUploadCompleted: async ({ blob }) => {
-        // Optioneel: sla de URL op in je database
-        console.log('Upload voltooid:', blob.url);
-      },
+    // Lees de request body
+    const body = await new Promise((resolve, reject) => {
+      let data = '';
+      req.on('data', chunk => (data += chunk));
+      req.on('end', () => {
+        try { resolve(JSON.parse(data)); }
+        catch { resolve({}); }
+      });
+      req.on('error', reject);
     });
  
-    return res.status(200).json(jsonResponse);
+    const { payload } = body;
+ 
+    // Genereer een client-token waarmee de browser direct naar Vercel Blob kan uploaden.
+    // Deze serverless function verwerkt zelf NOOIT het bestand — geen 4.5MB limiet.
+    const clientToken = await generateClientTokenFromReadWriteToken({
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+      pathname: payload?.pathname || `upload-${Date.now()}.pdf`,
+      onUploadCompleted: {
+        callbackUrl: payload?.callbackUrl || '',
+      },
+      maximumSizeInBytes: 50 * 1024 * 1024, // 50 MB
+      allowedContentTypes: ['application/pdf', 'application/octet-stream'],
+      addRandomSuffix: true,
+    });
+ 
+    return res.status(200).json({ clientToken });
+ 
   } catch (error) {
-    console.error('Upload handler error:', error);
-    return res.status(400).json({ error: error.message });
+    console.error('Upload token error:', error);
+    return res.status(500).json({ error: error.message || 'Token genereren mislukt' });
   }
 }
