@@ -31,10 +31,23 @@ export default async function handler(req, res) {
       content.push({ type: 'input_file', file_url: brochure_url });
     }
  
-    const response = await client.responses.create({
-      model: 'gpt-4.1',
-      input: [{ role: 'user', content }],
-    });
+    let response;
+    try {
+      response = await client.responses.create({
+        model: 'gpt-4.1',
+        input: [{ role: 'user', content }],
+      });
+    } catch (firstErr) {
+      // Bij rate limit (429) automatisch naar mini-model met hogere TPM limieten
+      if (firstErr?.status === 429 || (firstErr?.message || '').includes('429')) {
+        response = await client.responses.create({
+          model: 'gpt-4.1-mini',
+          input: [{ role: 'user', content }],
+        });
+      } else {
+        throw firstErr;
+      }
+    }
  
     return res.status(200).json({ success: true, data: response.output_text });
  
@@ -43,4 +56,3 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: error.message || 'AI verwerking mislukt' });
   }
 }
- 
