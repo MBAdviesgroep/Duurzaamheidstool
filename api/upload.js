@@ -1,4 +1,10 @@
-import { handleUpload } from '@vercel/blob/client';
+import { put } from '@vercel/blob';
+
+export const config = {
+  api: {
+    bodyParser: false, // 🔥 BELANGRIJK
+  },
+};
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -6,21 +12,18 @@ export default async function handler(req, res) {
   }
 
   try {
-    const body = req.body;
+    const filename = req.headers['x-filename'] || 'file.pdf';
 
-    const jsonResponse = await handleUpload({
-      body,
-      req,
-      onBeforeGenerateToken: async () => ({
-        allowedContentTypes: ['application/pdf'],
-        maximumSizeInBytes: 25 * 1024 * 1024,
-      }),
-      onUploadCompleted: async () => {},
+    const blob = await put(filename, req, {
+      access: 'public',
     });
 
-    return res.status(200).json(jsonResponse);
+    return res.status(200).json({
+      url: blob.url,
+    });
+
   } catch (error) {
     console.error(error);
-    return res.status(400).json({ error: error.message });
+    return res.status(500).json({ error: 'Upload failed' });
   }
 }
