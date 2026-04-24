@@ -517,6 +517,64 @@ select.finput {
 .divider { height: 1px; background: var(--rule); margin: 40px 0; }
 
 /* ═══════════════════════════════════════════════════════
+   AANVRAGER (particulier / ondernemer / vve)
+═══════════════════════════════════════════════════════ */
+.aanvrager-opts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.aanvrager-opt {
+  position: relative;
+  cursor: pointer;
+  display: block;
+}
+.aanvrager-opt input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.aanvrager-inner {
+  padding: 14px 14px 13px;
+  border: 1.5px solid var(--rule);
+  border-radius: var(--r-md);
+  background: white;
+  transition: border-color var(--t-fast), background var(--t-fast), box-shadow var(--t-fast);
+  height: 100%;
+}
+.aanvrager-opt:hover .aanvrager-inner {
+  border-color: var(--blue-2);
+  background: var(--blue-faint);
+}
+.aanvrager-opt input[type="radio"]:checked + .aanvrager-inner {
+  border-color: var(--blue);
+  background: var(--blue-faint);
+  box-shadow: 0 0 0 3px rgba(31,58,95,0.08);
+}
+.aanvrager-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--blue);
+  margin-bottom: 6px;
+}
+.aanvrager-title {
+  font-family: var(--f-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-1);
+  letter-spacing: -0.01em;
+}
+.aanvrager-desc {
+  font-size: 11.5px;
+  color: var(--ink-4);
+  line-height: 1.5;
+}
+@media (max-width: 720px) {
+  .aanvrager-opts { grid-template-columns: 1fr; }
+}
+
+/* ═══════════════════════════════════════════════════════
    RESULT PANEL
 ═══════════════════════════════════════════════════════ */
 .result { display: none; }
@@ -2446,6 +2504,51 @@ select.finput {
       <div class="divider"></div>
 
       <div class="sec-head">
+        <span class="sec-label">Type aanvrager</span>
+        <div class="sec-line"></div>
+      </div>
+      <div class="field" style="margin-bottom:24px;">
+        <div class="field-label" style="margin-bottom:8px;">Voor wie wordt dit rapport opgesteld?</div>
+        <div class="aanvrager-hint" style="font-size:12px;color:var(--ink-4);line-height:1.55;margin-bottom:14px;">
+          Sommige subsidies en fiscale regelingen gelden <strong>alleen voor ondernemers</strong> (EIA, MIA/Vamil, KIA) of <strong>alleen voor VvE's</strong> (SVVE). Particulieren komen doorgaans in aanmerking voor ISDE, SEEH en gemeentelijke premies. Het rapport filtert automatisch op basis van deze keuze.
+        </div>
+        <div class="aanvrager-opts" id="aanvragerOpts">
+          <label class="aanvrager-opt" data-val="particulier">
+            <input type="radio" name="aanvrager" value="particulier" checked />
+            <div class="aanvrager-inner">
+              <div class="aanvrager-head">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21v-2a6 6 0 0 1 12 0v2"/><circle cx="9" cy="8" r="4"/></svg>
+                <span class="aanvrager-title">Particulier</span>
+              </div>
+              <div class="aanvrager-desc">Eigen woning &middot; ISDE, SEEH, gemeentelijke premies</div>
+            </div>
+          </label>
+          <label class="aanvrager-opt" data-val="ondernemer">
+            <input type="radio" name="aanvrager" value="ondernemer" />
+            <div class="aanvrager-inner">
+              <div class="aanvrager-head">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="1"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/></svg>
+                <span class="aanvrager-title">Ondernemer / zakelijk</span>
+              </div>
+              <div class="aanvrager-desc">Bedrijfspand, ZZP of BV &middot; EIA, MIA/Vamil, KIA, ISDE zakelijk</div>
+            </div>
+          </label>
+          <label class="aanvrager-opt" data-val="vve">
+            <input type="radio" name="aanvrager" value="vve" />
+            <div class="aanvrager-inner">
+              <div class="aanvrager-head">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V8l9-5 9 5v13"/><path d="M9 21v-6h6v6"/><path d="M9 11h.01M15 11h.01"/></svg>
+                <span class="aanvrager-title">VvE</span>
+              </div>
+              <div class="aanvrager-desc">Vereniging van Eigenaren &middot; SVVE, ISDE, gemeentelijke premies</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="sec-head">
         <span class="sec-label">Extra toelichting</span>
         <div class="sec-line"></div>
       </div>
@@ -2738,16 +2841,27 @@ const SUBSIDIE_DB = [
   },
 ];
 
-// Matcht subsidies op basis van maatregelen uit het rapport
-function matchSubsidies(maatregelen) {
+// Matcht subsidies op basis van maatregelen uit het rapport + type aanvrager
+function matchSubsidies(maatregelen, aanvragerType) {
   const namen = (maatregelen || []).map(m => (m.naam || '').toLowerCase());
   const relevant = [];
   for (const sub of SUBSIDIE_DB) {
+    // Filter op doelgroep
+    const dg = (sub.doelgroep || '').toLowerCase();
+    if (aanvragerType === 'particulier') {
+      // particulier: alleen particulier of 'zakelijk + particulier'
+      if (dg.includes('zakelijk') && !dg.includes('particulier')) continue;
+    } else if (aanvragerType === 'ondernemer') {
+      // ondernemer: alles met 'zakelijk' of 'particulier' (salderingsregeling geldt ook)
+      // VvE-specifiek (SVVE) uitsluiten voor ondernemer
+      if (dg === 'vve') continue;
+    } else if (aanvragerType === 'vve') {
+      // VvE: particulier-achtige regelingen en VvE-specifiek, geen zakelijke fiscale
+      if (dg.includes('zakelijk') && !dg.includes('particulier') && dg !== 'vve') continue;
+    }
     const matches = sub.van_toepassing_op.some(toepassingStr => {
       const tl = toepassingStr.toLowerCase();
-      // directe match op maatregel naam
       if (namen.some(n => n.includes(tl) || tl.includes(n.split(' ')[0]))) return true;
-      // 'alle maatregelen' altijd van toepassing als er maatregelen zijn
       if (tl === 'alle maatregelen' && namen.length > 0) return true;
       return false;
     });
@@ -2759,6 +2873,14 @@ function matchSubsidies(maatregelen) {
 const SYSTEEM_PROMPT = `Je bent een senior verduurzamingsadviseur bij MB Adviesgroep. \
 Analyseer de meegestuurde PDF-documenten (energiescan en eventueel brochure/gebouwinfo) \
 grondig en retourneer ALLEEN geldig JSON zonder markdown of backticks.
+
+BELANGRIJK: In het veld "notities" staat het TYPE AANVRAGER (particulier, ondernemer of VvE). \
+Houd hier strikt rekening mee bij het voorstellen van subsidies en fiscale regelingen:\n\
+- EIA, MIA/Vamil, KIA, SDE++, WBSO en BMKB zijn UITSLUITEND voor ondernemers (zakelijk).\n\
+- SEEH is voor particuliere woningeigenaren.\n\
+- SVVE is exclusief voor Verenigingen van Eigenaars.\n\
+- ISDE heeft aparte particuliere en zakelijke regelingen.\n\
+Noem nooit regelingen die niet op dit type aanvrager van toepassing zijn.
 
 Lees ALLE pagina's uit — subsidiedetails, faseringsplannen en aandachtspunten staan \
 vaak op latere pagina's.
@@ -3011,6 +3133,25 @@ async function generate() {
     return;
   }
 
+  // Bepaal type aanvrager
+  const aanvragerEl = document.querySelector('input[name="aanvrager"]:checked');
+  const aanvragerType = aanvragerEl ? aanvragerEl.value : 'particulier';
+  const aanvragerLabel = {
+    particulier: 'Particulier (eigen woning)',
+    ondernemer: 'Ondernemer / zakelijk (bedrijfspand, ZZP of BV)',
+    vve: 'Vereniging van Eigenaren (VvE)'
+  }[aanvragerType] || 'Particulier';
+
+  // Bouw extra context voor AI
+  const userNotities = document.getElementById('extraNotes').value || '';
+  const aanvragerContext = `TYPE AANVRAGER: ${aanvragerLabel}.\n` +
+    (aanvragerType === 'particulier'
+      ? 'LET OP: Dit is een PARTICULIERE aanvraag. Stel UITSLUITEND subsidies voor die voor particulieren gelden (ISDE particulier, SEEH, gemeentelijke premies, salderingsregeling). Zakelijke fiscale regelingen als EIA, MIA/Vamil, KIA, SDE++ en WBSO zijn NIET van toepassing — noem deze niet.'
+      : aanvragerType === 'ondernemer'
+      ? 'LET OP: Dit is een ZAKELIJKE aanvraag. Zakelijke regelingen (EIA, MIA/Vamil, KIA, ISDE zakelijk, SDE++, BMKB-groen, salderingsregeling) zijn relevant. SEEH en SVVE zijn NIET van toepassing.'
+      : 'LET OP: Dit is een VvE-aanvraag. Subsidie Verduurzaming voor Verenigingen van Eigenaars (SVVE) is primair van toepassing, plus ISDE particulier en gemeentelijke premies. Zakelijke fiscale regelingen als EIA, MIA/Vamil en KIA zijn NIET van toepassing.');
+  const combinedNotities = aanvragerContext + (userNotities ? '\n\nAanvullende toelichting:\n' + userNotities : '');
+
   setFormVisible(false);
   document.getElementById('loadingState').classList.add('on');
   document.getElementById('result').classList.remove('on');
@@ -3020,9 +3161,13 @@ async function generate() {
     const rpt = await callAgent({
       energiescan_file: files[0],
       brochure_file:    files[1] || null,
-      notities:         document.getElementById('extraNotes').value,
+      notities:         combinedNotities,
       systeem_prompt:   SYSTEEM_PROMPT
     });
+
+    // Voeg aanvragerType toe aan rapport object zodat subsidie-filter het kan gebruiken
+    rpt.__aanvrager_type = aanvragerType;
+    rpt.__aanvrager_label = aanvragerLabel;
 
     stopSteps();
     renderReport(rpt);
@@ -3250,11 +3395,23 @@ function renderReport(r) {
 
   // Subsidies — combineer AI-output met subsidie database
   // Gebruik database als primaire bron, AI-data als aanvulling
-  const dbSubs = matchSubsidies(r.maatregelen);
+  const dbSubs = matchSubsidies(r.maatregelen, r.__aanvrager_type);
   // Voeg eventuele extra subsidies uit AI toe die niet in DB staan
   const aiSubCodes = (r.subsidies||[]).map(s => (s.code||'').toUpperCase());
   const dbCodes = dbSubs.map(s => s.code.toUpperCase());
-  const extraAiSubs = (r.subsidies||[]).filter(s => !dbCodes.includes((s.code||'').toUpperCase()));
+  // Filter uit AI-output subsidies die niet bij dit type aanvrager horen
+  const EXCLUDED_BY_TYPE = {
+    particulier: ['EIA', 'MIA', 'VAMIL', 'MIA/VAMIL', 'KIA', 'SDE++', 'SDE', 'WBSO', 'BMKB', 'BMKB-GROEN'],
+    ondernemer:  ['SEEH', 'SVVE'],
+    vve:         ['EIA', 'MIA', 'VAMIL', 'MIA/VAMIL', 'KIA', 'SDE++', 'SDE', 'WBSO', 'BMKB', 'BMKB-GROEN']
+  };
+  const excluded = EXCLUDED_BY_TYPE[r.__aanvrager_type] || [];
+  const extraAiSubs = (r.subsidies||[]).filter(s => {
+    const c = (s.code||'').toUpperCase();
+    if (dbCodes.includes(c)) return false;
+    if (excluded.includes(c)) return false;
+    return true;
+  });
   const allSubs = [...dbSubs, ...extraAiSubs];
 
   function renderSubCard(s) {
