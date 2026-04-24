@@ -6,7 +6,6 @@ export default async function handler(req, res) {
   }
  
   try {
-    // Lees de request body
     const body = await new Promise((resolve, reject) => {
       let data = '';
       req.on('data', chunk => (data += chunk));
@@ -17,19 +16,24 @@ export default async function handler(req, res) {
       req.on('error', reject);
     });
  
-    const { payload } = body;
+    const pathname = body?.payload?.pathname || `upload-${Date.now()}.pdf`;
  
-    // Genereer een client-token waarmee de browser direct naar Vercel Blob kan uploaden.
-    // Deze serverless function verwerkt zelf NOOIT het bestand — geen 4.5MB limiet.
+    // Genereer een client-token met ALLE opties ingebakken als JWT.
+    // De browser stuurt alleen Authorization + x-api-version headers — geen CORS-problemen.
     const clientToken = await generateClientTokenFromReadWriteToken({
       token: process.env.BLOB_READ_WRITE_TOKEN,
-      pathname: payload?.pathname || `upload-${Date.now()}.pdf`,
+      pathname,
       onUploadCompleted: {
-        callbackUrl: payload?.callbackUrl || '',
+        // Vercel roept deze URL aan na succesvolle upload.
+        // Moet een publiek bereikbare HTTPS URL zijn.
+        callbackUrl: (body?.payload?.callbackUrl || process.env.VERCEL_URL
+          ? `https://${process.env.VERCEL_URL}/api/upload`
+          : ''),
       },
       maximumSizeInBytes: 50 * 1024 * 1024, // 50 MB
       allowedContentTypes: ['application/pdf', 'application/octet-stream'],
       addRandomSuffix: true,
+      cacheControlMaxAge: 31536000, // 1 jaar cache
     });
  
     return res.status(200).json({ clientToken });
@@ -39,3 +43,4 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: error.message || 'Token genereren mislukt' });
   }
 }
+ 
