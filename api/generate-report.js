@@ -1,5 +1,8 @@
 import OpenAI from 'openai';
  
+// Vercel: sta maximaal 60 seconden toe voor grote PDF-analyses
+export const maxDuration = 60;
+ 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Only POST allowed' });
@@ -37,15 +40,14 @@ export default async function handler(req, res) {
       response = await client.responses.create({
         model: 'gpt-4.1',
         input: [{ role: 'user', content }],
-        max_output_tokens: 4096,
+        max_output_tokens: 2048, // 2048 is ruim voldoende voor het JSON schema — sneller dan 4096
       });
     } catch (firstErr) {
-      // 429 = rate limit — fall back naar mini-model dat hogere TPM-limieten heeft
       if (firstErr?.status === 429 || (firstErr?.message || '').includes('429')) {
         response = await client.responses.create({
           model: 'gpt-4.1-mini',
           input: [{ role: 'user', content }],
-          max_output_tokens: 4096,
+          max_output_tokens: 2048,
         });
       } else {
         throw firstErr;
