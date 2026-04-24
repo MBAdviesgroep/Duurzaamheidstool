@@ -31,10 +31,26 @@ export default async function handler(req, res) {
       content.push({ type: 'input_file', file_url: brochure_url });
     }
  
-    const response = await client.responses.create({
-      model: 'gpt-4.1',
-      input: [{ role: 'user', content }],
-    });
+    // Probeer eerst gpt-4.1; bij TPM rate-limit automatisch naar gpt-4.1-mini
+    let response;
+    try {
+      response = await client.responses.create({
+        model: 'gpt-4.1',
+        input: [{ role: 'user', content }],
+        max_output_tokens: 4096,
+      });
+    } catch (firstErr) {
+      // 429 = rate limit — fall back naar mini-model dat hogere TPM-limieten heeft
+      if (firstErr?.status === 429 || (firstErr?.message || '').includes('429')) {
+        response = await client.responses.create({
+          model: 'gpt-4.1-mini',
+          input: [{ role: 'user', content }],
+          max_output_tokens: 4096,
+        });
+      } else {
+        throw firstErr;
+      }
+    }
  
     return res.status(200).json({ success: true, data: response.output_text });
  
@@ -43,4 +59,3 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: error.message || 'AI verwerking mislukt' });
   }
 }
- 
