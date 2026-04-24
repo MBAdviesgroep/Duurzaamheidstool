@@ -1341,27 +1341,32 @@ select.finput {
   border-bottom: 1px solid var(--rule);
 }
 .phase-num-badge {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: var(--orange);
   color: white;
   font-family: var(--f-head);
-  font-size: 13px;
   font-weight: 700;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   line-height: 1;
+  gap: 2px;
 }
-.phase-num-badge span {
-  font-size: 8px;
-  letter-spacing: 0.5px;
-  display: block;
-  text-align: center;
+.phase-num-label {
+  font-size: 7.5px;
+  letter-spacing: 0.8px;
   opacity: 0.85;
-  margin-top: 1px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.phase-num-value {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 .phase-title {
   font-weight: 600; font-size: 13.5px;
@@ -1379,14 +1384,18 @@ select.finput {
   flex-wrap: wrap;
 }
 .phase-meta-pill {
+  display: inline-flex;
+  align-items: center;
   font-size: 11px;
   font-family: var(--f-head);
   font-weight: 600;
   color: var(--blue);
   background: var(--blue-faint);
-  padding: 3px 9px;
+  padding: 4px 10px;
   border-radius: 20px;
+  gap: 0;
 }
+.phase-meta-pill svg { stroke: var(--blue); flex-shrink: 0; }
 
 /* Aandachtspunten */
 .aandacht-table {
@@ -2158,6 +2167,43 @@ select.finput {
 }
 
 /* ═══════════════════════════════════════════════════════
+   BRON SECTIE (bank / duurzaamheidstool)
+═══════════════════════════════════════════════════════ */
+.bron-card {
+  margin-top: 20px;
+  margin-bottom: 8px;
+  padding: 14px 18px;
+  background: #FAF8F5;
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--orange);
+  border-radius: var(--r-md);
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.bron-icon {
+  color: var(--orange);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.bron-text { flex: 1; }
+.bron-label {
+  font-family: var(--f-head);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--orange);
+  margin-bottom: 4px;
+}
+.bron-desc {
+  font-size: 12px;
+  color: var(--ink-3);
+  line-height: 1.6;
+}
+.bron-desc strong { color: var(--ink-1); font-weight: 600; }
+
+/* ═══════════════════════════════════════════════════════
    MAATREGELEN — besparing als groen
 ═══════════════════════════════════════════════════════ */
 .m-save { color: var(--green); font-weight: 600; font-family: var(--f-head); }
@@ -2362,6 +2408,21 @@ select.finput {
   .adviseur-label { font-size: 7pt !important; color: rgba(255,255,255,0.4) !important; }
   .adviseur-contact a { font-size: 9.5pt !important; color: rgba(255,255,255,0.7) !important; }
   .adviseur-avatar { background: rgba(255,255,255,0.15) !important; }
+
+  /* Bron (bank/duurzaamheidstool) */
+  .bron-card {
+    margin-top: 10pt !important;
+    padding: 7pt 10pt !important;
+    background: #FAF8F5 !important;
+    border: 0.5pt solid #E3DDD8 !important;
+    border-left: 2pt solid #E26836 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    page-break-inside: avoid !important;
+    gap: 8pt !important;
+  }
+  .bron-label { font-size: 6.5pt !important; color: #E26836 !important; }
+  .bron-desc { font-size: 8pt !important; color: #3A3A3A !important; }
 
   /* Label visualisatie — compact in print */
   .label-vis-section {
@@ -2610,6 +2671,7 @@ select.finput {
         <div id="aandachtSection"></div>
         <div id="vervolgSection"></div>
         <div id="adviseurSection"></div>
+        <div id="bronSection"></div>
       </div>
       <div class="rpt-footer">
         <div class="rpt-footer-disc">Alle bedragen zijn exclusief btw en ter indicatie op basis van kengetallen per maatregel. Definitieve bedragen volgen na inspectie en offertes. Raadpleeg een fiscalist voor de exacte verwerking van EIA, KIA en MIA/Vamil.</div>
@@ -2895,6 +2957,8 @@ Retourneer exact het volgende JSON-schema — verzin niets, extraheer alles uit 
   "streef_label": "string",
   "functie": "string",
   "huidige_kosten": "string",
+  "bron_tool": "string (naam van de duurzaamheidstool zoals die in de energiescan genoemd wordt, bijv. 'ING Duurzaam Zakelijk Advies', 'Rabobank Duurzame Bedrijfsscan', 'ABN AMRO Verduurzamingstool' — exact zoals in de scan; leeg als onbekend)",
+  "bron_bank": "string (naam van de bank die de tool aanbiedt, bijv. 'ING', 'Rabobank', 'ABN AMRO' — leeg als onbekend)",
   "samenvatting": "string (2-3 professionele zinnen)",
   "maatregelen": [{"naam":"string","besparing":"string","investering":"string","tvt":"string","co2":"string","subsidies":"string"}],
   "totaal_besparing": "string",
@@ -3446,14 +3510,17 @@ function renderReport(r) {
 
   // Fases
   const phases = (r.fases||[]).map((f,i)=>{
+    const iconEuro = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M18 7a6 6 0 0 0-10 4.5A6 6 0 0 0 18 17"/><path d="M5 10h9"/><path d="M5 14h9"/></svg>';
+    const iconClock = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
     const pills = [
-      f.totaal_investering ? '&#128176; ' + f.totaal_investering : '',
-      f.tvt ? '&#9201; TVT ' + f.tvt : ''
+      f.totaal_investering ? iconEuro + f.totaal_investering : '',
+      f.tvt ? iconClock + 'TVT ' + f.tvt : ''
     ].filter(Boolean).map(p=>`<span class="phase-meta-pill">${p}</span>`).join('');
     return `<div class="phase-block">
       <div class="phase-header">
         <div class="phase-num-badge">
-          <div><div style="font-size:7px;letter-spacing:0.5px;opacity:0.8">FASE</div>${i+1}</div>
+          <span class="phase-num-label">Fase</span>
+          <span class="phase-num-value">${i+1}</span>
         </div>
         <div class="phase-title">${f.titel}</div>
       </div>
@@ -3482,6 +3549,36 @@ function renderReport(r) {
   // Vervolgstappen + adviseur
   renderVervolgSection(r);
   renderAdviseurSection();
+  renderBronSection(r);
+}
+
+function renderBronSection(r) {
+  const el = document.getElementById('bronSection');
+  if (!el) return;
+  const tool = (r.bron_tool || '').trim();
+  const bank = (r.bron_bank || '').trim();
+  if (!tool && !bank) { el.innerHTML = ''; return; }
+
+  // Bouw de bronregel: voorkeur aan expliciete tool-naam, anders bank
+  let bronText;
+  if (tool && bank) {
+    bronText = `Dit advies is opgesteld op basis van de duurzaamheidsscan uit <strong>${tool}</strong> van ${bank}.`;
+  } else if (tool) {
+    bronText = `Dit advies is opgesteld op basis van de duurzaamheidsscan uit <strong>${tool}</strong>.`;
+  } else {
+    bronText = `Dit advies is opgesteld op basis van de duurzaamheidstool van <strong>${bank}</strong>.`;
+  }
+
+  el.innerHTML = `
+    <div class="bron-card">
+      <div class="bron-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h4"/></svg>
+      </div>
+      <div class="bron-text">
+        <div class="bron-label">Bron van de analyse</div>
+        <div class="bron-desc">${bronText} MB Adviesgroep heeft de scan vertaald naar concrete maatregelen, subsidies en een uitvoerbaar stappenplan.</div>
+      </div>
+    </div>`;
 }
 
 // =============================================================================
@@ -3906,6 +4003,9 @@ function renderMaatregelenChart(maatregelen) {
     <div class="chart-wrap" style="margin-bottom:28px;">
       <div class="chart-canvas-wrap" style="height:${Math.max(160, maatregelen.length * 42)}px;">
         <canvas id="maatregelenChart"></canvas>
+      </div>
+      <div class="chart-explainer" style="margin-top:16px;padding-top:14px;border-top:1px solid var(--line);font-size:11.5px;color:var(--ink-4);font-family:var(--f-body);line-height:1.55;">
+        <strong style="color:var(--ink-2);font-weight:600;">Toelichting:</strong> per maatregel wordt de <em>jaarlijkse besparing</em> (groene balk) afgezet tegen de <em>eenmalige investering</em> (oranje balk). Hoe kleiner de verhouding oranje ten opzichte van groen, hoe sneller de maatregel zichzelf terugverdient. Maatregelen met een korte balk rechts maar een lange balk links leveren meerdere jaren achter elkaar rendement op.
       </div>
     </div>`;
 
