@@ -1,4 +1,4 @@
-import { generateClientTokenFromReadWriteToken } from '@vercel/blob/client';
+import { handleUpload } from '@vercel/blob/client';
  
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -16,31 +16,27 @@ export default async function handler(req, res) {
       req.on('error', reject);
     });
  
-    const pathname = body?.payload?.pathname || `upload-${Date.now()}.pdf`;
- 
-    // Genereer een client-token met ALLE opties ingebakken als JWT.
-    // De browser stuurt alleen Authorization + x-api-version headers — geen CORS-problemen.
-    const clientToken = await generateClientTokenFromReadWriteToken({
-      token: process.env.BLOB_READ_WRITE_TOKEN,
-      pathname,
-      onUploadCompleted: {
-        // Vercel roept deze URL aan na succesvolle upload.
-        // Moet een publiek bereikbare HTTPS URL zijn.
-        callbackUrl: (body?.payload?.callbackUrl || process.env.VERCEL_URL
-          ? `https://${process.env.VERCEL_URL}/api/upload`
-          : ''),
+    const jsonResponse = await handleUpload({
+      body,
+      request: req,
+      onBeforeGenerateToken: async (pathname) => {
+        return {
+          allowedContentTypes: ['application/pdf', 'application/octet-stream'],
+          maximumSizeInBytes: 50 * 1024 * 1024,
+          addRandomSuffix: true,
+        };
       },
-      maximumSizeInBytes: 50 * 1024 * 1024, // 50 MB
-      allowedContentTypes: ['application/pdf', 'application/octet-stream'],
-      addRandomSuffix: true,
-      cacheControlMaxAge: 31536000, // 1 jaar cache
+      onUploadCompleted: async ({ blob }) => {
+        // Wordt aangeroepen door Vercel na voltooide upload — geen actie nodig
+        console.log('Upload voltooid:', blob.url);
+      },
     });
  
-    return res.status(200).json({ clientToken });
+    return res.status(200).json(jsonResponse);
  
   } catch (error) {
-    console.error('Upload token error:', error);
-    return res.status(500).json({ error: error.message || 'Token genereren mislukt' });
+    console.error('Upload error:', error);
+    return res.status(500).json({ error: error.message || 'Upload mislukt' });
   }
 }
  
