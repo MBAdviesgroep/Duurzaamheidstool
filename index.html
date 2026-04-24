@@ -1606,15 +1606,50 @@ Alleen pure JSON, geen uitleg, geen markdown.`;
 //  callAgent() — stuurt de documenten naar de Vercel backend
 // =============================================================================
 async function callAgent(payload) {
-  const formData = new FormData();
-  formData.append('energiescan', payload.energiescan_file);
-  if (payload.brochure_file) formData.append('brochure', payload.brochure_file);
-  formData.append('notities', payload.notities || '');
-  formData.append('systeem_prompt', payload.systeem_prompt || SYSTEEM_PROMPT);
+  let energiescanUrl = null;
+  let brochureUrl = null;
+
+  if (payload.energiescan_file) {
+    const uploadRes = await fetch('/api/upload', {
+      method: 'POST',
+      headers: {
+        'x-filename': payload.energiescan_file.name
+      },
+      body: payload.energiescan_file
+    });
+
+    if (!uploadRes.ok) throw new Error('Upload energiescan mislukt: ' + uploadRes.status);
+
+    const uploadData = await uploadRes.json();
+    energiescanUrl = uploadData.url;
+  }
+
+  if (payload.brochure_file) {
+    const uploadRes = await fetch('/api/upload', {
+      method: 'POST',
+      headers: {
+        'x-filename': payload.brochure_file.name
+      },
+      body: payload.brochure_file
+    });
+
+    if (!uploadRes.ok) throw new Error('Upload brochure mislukt: ' + uploadRes.status);
+
+    const uploadData = await uploadRes.json();
+    brochureUrl = uploadData.url;
+  }
 
   const res = await fetch('/api/generate-report', {
     method: 'POST',
-    body: formData
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      energiescan_url: energiescanUrl,
+      brochure_url: brochureUrl,
+      notities: payload.notities || '',
+      system_prompt: payload.system_prompt || SYSTEM_PROMPT
+    })
   });
 
   if (!res.ok) {
