@@ -966,6 +966,13 @@ select.finput {
   align-items: stretch;
 }
 
+.upload-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+}
+
 /* Drop zone */
 .drop-zone {
   border: 1.5px dashed var(--rule);
@@ -977,11 +984,12 @@ select.finput {
   transition: border-color var(--t-fast), background var(--t-fast);
   position: relative;
   min-height: 200px;
-  height: 100%;
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
 }
 .drop-zone:hover, .drop-zone.drag-over {
   border-color: var(--blue);
@@ -1020,7 +1028,7 @@ select.finput {
 .file-pill {
   display: none; align-items: center; gap: 10px;
   background: var(--blue-faint); border: 1px solid var(--blue-faint2);
-  border-radius: var(--r-sm); padding: 10px 14px; margin-top: 10px;
+  border-radius: var(--r-sm); padding: 10px 14px;
 }
 .file-pill.on { display: flex; animation: slideIn 0.2s ease; }
 .file-pill-icon {
@@ -1371,7 +1379,7 @@ select.finput {
 
       <div class="upload-grid">
         <!-- Energiescan -->
-        <div>
+        <div class="upload-col">
           <div class="drop-zone" id="dropZone1">
             <input type="file" id="fileInput1" accept=".pdf" />
             <div class="drop-zone-badge">
@@ -1395,7 +1403,7 @@ select.finput {
           </div>
         </div>
         <!-- Brochure -->
-        <div>
+        <div class="upload-col">
           <div class="drop-zone" id="dropZone2">
             <input type="file" id="fileInput2" accept=".pdf" />
             <div class="drop-zone-badge" style="background:var(--orange-faint);color:var(--orange);">
