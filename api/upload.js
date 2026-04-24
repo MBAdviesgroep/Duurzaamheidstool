@@ -1,30 +1,28 @@
-import { put } from '@vercel/blob';
+import { handleUpload } from '@vercel/blob/client';
  
-export const config = {
-  api: {
-    bodyParser: false,
-    sizeLimit: '50mb',
-  },
-};
- 
-export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Only POST allowed' });
-  }
+// Body parser AAN laten — handleUpload leest request.body zelf
+export default async function handler(request, response) {
+  const body = request.body;
  
   try {
-    const filename = req.headers['x-filename'] || `upload-${Date.now()}.pdf`;
- 
-    const blob = await put(filename, req, {
-      access: 'public',
-      contentType: 'application/pdf',
+    const jsonResponse = await handleUpload({
+      body,
+      request,
+      onBeforeGenerateToken: async (pathname) => {
+        return {
+          allowedContentTypes: ['application/pdf', 'application/octet-stream'],
+          addRandomSuffix: true,
+          maximumSizeInBytes: 50 * 1024 * 1024,
+        };
+      },
+      onUploadCompleted: async ({ blob }) => {
+        console.log('Upload voltooid:', blob.url);
+      },
     });
  
-    return res.status(200).json({ url: blob.url });
- 
+    return response.status(200).json(jsonResponse);
   } catch (error) {
-    console.error('Upload error:', error);
-    return res.status(500).json({ error: 'Upload mislukt: ' + (error.message || 'onbekend') });
+    return response.status(400).json({ error: error.message });
   }
 }
  
