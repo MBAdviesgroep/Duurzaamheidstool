@@ -2154,6 +2154,9 @@ select.finput {
   .rt td { display: table-cell !important; opacity: 1 !important; }
   .rt td.m-check, .rt th:first-child { display: none !important; }
 
+  /* Subsidies altijd op nieuwe pagina — voorkomt afbreken na grafiek */
+  #subsidiesSection { page-break-before: always !important; break-before: page !important; }
+
   /* ── Vervolg + aandacht ── */
   .vervolg-list { page-break-inside: auto !important; }
   .aandacht-table { page-break-inside: auto !important; }
