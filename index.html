@@ -2071,31 +2071,56 @@ Retourneer exact het volgende JSON-schema — verzin niets, extraheer alles uit 
 Alleen pure JSON, geen uitleg, geen markdown.`;
 
 // =============================================================================
-//  callAgent() — stuurt de documenten naar de Vercel backend
+//  callAgent() — upload direct browser→Vercel Blob, daarna generate-report aanroepen
 // =============================================================================
+
+async function uploadFile(file) {
+  // Stap 1: haal client token op van server (kleine JSON request, <1KB)
+  const tokenRes = await fetch('/api/upload', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      type: 'blob.generate-client-token',
+      payload: { pathname: file.name }
+    })
+  });
+  if (!tokenRes.ok) {
+    const err = await tokenRes.text().catch(() => '');
+    throw new Error('Token mislukt ' + tokenRes.status + (err ? ': ' + err : ''));
+  }
+  const { clientToken } = await tokenRes.json();
+  if (!clientToken) throw new Error('Geen clientToken ontvangen');
+
+  // Stap 2: PUT direct naar Vercel Blob API (omzeilt serverless 4.5MB limiet volledig)
+  const params = new URLSearchParams({ pathname: file.name });
+  const blobRes = await fetch('https://vercel.com/api/blob/?' + params.toString(), {
+    method: 'PUT',
+    headers: {
+      'authorization': 'Bearer ' + clientToken,
+      'x-api-version': '10',
+      'x-content-type': file.type || 'application/pdf',
+    },
+    body: file,
+  });
+  if (!blobRes.ok) {
+    const err = await blobRes.text().catch(() => String(blobRes.status));
+    throw new Error('Upload mislukt ' + blobRes.status + ': ' + err);
+  }
+  const result = await blobRes.json();
+  if (!result.url) throw new Error('Geen URL ontvangen van Blob');
+  return result.url;
+}
 
 async function callAgent(payload) {
   let energiescanUrl = null;
   let brochureUrl = null;
 
   if (payload.energiescan_file) {
-    const uploadRes = await fetch('/api/upload', {
-      method: 'POST',
-      headers: { 'x-filename': payload.energiescan_file.name },
-      body: payload.energiescan_file
-    });
-    if (!uploadRes.ok) throw new Error('Upload energiescan mislukt: ' + uploadRes.status);
-    energiescanUrl = (await uploadRes.json()).url;
+    energiescanUrl = await uploadFile(payload.energiescan_file);
   }
 
   if (payload.brochure_file) {
-    const uploadRes = await fetch('/api/upload', {
-      method: 'POST',
-      headers: { 'x-filename': payload.brochure_file.name },
-      body: payload.brochure_file
-    });
-    if (!uploadRes.ok) throw new Error('Upload brochure mislukt: ' + uploadRes.status);
-    brochureUrl = (await uploadRes.json()).url;
+    brochureUrl = await uploadFile(payload.brochure_file);
   }
 
   const res = await fetch('/api/generate-report', {
