@@ -1,7 +1,10 @@
 {
-  "type": "module",
-  "dependencies": {
-    "openai": "latest",
-    "@vercel/blob": "latest"
+  "functions": {
+    "api/generate-report.js": {
+      "maxDuration": 60
+    },
+    "api/upload.js": {
+      "maxDuration": 10
+    }
   }
 }
