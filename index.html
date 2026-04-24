@@ -1169,7 +1169,7 @@ select.finput {
 .rpt-logo { display: flex; align-items: center; gap: 10px; }
 .rpt-logo img {
   width: 36px; height: 36px; border-radius: 50%;
-  object-fit: cover; background: white;
+  object-fit: contain; background: white; padding: 2px;
 }
 .rpt-logo-name { font-family: var(--f-head); font-size: 14px; font-weight: 600; color: white; }
 .rpt-logo-sub { font-size: 10px; color: rgba(255,255,255,0.45); font-family: var(--f-head); }
@@ -1474,7 +1474,7 @@ select.finput {
 
   /* ── Rapport header — blauwe banner ── */
   .rpt-hdr {
-    background: #1B597B !important;
+    background: #134460 !important;
     color: white !important;
     padding: 18pt 22pt 14pt !important;
     border-radius: 0 !important;
@@ -1484,7 +1484,7 @@ select.finput {
   .rpt-hdr::before { display: none !important; }
   .rpt-hdr::after { background: #E26836 !important; height: 3pt !important; }
   .rpt-hdr-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6pt; }
-  .rpt-logo img { filter: brightness(10) !important; }
+  .rpt-logo img { filter: none !important; background: white !important; border-radius: 50% !important; width: 22pt !important; height: 22pt !important; object-fit: contain !important; padding: 1.5pt !important; }
   .rpt-logo-name, .rpt-logo-sub { color: white !important; }
   .rpt-date { color: rgba(255,255,255,0.7) !important; }
   .rpt-pretitle { color: rgba(255,255,255,0.7) !important; font-size: 8pt !important; letter-spacing: 1.5pt; }
@@ -2315,7 +2315,7 @@ select.finput {
     margin-bottom: 34pt;
   }
   .pc-logo { display: flex !important; align-items: center; gap: 10pt; }
-  .pc-logo img { width: 32pt; height: 32pt; border-radius: 50%; background: white !important; }
+  .pc-logo img { width: 32pt; height: 32pt; border-radius: 50%; background: white !important; object-fit: contain !important; padding: 2pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   .pc-brand { font-size: 13pt; font-weight: 600; color: white !important; font-family: 'IBM Plex Sans', sans-serif; }
   .pc-brand-sub { font-size: 9pt; color: rgba(255,255,255,0.6) !important; font-family: 'IBM Plex Sans', sans-serif; }
   .pc-date-lbl { font-size: 10pt; color: rgba(255,255,255,0.6) !important; font-family: 'IBM Plex Sans', sans-serif; }
