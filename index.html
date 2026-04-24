@@ -2114,13 +2114,13 @@ async function callAgent(payload) {
   let energiescanUrl = null;
   let brochureUrl = null;
 
-  if (payload.energiescan_file) {
-    energiescanUrl = await uploadToBlob(payload.energiescan_file);
-  }
-
-  if (payload.brochure_file) {
-    brochureUrl = await uploadToBlob(payload.brochure_file);
-  }
+  // Upload beide bestanden PARALLEL — scheelt de helft van de uploadtijd
+  const [esResult, brResult] = await Promise.all([
+    payload.energiescan_file ? uploadToBlob(payload.energiescan_file) : Promise.resolve(null),
+    payload.brochure_file    ? uploadToBlob(payload.brochure_file)    : Promise.resolve(null),
+  ]);
+  energiescanUrl = esResult;
+  brochureUrl    = brResult;
 
   const res = await fetch('/api/generate-report', {
     method: 'POST',
