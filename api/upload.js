@@ -1,4 +1,4 @@
-import { handleUpload } from '@vercel/blob/client';
+import { generateClientTokenFromReadWriteToken } from '@vercel/blob/client';
  
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -16,27 +16,28 @@ export default async function handler(req, res) {
       req.on('error', reject);
     });
  
-    const jsonResponse = await handleUpload({
-      body,
-      request: req,
-      onBeforeGenerateToken: async (pathname) => {
-        return {
-          allowedContentTypes: ['application/pdf', 'application/octet-stream'],
-          maximumSizeInBytes: 50 * 1024 * 1024,
-          addRandomSuffix: true,
-        };
-      },
-      onUploadCompleted: async ({ blob }) => {
-        // Wordt aangeroepen door Vercel na voltooide upload — geen actie nodig
-        console.log('Upload voltooid:', blob.url);
-      },
+    // upload-completed callback van Vercel — geen actie nodig
+    if (body.type === 'blob.upload-completed') {
+      return res.status(200).json({ ok: true });
+    }
+ 
+    const pathname = body?.payload?.pathname || `upload-${Date.now()}.pdf`;
+ 
+    const clientToken = await generateClientTokenFromReadWriteToken({
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+      pathname,
+      // onUploadCompleted weggelaten — vereist een publiek bereikbare HTTPS URL
+      // die Vercel actief probeert te bereiken tijdens token-generatie
+      maximumSizeInBytes: 50 * 1024 * 1024,
+      allowedContentTypes: ['application/pdf', 'application/octet-stream'],
+      addRandomSuffix: true,
     });
  
-    return res.status(200).json(jsonResponse);
+    return res.status(200).json({ clientToken });
  
   } catch (error) {
     console.error('Upload error:', error);
-    return res.status(500).json({ error: error.message || 'Upload mislukt' });
+    return res.status(500).json({ error: error.message || 'Token genereren mislukt' });
   }
 }
  
