@@ -1,81 +1,66 @@
 import OpenAI from "openai";
-import formidable from "formidable";
-import fs from "fs";
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Only POST allowed" });
   }
 
-  const form = new formidable.IncomingForm();
+  try {
+    const {
+      energiescan_url,
+      brochure_url,
+      notities,
+      system_prompt
+    } = req.body;
 
-  form.parse(req, async (err, fields, files) => {
-    try {
-      if (err) {
-        return res.status(500).json({ error: "Upload fout" });
-      }
-
-      const client = new OpenAI({
-        apiKey: process.env.OPENAI_API_KEY,
-      });
-
-      const energiescan = files.energiescan;
-      const brochure = files.brochure;
-
-      const input = [];
-
-      if (energiescan) {
-        const fileData = fs.readFileSync(energiescan.filepath);
-        input.push({
-          role: "user",
-          content: [
-            {
-              type: "input_file",
-              file_data: fileData.toString("base64"),
-              filename: "energiescan.pdf",
-            },
-          ],
-        });
-      }
-
-      if (brochure) {
-        const fileData = fs.readFileSync(brochure.filepath);
-        input.push({
-          role: "user",
-          content: [
-            {
-              type: "input_file",
-              file_data: fileData.toString("base64"),
-              filename: "brochure.pdf",
-            },
-          ],
-        });
-      }
-
-      input.push({
-        role: "user",
-        content: "Analyseer deze documenten en maak een volledig verduurzamingsrapport in JSON.",
-      });
-
-      const response = await client.responses.create({
-        model: "gpt-4.1",
-        input,
-      });
-
-      res.status(200).json({
-        success: true,
-        data: response.output_text,
-      });
-
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "AI fout" });
+    if (!energiescan_url) {
+      return res.status(400).json({ error: "Energiescan ontbreekt." });
     }
-  });
+
+    const client = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+
+    const content = [
+      {
+        type: "input_text",
+        text:
+          (system_prompt || "Maak een professioneel MB Adviesgroep verduurzamingsrapport in JSON.") +
+          "\n\nExtra toelichting:\n" +
+          (notities || "")
+      },
+      {
+        type: "input_file",
+        file_url: energiescan_url
+      }
+    ];
+
+    if (brochure_url) {
+      content.push({
+        type: "input_file",
+        file_url: brochure_url
+      });
+    }
+
+    const response = await client.responses.create({
+      model: "gpt-4.1",
+      input: [
+        {
+          role: "user",
+          content
+        }
+      ]
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: response.output_text
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      error: error.message || "AI verwerking mislukt"
+    });
+  }
 }
