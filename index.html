@@ -3968,7 +3968,7 @@ function renderReport(r) {
       `<table class="netto-table">
         <thead><tr><th>Post</th><th style="text-align:right">Bedrag</th></tr></thead>
         <tbody>
-          <tr><td>Bruto investering</td><td>${ni.bruto||r.totaal_investering||'&#8212;'}</td></tr>
+          <tr id="nettoBrutoRij"><td>Bruto investering</td><td id="nettoBrutoVal">${ni.bruto||r.totaal_investering||'&#8212;'}</td></tr>
           ${rows}
           <tr><td>Geschatte netto investering</td><td>${ni.netto||'&#8212;'}</td></tr>
         </tbody>
@@ -4223,6 +4223,10 @@ function recalcTotals() {
   }
   // Update scenario summary indien aanwezig
   if (typeof window._updateScenarioSummary === 'function') window._updateScenarioSummary();
+  // Update bruto investering in netto-tabel
+  const nettoBrutoVal = document.getElementById('nettoBrutoVal');
+  if (nettoBrutoVal) nettoBrutoVal.textContent = fmtEuro(totalInvestering);
+
   // Update maandlasten met geselecteerde besparing/investering
   if (typeof window._mlRender === 'function') window._mlRender();
 }
@@ -4777,11 +4781,10 @@ function renderMaandlastenSection(r) {
 
   function getSelected() {
     const checks = [...document.querySelectorAll('.m-checkbox')];
-    // Als checkboxes nog niet in DOM staan (eerste render), gebruik alle maatregelen
-    const allMaatregelen = _rptData.maatregelen || [];
+    const allMaatregelen = (_rptData || window._mlRptData || r).maatregelen || [];
     const sel = checks.length > 0
       ? allMaatregelen.filter((_,i) => checks[i] && checks[i].checked)
-      : allMaatregelen;
+      : allMaatregelen; // fallback: alle maatregelen als checkboxes nog niet in DOM staan
     const besparing = sel.reduce((s,m)=>s+parseEuro(m.besparing),0);
     const bruto = sel.reduce((s,m)=>s+parseEuro(m.investering),0);
     // Subsidie-aftrek-ratio uit netto_investering, indien beschikbaar
@@ -4906,6 +4909,8 @@ function renderMaandlastenSection(r) {
   };
 
   // HTML — controls altijd renderen, alleen visueel verborgen bij is-empty
+  // Sla huidig rapport data op zodat getSelected() altijd werkt
+  window._mlRptData = r;
   el.innerHTML = secHead('Maandlasten — voor en na verduurzaming') + `
     <div class="maandlasten-block">
       <div class="ml-empty">
@@ -4973,6 +4978,8 @@ function renderMaandlastenSection(r) {
       </div>
     </div>`;
   render();
+  // Nogmaals renderen na DOM-settle zodat checkboxes zeker beschikbaar zijn
+  setTimeout(() => render(), 80);
 }
 
 // Scenario-slider: budget / minimaal / volledig
