@@ -1,7 +1,8 @@
 {
   "type": "module",
   "dependencies": {
-    "openai": "latest",
-    "@vercel/blob": "2.3.3"
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/blob": "2.3.3",
+    "openai": "latest"
   }
 }
