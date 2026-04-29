@@ -1672,7 +1672,7 @@ select.finput {
 
   /* ── Vaste MB Adviesgroep footer onderaan elke pagina ── */
   .print-page-footer {
-    display: block !important;
+    display: flex !important;
     position: fixed;
     bottom: 0;
     left: 0; right: 0;
@@ -1680,7 +1680,6 @@ select.finput {
     background: #134460 !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
-    display: flex !important;
     align-items: center;
     justify-content: space-between;
     padding: 0 16mm;
@@ -2983,7 +2982,7 @@ select.finput {
    PRINT SCENARIO BANNER (alleen zichtbaar bij afdrukken)
 ═══════════════════════════════════════════════════════ */
 .print-scenario-banner { display: none; }
-.print-page-footer { display: none; }
+.print-page-footer { display: none !important; }
 @media print {
   .print-scenario-banner {
     display: flex !important;
@@ -3639,16 +3638,6 @@ select.finput {
 
   </div>
   <div class="disclaimer">Indicatieve analyse op basis van kengetallen. Geen officieel energieadvies.</div>
-</div>
-<div class="print-page-footer" id="printPageFooter">
-  <div class="ppf-left">
-    <div class="ppf-logo"><img id="ppfLogoImg" src="" alt="MB"></div>
-    <div>
-      <div class="ppf-name">MB Adviesgroep</div>
-      <div class="ppf-sub">Verduurzamings- &amp; vastgoedadvies</div>
-    </div>
-  </div>
-  <div class="ppf-right">Alle bedragen zijn exclusief btw en ter indicatie op basis van kengetallen per maatregel. Definitieve bedragen volgen na inspectie en offertes.</div>
 </div>
 
 <script>
@@ -6165,16 +6154,26 @@ function renderAdviseurSection() {
 
 // =============================================================================
 
-// Stel logo in voor print footer
-(function() {
-  var el = document.getElementById('ppfLogoImg');
-  if (el && typeof LOGO_IMG !== 'undefined') el.src = LOGO_IMG;
-  // Also set on window load in case LOGO_IMG is set later
-  window.addEventListener('load', function() {
-    var el2 = document.getElementById('ppfLogoImg');
-    if (el2 && typeof LOGO_IMG !== 'undefined') el2.src = LOGO_IMG;
-  });
-})();
+// Stel logo in voor print footer — alleen relevant bij afdrukken
+window.addEventListener('beforeprint', function() {
+  var footer = document.createElement('div');
+  footer.id = 'printPageFooter';
+  footer.className = 'print-page-footer';
+  footer.innerHTML =
+    '<div class="ppf-left">' +
+      '<div class="ppf-logo"><img src="' + (typeof LOGO_IMG !== 'undefined' ? LOGO_IMG : '') + '" alt="MB"></div>' +
+      '<div>' +
+        '<div class="ppf-name">MB Adviesgroep</div>' +
+        '<div class="ppf-sub">Verduurzamings- &amp; vastgoedadvies</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="ppf-right">Alle bedragen zijn exclusief btw en ter indicatie op basis van kengetallen per maatregel. Definitieve bedragen volgen na inspectie en offertes.</div>';
+  document.body.appendChild(footer);
+});
+window.addEventListener('afterprint', function() {
+  var el = document.getElementById('printPageFooter');
+  if (el) el.remove();
+});
 
 // Canvas → img conversie voor print (Chart.js)
 function prepareChartsForPrint() {
