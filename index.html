@@ -3641,6 +3641,115 @@ select.finput {
   }
 }
 
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   LAATSTE A4-FIT FIX — v21
+   Doel: volledige rapportinhoud nog iets kleiner maken en extra
+   veiligheidsruimte boven de vaste footer houden. Footer blijft full-width.
+═══════════════════════════════════════════════════════════════════════ */
+@media print {
+
+  /* Normale rapportpagina's net iets ruimer onderaan voor de footer */
+  @page {
+    size: A4 portrait !important;
+    margin: 12mm 14mm 22mm 14mm !important;
+  }
+
+  @page :first {
+    margin: 0 !important;
+  }
+
+  /* Hele rapportinhoud iets kleiner en netjes gecentreerd */
+  .result .body > *:not(.print-cover-page):not(.mb-pf) {
+    width: 93% !important;
+    max-width: 93% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  #measuresSection,
+  #maatregelenChartSection,
+  #chartSection,
+  #nettoSection,
+  #maandlastenSection,
+  #subsidiesSection,
+  #vervolgSection,
+  #aandachtSection,
+  #adviseurSection {
+    width: 93% !important;
+    max-width: 93% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+
+  /* Meer ruimte onderaan de content zodat de footer nooit overlapt */
+  .result .body {
+    padding-bottom: 10mm !important;
+  }
+
+  /* Grafieken iets compacter, maar nog goed leesbaar */
+  .chart-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 7pt 9pt !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  .chart-canvas-wrap {
+    width: 100% !important;
+    height: 135pt !important;
+    min-height: 135pt !important;
+    max-height: 135pt !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  .chart-canvas-wrap canvas {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 135pt !important;
+    max-height: 135pt !important;
+  }
+
+  .chart-print-img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: 135pt !important;
+    object-fit: contain !important;
+    display: block !important;
+  }
+
+  #chartNoteFlat,
+  #chartNoteStijg {
+    font-size: 6.5pt !important;
+    line-height: 1.35 !important;
+    margin-top: 3pt !important;
+    padding-top: 3pt !important;
+  }
+
+  .chart-legend {
+    margin-top: 4pt !important;
+  }
+
+  .chart-legend-item {
+    font-size: 7pt !important;
+  }
+
+  /* Footer absoluut niet verkleinen */
+  .mb-pf,
+  .mb-pf-bar {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
 </style>
 </head>
 <body>
