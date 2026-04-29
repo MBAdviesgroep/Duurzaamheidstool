@@ -3097,36 +3097,6 @@ select.finput {
     <!-- TOC RAIL (sticky inhoudsopgave, screen-only) -->
     <nav class="toc-rail" id="tocRail" aria-label="Inhoudsopgave"></nav>
 
-    <!-- AI CHAT FAB (screen-only) -->
-    <button class="ai-fab hidden" id="aiFab" aria-label="Vraag de adviseur" onclick="openAiPanel()">
-      <span class="ai-fab-pulse"></span>
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-    </button>
-
-    <!-- AI CHAT PANEL (screen-only) -->
-    <div class="ai-panel" id="aiPanel" role="dialog" aria-label="Adviseur AI">
-      <div class="ai-panel-head">
-        <div class="ai-panel-head-l">
-          <div class="ai-panel-avatar">MB</div>
-          <div>
-            <div class="ai-panel-name">Adviseur AI</div>
-            <div class="ai-panel-status">Beantwoordt vragen over dit rapport</div>
-          </div>
-        </div>
-        <button class="ai-panel-close" onclick="closeAiPanel()" aria-label="Sluiten">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l8 8M11 3l-8 8"/></svg>
-        </button>
-      </div>
-      <div class="ai-msgs" id="aiMsgs"></div>
-      <div class="ai-suggestions" id="aiSugg"></div>
-      <form class="ai-input-row" id="aiForm" onsubmit="return sendAiMsg(event)">
-        <input class="ai-input" id="aiInput" type="text" placeholder="Stel een vraag over dit rapport..." autocomplete="off">
-        <button class="ai-send" id="aiSend" type="submit" aria-label="Verstuur">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 14L14 8 2 2v5l8 1-8 1z"/></svg>
-        </button>
-      </form>
-    </div>
-
     <!-- RESULT -->
     <div class="result" id="result">
       <div class="print-cover-page" id="printCover"></div>
@@ -3741,10 +3711,6 @@ function resetTool() {
   document.getElementById('formError').style.display = 'none';
   [1,2,3].forEach(n => removeFile(n));
   const tocRail = document.getElementById('tocRail'); if (tocRail) tocRail.classList.remove('on');
-  const aiPanel = document.getElementById('aiPanel'); if (aiPanel) aiPanel.classList.remove('on');
-  const aiFab = document.getElementById('aiFab'); if (aiFab) aiFab.classList.add('hidden');
-  const aiMsgs = document.getElementById('aiMsgs'); if (aiMsgs) aiMsgs.innerHTML = '';
-  window._aiInited = false;
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
@@ -4048,7 +4014,6 @@ function renderReport(r) {
   renderMaandlastenSection(r);
   renderScenarioSection(r);
   renderTocRail();
-  showAiFab();
 }
 
 function renderBronSection(r) {
@@ -4103,8 +4068,10 @@ function parseEuro(str) {
 
 // Format getal naar euro string: 12500 → "€ 12.500"
 function fmtEuro(n) {
-  if (!n || isNaN(n)) return '—';
-  return '€\u00a0' + Math.round(n).toLocaleString('nl-NL');
+  if (n === null || n === undefined || isNaN(n)) return '—';
+  const r = Math.round(n);
+  if (r < 0) return '−\u00a0€\u00a0' + Math.abs(r).toLocaleString('nl-NL');
+  return '€\u00a0' + r.toLocaleString('nl-NL');
 }
 
 // Parst CO₂ strings naar kg: "2.400 kg/jr" / "2,4 ton CO₂" → getal in kg
@@ -4482,7 +4449,7 @@ function renderPrintCover(r, today) {
     <div class="pc-photo-block">
       <div class="pc-photo-slot" id="pcPhotoSlot">${photoHtml}</div>
       <div class="pc-photo-caption">
-        <span>Het pand</span>
+        <span></span>
         <span class="pc-cap-right">MB Adviesgroep &middot; Verduurzamingsadvies</span>
       </div>
     </div>`;
@@ -4763,10 +4730,14 @@ function renderMaandlastenSection(r) {
     const { besparing, netto } = getSelected();
     // Cap eigenInbreng zodat slider niet boven netto uitkomt
     if (s.eigenInbreng > netto) s.eigenInbreng = netto;
+    if (s.eigenInbreng < 0) s.eigenInbreng = 0;
     const teLenen = Math.max(0, netto - s.eigenInbreng);
     const annuiteit = pmt(teLenen, s.rente, s.looptijd);
+    // Cap besparing op huidige kosten zodat we niet onder € 0/mnd zakken (oversparing telt niet als negatieve rekening)
+    const effBesparing = Math.min(besparing, huidig);
+    const restEnergie = Math.max(0, huidig - besparing);
     const huidigMnd = huidig / 12;
-    const directMnd = (huidig - besparing) / 12;
+    const directMnd = restEnergie / 12;
     const finMnd = directMnd + annuiteit;
 
     const set = (id, html) => { const e = document.getElementById(id); if (e) e.innerHTML = html; };
@@ -4775,22 +4746,26 @@ function renderMaandlastenSection(r) {
     set('mlFin', `${fmtEuro(finMnd)}<span class="ml-eenheid">/mnd</span>`);
     set('mlNowDet', `<div class="ml-detail-row"><span class="lbl">Energie/jr</span><span class="val">${fmtEuro(huidig)}</span></div>`);
     set('mlDirectDet',
-      `<div class="ml-detail-row"><span class="lbl">Energie/jr</span><span class="val">${fmtEuro(huidig-besparing)}</span></div>
-       <div class="ml-detail-row"><span class="lbl">Bespaard/jr</span><span class="val" style="color:var(--green)">${fmtEuro(besparing)}</span></div>`);
+      `<div class="ml-detail-row"><span class="lbl">Energie/jr</span><span class="val">${fmtEuro(restEnergie)}</span></div>
+       <div class="ml-detail-row"><span class="lbl">Bespaard/jr</span><span class="val" style="color:var(--green)">${fmtEuro(effBesparing)}</span></div>`);
     set('mlFinDet',
-      `<div class="ml-detail-row"><span class="lbl">Energie/jr</span><span class="val">${fmtEuro(huidig-besparing)}</span></div>
+      `<div class="ml-detail-row"><span class="lbl">Energie/jr</span><span class="val">${fmtEuro(restEnergie)}</span></div>
        <div class="ml-detail-row"><span class="lbl">Lening/jr</span><span class="val">${fmtEuro(annuiteit*12)}</span></div>
        <div class="ml-detail-row"><span class="lbl">Geleend</span><span class="val">${fmtEuro(teLenen)}</span></div>`);
 
-    const renteEl = document.getElementById('mlRenteVal'); if (renteEl) renteEl.textContent = s.rente.toFixed(1) + '%';
+    const renteEl = document.getElementById('mlRenteVal'); if (renteEl) renteEl.textContent = s.rente.toFixed(1).replace('.',',') + '%';
     const looptijdEl = document.getElementById('mlLooptijdVal'); if (looptijdEl) looptijdEl.textContent = s.looptijd + ' jr';
-    const eigenEl = document.getElementById('mlEigenVal'); if (eigenEl) eigenEl.textContent = fmtEuro(s.eigenInbreng);
-    // Update slider max bij wisselende selectie
+    const eigenEl = document.getElementById('mlEigenVal'); if (eigenEl) eigenEl.textContent = s.eigenInbreng > 0 ? fmtEuro(s.eigenInbreng) : '€\u00a00';
+    // Update slider max bij wisselende selectie (zonder de huidige slider-waarde te overschrijven tijdens dragging)
     const eigSlider = document.getElementById('mlEigenSlider');
     if (eigSlider) {
-      eigSlider.max = Math.max(netto, 1);
-      eigSlider.step = Math.max(Math.round(netto/40), 100);
-      eigSlider.value = s.eigenInbreng;
+      const newMax = Math.max(netto, 1);
+      if (parseFloat(eigSlider.max) !== newMax) {
+        eigSlider.max = newMax;
+        eigSlider.step = Math.max(Math.round(newMax/40), 100);
+      }
+      // Sync alleen als de waarde verschilt van state (bijv. na cap)
+      if (parseFloat(eigSlider.value) !== s.eigenInbreng) eigSlider.value = s.eigenInbreng;
     }
   }
   window._mlRender = render;
@@ -4960,71 +4935,6 @@ function renderTocRail() {
   }, { rootMargin: '-30% 0px -60% 0px' });
   items.forEach(i => { const e = document.getElementById(i.id); if (e) obs.observe(e); });
   window._tocObserver = obs;
-}
-
-// AI-chat over het rapport
-function showAiFab() { const f = document.getElementById('aiFab'); if (f) f.classList.remove('hidden'); }
-function openAiPanel() {
-  document.getElementById('aiPanel').classList.add('on');
-  document.getElementById('aiFab').classList.add('hidden');
-  if (!window._aiInited) {
-    window._aiInited = true;
-    addAiMsg('ai', 'Hallo! Ik ben de adviseur-assistent. Stel mij gerust een vraag over dit verduurzamingsrapport — bijvoorbeeld waarom een bepaalde maatregel wel of niet is opgenomen, of hoe een subsidie werkt.');
-    renderAiSuggestions();
-  }
-  setTimeout(() => document.getElementById('aiInput').focus(), 100);
-}
-function closeAiPanel() {
-  document.getElementById('aiPanel').classList.remove('on');
-  document.getElementById('aiFab').classList.remove('hidden');
-}
-function addAiMsg(role, text) {
-  const box = document.getElementById('aiMsgs');
-  const d = document.createElement('div');
-  d.className = 'ai-msg ' + role;
-  d.innerHTML = `<div class="ai-msg-bubble">${text}</div>`;
-  box.appendChild(d);
-  box.scrollTop = box.scrollHeight;
-  return d;
-}
-function renderAiSuggestions() {
-  const sugg = ['Welke maatregel levert het meeste op?', 'Waarom geen warmtepomp?', 'Hoe vraag ik ISDE aan?', 'Wat als ik minder budget heb?'];
-  document.getElementById('aiSugg').innerHTML = sugg.map(q =>
-    `<button class="ai-sugg" type="button" onclick="askAi('${q.replace(/'/g,"\\'")}')">${q}</button>`).join('');
-}
-function askAi(q) { document.getElementById('aiInput').value = q; sendAiMsg({preventDefault(){}}); }
-async function sendAiMsg(e) {
-  if (e && e.preventDefault) e.preventDefault();
-  const input = document.getElementById('aiInput');
-  const q = input.value.trim();
-  if (!q) return false;
-  addAiMsg('user', q);
-  input.value = '';
-  const send = document.getElementById('aiSend'); send.disabled = true;
-  const thinking = addAiMsg('ai', '');
-  thinking.querySelector('.ai-msg-bubble').classList.add('thinking');
-  try {
-    const ctx = JSON.stringify({
-      pand: _rptData.pand_naam, adres: _rptData.pand_adres,
-      bouwjaar: _rptData.bouwjaar, oppervlakte: _rptData.oppervlakte,
-      huidig_label: _rptData.huidig_label, streef_label: _rptData.streef_label,
-      huidige_kosten: _rptData.huidige_kosten,
-      totaal_besparing: _rptData.totaal_besparing,
-      maatregelen: (_rptData.maatregelen||[]).map(m=>({n:m.naam,b:m.besparing,i:m.investering,t:m.tvt,co2:m.co2,sub:m.subsidies})),
-      subsidies: (_rptData.subsidies||[]).map(s=>({code:s.code,naam:s.naam,voordeel:s.voordeel})),
-      fases: _rptData.fases, samenvatting: _rptData.samenvatting,
-      aandachtspunten: _rptData.aandachtspunten
-    });
-    const prompt = `Je bent een Nederlandstalige verduurzamingsadviseur namens MB Adviesgroep. Beantwoord vragen UITSLUITEND op basis van het meegestuurde rapport. Wees beknopt (max 4 zinnen), zakelijk en concreet. Verzin geen subsidies of bedragen die niet in het rapport staan. Als iets niet in het rapport staat, zeg dat eerlijk en stel voor om contact op te nemen met de adviseur.\n\nRapport:\n${ctx}\n\nVraag: ${q}`;
-    const answer = await window.claude.complete(prompt);
-    thinking.querySelector('.ai-msg-bubble').classList.remove('thinking');
-    thinking.querySelector('.ai-msg-bubble').textContent = answer;
-  } catch (err) {
-    thinking.querySelector('.ai-msg-bubble').classList.remove('thinking');
-    thinking.querySelector('.ai-msg-bubble').textContent = 'Sorry, er ging iets mis bij het beantwoorden. Probeer het opnieuw of neem contact op met info@mbadviesgroep.nl.';
-  }
-  send.disabled = false;
-  return false;
 }
 
 function renderAdviseurSection() {
