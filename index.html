@@ -653,6 +653,55 @@ select.finput {
 .kpi-num.good { color: var(--green); }
 .kpi-sub { font-size: 11.5px; color: var(--ink-4); margin-top: 9px; line-height: 1.45; }
 
+/* Bewerkbare huidige energiekosten */
+.kpi-edit-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.kpi-edit-input {
+  font-size: 28px;
+  font-weight: 700;
+  font-family: var(--f-head);
+  color: var(--blue);
+  letter-spacing: -0.8px;
+  line-height: 1;
+  border: none;
+  border-bottom: 2px dashed var(--blue-faint2);
+  background: transparent;
+  width: 130px;
+  padding: 0 0 2px;
+  outline: none;
+  transition: border-color var(--t-fast);
+  -moz-appearance: textfield;
+}
+.kpi-edit-input::-webkit-outer-spin-button,
+.kpi-edit-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+.kpi-edit-input:focus {
+  border-bottom-color: var(--blue);
+  background: var(--blue-faint);
+  border-radius: 4px 4px 0 0;
+  padding: 2px 4px 2px;
+}
+.kpi-edit-prefix {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--blue);
+  font-family: var(--f-head);
+  letter-spacing: -0.5px;
+  flex-shrink: 0;
+}
+.kpi-edit-hint {
+  font-size: 10px;
+  color: var(--ink-4);
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.kpi-edit-hint svg { flex-shrink: 0; }
+
 /* Analysis grid */
 .punten-grid {
   display: grid;
@@ -1525,6 +1574,11 @@ select.finput {
   .kpi-sub { font-size: 7.5pt !important; color: #6B6B6B !important; }
   .kpi-c1 .kpi-num { color: #1B597B !important; }
   .kpi-c2 .kpi-num { color: #E26836 !important; }
+  /* Input in KPI-panel → print als gewone tekst */
+  .kpi-edit-wrap { display: flex; align-items: baseline; gap: 4px; }
+  .kpi-edit-prefix { font-size: 17pt !important; font-weight: 700 !important; color: #1B597B !important; }
+  .kpi-edit-input { font-size: 17pt !important; font-weight: 700 !important; color: #1B597B !important; border: none !important; background: transparent !important; width: auto !important; padding: 0 !important; }
+  .kpi-edit-hint { display: none !important; }
   .good { color: #2A7A50 !important; }
 
   /* ── Intro tekst ── */
@@ -3878,11 +3932,30 @@ function renderReport(r) {
   // KPI panel
   const co2kg = (r.maatregelen||[]).reduce((s,m) => s + parseCO2kg(m.co2), 0);
   const co2ctx = getCO2Context(co2kg);
+  // Sla huidige kosten globaal op zodat andere secties herrenderen bij wijziging
+  window._huidigKosten = parseEuro(r.huidige_kosten) || 0;
   document.getElementById('kpiPanel').innerHTML = `
     <div class="kpi-cell kpi-c1">
       <span class="kpi-lbl">Huidige energiekosten</span>
-      <div class="kpi-num">${r.huidige_kosten||'&#8212;'}</div>
-      <div class="kpi-sub">per jaar</div>
+      <div class="kpi-edit-wrap">
+        <span class="kpi-edit-prefix">€</span>
+        <input
+          type="number"
+          class="kpi-edit-input"
+          id="kpiHuidigInput"
+          value="${window._huidigKosten}"
+          step="100"
+          min="0"
+          oninput="window._onHuidigKostenInput(this.value)"
+          title="Klik om aan te passen"
+        >
+      </div>
+      <div class="kpi-sub">per jaar
+        <span class="kpi-edit-hint" style="margin-top:5px;">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Klikken om aan te passen
+        </span>
+      </div>
     </div>
     <div class="kpi-cell kpi-c2">
       <span class="kpi-lbl">Mogelijke besparing</span>
@@ -4342,6 +4415,32 @@ function updateSubsidies() {
 function selectAllMeasures(val) {
   document.querySelectorAll('.m-checkbox').forEach(cb => { cb.checked = val; });
   recalcTotals();
+}
+
+// Handler voor bewerkbare huidige energiekosten in KPI-panel
+window._onHuidigKostenInput = function(rawVal) {
+  const val = parseFloat(rawVal);
+  window._huidigKosten = isNaN(val) || val < 0 ? 0 : Math.round(val);
+  // Herrender alle secties die afhangen van huidige_kosten
+  updateHuidigeKosten();
+};
+
+function updateHuidigeKosten() {
+  const huidig = window._huidigKosten || 0;
+  // Patch _rptData zodat alle functies de nieuwe waarde zien
+  if (_rptData) _rptData.huidige_kosten = fmtEuro(huidig);
+
+  // Herrender geenActieSection
+  if (_rptData && typeof renderGeenActieSection === 'function') {
+    renderGeenActieSection(_rptData);
+  }
+
+  // Herrender maandlasten — alleen de render()-functie aanroepen (state blijft bewaard)
+  if (typeof window._mlRender === 'function') {
+    // Maandlasten gebruikt huidig via closure op r.huidige_kosten — update de parse-waarde
+    window._mlHuidigOverride = huidig;
+    window._mlRender();
+  }
 }
 
 // =============================================================================
@@ -4812,7 +4911,7 @@ function renderAdviseurSection() {
 function renderGeenActieSection(r) {
   const el = document.getElementById('geenActieSection');
   if (!el) return;
-  const huidig = parseEuro(r.huidige_kosten);
+  const huidig = (window._huidigKosten > 0 ? window._huidigKosten : null) || parseEuro(r.huidige_kosten);
   const besparing = (r.maatregelen||[]).reduce((s,m)=>s+parseEuro(m.besparing),0);
   if (!huidig && !besparing) { el.innerHTML = ''; return; }
 
@@ -4924,6 +5023,10 @@ function renderMaandlastenSection(r) {
   function render() {
     const s = window._mlState;
     const { besparing, netto } = getSelected();
+    // Gebruik altijd de meest recente huidige kosten (aanpasbaar via KPI-input)
+    const huidigLive = (window._mlHuidigOverride != null ? window._mlHuidigOverride : null)
+      || (window._huidigKosten > 0 ? window._huidigKosten : huidig)
+      || huidig;
 
     // Geen investering geselecteerd → empty state tonen, controls verbergen
     const isEmpty = netto <= 0;
@@ -4941,9 +5044,9 @@ function renderMaandlastenSection(r) {
     const totaalRente = annuiteit * s.looptijd * 12 - teLenen;
 
     // Cap besparing op huidige kosten (oversparing telt niet als negatieve rekening)
-    const volledigGedekt = besparing >= huidig && huidig > 0;
-    const restEnergie = Math.max(0, huidig - besparing);
-    const huidigMnd = huidig / 12;
+    const volledigGedekt = besparing >= huidigLive && huidigLive > 0;
+    const restEnergie = Math.max(0, huidigLive - besparing);
+    const huidigMnd = huidigLive / 12;
     const directMnd = restEnergie / 12;
     const leningMnd = annuiteit;
     const finMnd = directMnd + leningMnd;
@@ -4953,15 +5056,15 @@ function renderMaandlastenSection(r) {
 
     // === Huidig ===
     set('mlNow', `${fmtEuro(huidigMnd)}<span class="ml-eenheid">/mnd</span>`);
-    set('mlNowDet', `<div class="ml-detail-row"><span class="lbl">Energie/jr</span><span class="val">${fmtEuro(huidig)}</span></div>`);
+    set('mlNowDet', `<div class="ml-detail-row"><span class="lbl">Energie/jr</span><span class="val">${fmtEuro(huidigLive)}</span></div>`);
 
     // === Na investering (eigen geld) ===
     if (volledigGedekt) {
       set('mlDirect', `<span style="font-size:20px;color:var(--green);">Volledig gedekt</span>`);
       set('mlDirectDet',
         `<div class="ml-detail-row"><span class="lbl">Energie/jr</span><span class="val">${fmtEuro(restEnergie)}</span></div>
-         <div class="ml-detail-row"><span class="lbl">Bespaard/jr</span><span class="val" style="color:var(--green)">${fmtEuro(huidig)}</span></div>
-         <div class="ml-detail-row"><span class="lbl">Surplus</span><span class="val" style="color:var(--ink-4);font-style:italic;">+ ${fmtEuro(besparing - huidig)}/jr</span></div>`);
+         <div class="ml-detail-row"><span class="lbl">Bespaard/jr</span><span class="val" style="color:var(--green)">${fmtEuro(huidigLive)}</span></div>
+         <div class="ml-detail-row"><span class="lbl">Surplus</span><span class="val" style="color:var(--ink-4);font-style:italic;">+ ${fmtEuro(besparing - huidigLive)}/jr</span></div>`);
     } else {
       set('mlDirect', `${fmtEuro(directMnd)}<span class="ml-eenheid">/mnd</span>`);
       set('mlDirectDet',
