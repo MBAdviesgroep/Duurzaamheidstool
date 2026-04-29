@@ -1667,43 +1667,6 @@ select.finput {
   .aandacht-table td { padding: 6pt 6pt !important; border-bottom: 0.4pt solid #E3DDD8 !important; vertical-align: top !important; }
   .aandacht-table td:first-child { font-weight: 600 !important; color: #1B597B !important; width: 28% !important; }
 
-
-  /* Print scenario banner */
-  .print-scenario-banner {
-    display: flex !important;
-    align-items: center;
-    gap: 10pt;
-    padding: 7pt 11pt;
-    margin-bottom: 9pt;
-    background: #EEF4F8 !important;
-    border: 1pt solid #1B597B !important;
-    border-left: 3pt solid #1B597B !important;
-    border-radius: 5pt;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-    page-break-inside: avoid;
-  }
-  .psb-label {
-    font-size: 6.5pt; font-weight: 700; letter-spacing: 1.5pt;
-    text-transform: uppercase; color: #1B597B !important;
-    font-family: 'IBM Plex Sans', sans-serif; white-space: nowrap;
-    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
-  }
-  .psb-name {
-    font-size: 10.5pt; font-weight: 700; color: #141414 !important;
-    font-family: 'IBM Plex Sans', sans-serif;
-    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
-  }
-  .psb-desc {
-    font-size: 8pt; color: #6B6B6B !important;
-    font-family: 'IBM Plex Sans', sans-serif; margin-left: auto;
-    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
-  }
-  .psb-sep {
-    width: 0.5pt; height: 18pt; background: #1B597B !important; opacity: 0.3;
-    flex-shrink: 0;
-    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
-  }
   /* ── Footer ── */
   .rpt-footer { display: flex !important; border-top: 0.5pt solid #E3DDD8 !important; padding: 8pt 0 0 !important; margin-top: 12pt !important; font-size: 7.5pt !important; }
   .rpt-footer-disc { color: #A0A0A0 !important; line-height: 1.5 !important; }
@@ -2875,10 +2838,6 @@ select.finput {
 ═══════════════════════════════════════════════════════ */
 .print-cover-page { display: none; }
 
-/* Print-only scenario banner */
-.print-scenario-banner { display: none; }
-
-
 /* ═══════════════════════════════════════════════════════
    PRINT OVERRIDES — nieuwe modules
 ═══════════════════════════════════════════════════════ */
@@ -2993,7 +2952,7 @@ select.finput {
   .rt thead { display: table-header-group !important; }
   .rt tbody { display: table-row-group !important; }
   .rt tr { display: table-row !important; opacity: 1 !important; }
-  .rt tr.row-unchecked { display: none !important; }
+  .rt tr.row-unchecked td { opacity: 1 !important; }
   .rt td { display: table-cell !important; opacity: 1 !important; }
   .rt td.m-check, .rt th:first-child { display: none !important; }
 
@@ -4239,12 +4198,6 @@ function renderReport(r) {
       <td class="m-co2">${m.co2||'&#8212;'}</td>
     </tr>`).join('');
   let msec = secHead('Geadviseerde maatregelen');
-  msec += `<div id="printScenarioBanner" class="print-scenario-banner">
-    <span class="psb-label">Gekozen scenario</span>
-    <div class="psb-sep"></div>
-    <span class="psb-name" id="printScenarioName">Beste balans</span>
-    <span class="psb-desc" id="printScenarioDesc"></span>
-  </div>`;
   msec += `<div class="measures-toolbar">
     <span class="measures-toolbar-label">Selecteer maatregelen om totalen te berekenen</span>
     <div class="measures-select-btns">
@@ -4561,30 +4514,6 @@ function recalcTotals() {
   if (typeof window._updateScenarioSummary === 'function') window._updateScenarioSummary();
   // Update maandlasten met geselecteerde besparing/investering
   if (typeof window._mlRender === 'function') window._mlRender();
-
-  // Update print scenario banner
-  (function() {
-    var nameEl = document.getElementById('printScenarioName');
-    var descEl = document.getElementById('printScenarioDesc');
-    if (!nameEl) return;
-    var totalM = (_rptData && _rptData.maatregelen) ? _rptData.maatregelen.length : 0;
-    var allChecks = Array.from(document.querySelectorAll('.m-checkbox'));
-    var checkedSet = new Set(allChecks.map(function(cb,i){ return cb.checked ? i : -1; }).filter(function(i){ return i >= 0; }));
-    var matchedName = null;
-    if (window._scStats) {
-      var nameMap = { quick:'Snel rendement', budget:'Beste balans', volledig:'Volledig pakket' };
-      for (var key in window._scStats) {
-        var scSet = window._scStats[key].sel;
-        if (scSet && scSet.size === checkedSet.size) {
-          var match = true;
-          scSet.forEach(function(i){ if (!checkedSet.has(i)) match = false; });
-          if (match) { matchedName = nameMap[key] || key; break; }
-        }
-      }
-    }
-    nameEl.textContent = matchedName || 'Aangepast pakket';
-    if (descEl) descEl.textContent = checkedSet.size + ' van ' + totalM + ' maatregelen';
-  })();
 }
 
 // KIA schijven 2025
@@ -5760,6 +5689,7 @@ function renderScenarioSection(r) {
     if (typeof recalcTotals === 'function') recalcTotals();
     // Update kaart active state
     document.querySelectorAll('.sc-card').forEach(c=>c.classList.toggle('sc-active', c.dataset.k===key));
+    // Update kaart inhoud (stats zijn statisch, maandlast update via _mlRender die al aangeroepen wordt)
   }
   window._applyScenario = applyScenario;
   window._updateScenarioSummary = function() {}; // leeg — kaarten zijn statisch
@@ -5952,40 +5882,6 @@ function printRapport() {
     }, 1000);
   }, 250);
 }
-// MB Adviesgroep print footer — dynamisch aanmaken/verwijderen
-(function() {
-  var _footerEl = null;
-  window.addEventListener('beforeprint', function() {
-    if (_footerEl) return;
-    _footerEl = document.createElement('div');
-    _footerEl.style.cssText = [
-      'position:fixed','bottom:0','left:0','right:0',
-      'height:14mm','background:#134460',
-      'display:flex','align-items:center','justify-content:space-between',
-      'padding:0 16mm','z-index:9999',
-      '-webkit-print-color-adjust:exact','print-color-adjust:exact'
-    ].join(';');
-    var logoSrc = (typeof LOGO_IMG !== 'undefined') ? LOGO_IMG : '';
-    _footerEl.innerHTML =
-      '<div style="display:flex;align-items:center;gap:8pt;">' +
-        '<div style="width:22pt;height:22pt;border-radius:50%;background:rgba(255,255,255,0.15);overflow:hidden;display:flex;align-items:center;justify-content:center;">' +
-          '<img src="' + logoSrc + '" style="width:100%;height:100%;object-fit:cover;" alt="MB">' +
-        '</div>' +
-        '<div>' +
-          '<div style="font-size:8.5pt;font-weight:600;color:white;font-family:IBM Plex Sans,sans-serif;">MB Adviesgroep</div>' +
-          '<div style="font-size:6.5pt;color:rgba(255,255,255,0.55);font-family:IBM Plex Sans,sans-serif;">Verduurzamings- &amp; vastgoedadvies</div>' +
-        '</div>' +
-      '</div>' +
-      '<div style="font-size:7pt;color:rgba(255,255,255,0.5);font-family:IBM Plex Sans,sans-serif;text-align:right;max-width:260pt;line-height:1.5;">' +
-        'Alle bedragen zijn exclusief btw en ter indicatie op basis van kengetallen per maatregel.<br>Definitieve bedragen volgen na inspectie en offertes.' +
-      '</div>';
-    document.body.appendChild(_footerEl);
-  });
-  window.addEventListener('afterprint', function() {
-    if (_footerEl) { _footerEl.remove(); _footerEl = null; }
-  });
-})();
-
 </script>
 </body>
 </html>
