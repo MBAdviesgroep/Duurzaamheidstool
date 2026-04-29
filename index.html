@@ -2290,70 +2290,158 @@ select.finput {
 /* ═══════════════════════════════════════════════════════
    SCENARIO-SLIDER
 ═══════════════════════════════════════════════════════ */
-.scenario-block { margin: 0 0 24px; }
+.chart-tog-group {
+  display: flex;
+  background: var(--page);
+  border-radius: 999px;
+  padding: 3px;
+  gap: 2px;
+}
+.chart-tog {
+  font-family: var(--f-head); font-size: 11.5px; font-weight: 600;
+  padding: 5px 14px; border: none; background: transparent;
+  color: var(--ink-3); cursor: pointer; border-radius: 999px;
+  transition: all var(--t-fast); white-space: nowrap;
+}
+.chart-tog-active {
+  background: var(--blue-deep); color: white;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+}
+.chart-tog:hover:not(.chart-tog-active) { color: var(--blue); }
 .sc-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0,1fr));
-  gap: 12px;
-  margin-bottom: 0;
+  gap: 14px;
+  align-items: stretch;
 }
 @media (max-width: 700px) { .sc-grid { grid-template-columns: 1fr 1fr; } }
+
 .sc-card {
   background: var(--surface);
   border: 1px solid var(--rule);
-  border-radius: var(--r-md);
+  border-radius: var(--r-lg);
   overflow: hidden;
   cursor: pointer;
-  transition: border-color var(--t-fast), transform var(--t-fast);
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.18s ease, transform 0.18s ease;
 }
-.sc-card:hover { border-color: var(--blue); transform: translateY(-1px); }
-.sc-card.sc-active { border: 2px solid var(--blue-deep); }
+.sc-card:hover { border-color: var(--blue-mid); transform: translateY(-2px); }
+.sc-card.sc-active {
+  border: 1.5px solid var(--blue-deep);
+  box-shadow: 0 4px 24px rgba(27,89,123,0.13);
+}
+
+/* Kleuraccent bovenrand per scenario */
+.sc-accent {
+  height: 3px;
+  width: 100%;
+  flex-shrink: 0;
+}
+.sc-accent-quick    { background: var(--green); }
+.sc-accent-budget   { background: var(--blue-deep); }
+.sc-accent-volledig { background: var(--orange); }
+.sc-accent-co2      { background: var(--green); }
+
 .sc-card-head {
-  padding: 12px 14px 10px;
+  padding: 18px 18px 14px;
   border-bottom: 1px solid var(--rule);
 }
-.sc-badge {
-  display: inline-block;
-  font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
-  padding: 2px 7px; border-radius: 4px; margin-bottom: 6px;
+.sc-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 1.8px;
+  text-transform: uppercase; color: var(--ink-4);
+  font-family: var(--f-head); margin-bottom: 10px;
+  display: block;
 }
-.sc-badge-quick   { background: var(--green-bg);   color: var(--green); }
-.sc-badge-budget  { background: var(--blue-faint);  color: var(--blue-deep); }
-.sc-badge-volledig{ background: var(--orange-faint); color: var(--orange-deep); }
-.sc-badge-co2     { background: var(--green-bg);    color: var(--green); }
-.sc-name { font-size: 12.5px; font-weight: 600; color: var(--ink); margin: 0 0 1px; font-family: var(--f-head); }
-.sc-desc { font-size: 10.5px; color: var(--ink-4); margin: 0; line-height: 1.4; }
-.sc-body { padding: 10px 14px; }
-.sc-row {
-  display: flex; justify-content: space-between; align-items: baseline;
-  padding: 3px 0; border-bottom: 0.5px solid var(--rule);
-  font-size: 11px;
+.sc-name {
+  font-size: 15px; font-weight: 700; color: var(--ink);
+  margin: 0 0 3px; font-family: var(--f-head);
+  letter-spacing: -0.2px; line-height: 1.2;
 }
-.sc-row:last-child { border-bottom: none; }
-.sc-row-lbl { color: var(--ink-4); }
-.sc-row-val { font-weight: 600; font-family: var(--f-head); color: var(--ink-2); font-size: 11.5px; }
-.sc-row-val.green { color: var(--green); }
-.sc-row-val.orange { color: var(--orange); }
-.sc-measures { margin-top: 8px; display: flex; flex-direction: column; gap: 3px; }
-.sc-m { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--ink-3); }
-.sc-m.off { opacity: 0.35; }
-.sc-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+.sc-desc { font-size: 11px; color: var(--ink-4); margin: 0; line-height: 1.4; }
+
+/* Stats blok */
+.sc-body {
+  padding: 16px 18px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.sc-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 8px;
+  margin-bottom: 16px;
+}
+.sc-stat {}
+.sc-stat-lbl {
+  font-size: 9.5px; font-weight: 600; letter-spacing: 0.8px;
+  text-transform: uppercase; color: var(--ink-4);
+  font-family: var(--f-head); margin-bottom: 3px;
+}
+.sc-stat-val {
+  font-size: 16px; font-weight: 700; font-family: var(--f-head);
+  letter-spacing: -0.4px; color: var(--ink);
+  line-height: 1.1;
+}
+.sc-stat-val.green  { color: var(--green); }
+.sc-stat-val.orange { color: var(--orange); }
+.sc-stat-val.blue   { color: var(--blue-deep); }
+
+/* Maatregelen lijst */
+.sc-measures {
+  display: flex; flex-direction: column; gap: 5px;
+  flex: 1;
+}
+.sc-m {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 11px; color: var(--ink-2);
+  font-family: var(--f-head);
+}
+.sc-m.off { opacity: 0.28; }
+.sc-dot {
+  width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+}
 .sc-dot.on  { background: var(--green); }
 .sc-dot.off { background: var(--ink-5); }
+
+/* Footer */
 .sc-footer {
-  padding: 10px 14px;
-  background: var(--page);
+  padding: 14px 18px 16px;
+  background: var(--blue-faint);
   border-top: 1px solid var(--rule);
+  flex-shrink: 0;
 }
-.sc-netto-lbl { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: var(--ink-4); font-weight: 600; font-family: var(--f-head); margin-bottom: 2px; }
-.sc-netto-val { font-size: 18px; font-weight: 700; letter-spacing: -0.5px; font-family: var(--f-head); color: var(--ink); }
-.sc-netto-val.green { color: var(--green); }
-.sc-maand { font-size: 10px; color: var(--ink-4); margin-top: 1px; }
-.sc-bar-wrap { margin-top: 8px; }
-.sc-bar-lbl { display: flex; justify-content: space-between; font-size: 9.5px; color: var(--ink-4); margin-bottom: 3px; }
-.sc-bar-track { height: 4px; background: var(--rule); border-radius: 2px; overflow: hidden; }
+.sc-card.sc-active .sc-footer { background: var(--blue-faint2); }
+
+.sc-maand-lbl {
+  font-size: 9px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--blue);
+  font-family: var(--f-head); margin-bottom: 4px; opacity: 0.7;
+}
+.sc-maand-val {
+  font-size: 26px; font-weight: 700; font-family: var(--f-head);
+  letter-spacing: -1px; color: var(--blue-deep); line-height: 1;
+}
+.sc-maand-eenheid { font-size: 13px; font-weight: 500; letter-spacing: 0; }
+.sc-maand-sub { font-size: 10px; color: var(--ink-4); margin-top: 4px; line-height: 1.4; }
+
+.sc-bar-wrap { margin-top: 10px; }
+.sc-bar-lbl {
+  display: flex; justify-content: space-between;
+  font-size: 9.5px; color: var(--ink-4); margin-bottom: 4px;
+  font-family: var(--f-head);
+}
+.sc-bar-track {
+  height: 3px; background: rgba(27,89,123,0.15);
+  border-radius: 2px; overflow: hidden;
+}
 .sc-bar-fill { height: 100%; border-radius: 2px; transition: width 0.5s ease; }
-/* old classes kept for compat */
+
+/* scenario-block wrapper */
+.scenario-block { margin: 0 0 24px; }
+
+/* old compat */
 .scenario-tab { display: none; }
 .ssum-cell { display: flex; flex-direction: column; gap: 2px; }
 .ssum-lbl { font-size: 9.5px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--ink-4); font-weight: 600; font-family: var(--f-head); }
@@ -2795,8 +2883,31 @@ select.finput {
   .geen-actie-sub { font-size: 7.5pt !important; }
   .geen-actie-foot { padding: 8pt 14pt !important; font-size: 8pt !important; }
 
-  /* Netto tabel compact voor print */
-  #nettoTariefSelect { display: none !important; }
+  /* Scenario kaarten in print */
+  #scenarioSection { page-break-inside: avoid !important; break-inside: avoid !important; }
+  .sc-grid { gap: 8pt !important; }
+  .sc-card { border: 0.5pt solid #E3DDD8 !important; border-radius: 6pt !important; box-shadow: none !important; }
+  .sc-card.sc-active { border: 1.5pt solid #1B597B !important; }
+  .sc-accent { height: 2pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .sc-card-head { padding: 8pt 10pt 7pt !important; }
+  .sc-label { font-size: 6.5pt !important; margin-bottom: 4pt !important; }
+  .sc-name { font-size: 9pt !important; }
+  .sc-desc { font-size: 7.5pt !important; }
+  .sc-body { padding: 8pt 10pt !important; }
+  .sc-stats { gap: 6pt 6pt !important; margin-bottom: 8pt !important; }
+  .sc-stat-lbl { font-size: 6.5pt !important; }
+  .sc-stat-val { font-size: 10pt !important; }
+  .sc-m { font-size: 7.5pt !important; gap: 4pt !important; }
+  .sc-dot { width: 4pt !important; height: 4pt !important; }
+  .sc-footer { padding: 7pt 10pt 8pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .sc-maand-lbl { font-size: 6.5pt !important; }
+  .sc-maand-val { font-size: 15pt !important; }
+  .sc-maand-eenheid { font-size: 8pt !important; }
+  .sc-maand-sub { font-size: 7pt !important; }
+  .sc-bar-wrap { margin-top: 5pt !important; }
+  .sc-bar-lbl { font-size: 7pt !important; }
+  .sc-bar-track { height: 2.5pt !important; }
+  .sc-bar-fill { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   #nettoTable { font-size: 8.5pt !important; margin-bottom: 10pt !important; }
   #nettoTable td { padding: 4pt 6pt !important; }
   .netto-totaal-row td { font-size: 10pt !important; }
@@ -2843,8 +2954,12 @@ select.finput {
   .chart-canvas-wrap { height: auto !important; min-height: 160pt !important; position: relative !important; }
   .chart-canvas-wrap canvas[data-print-hidden] { display: none !important; }
   .chart-print-img { width: 100% !important; max-width: 100% !important; display: block !important; height: auto !important; }
-  /* Grafiek: uitleg verbergen in print (grafiek is zelfverklarend met legenda) */
+  /* Grafiek: toggle/slider verbergen, aktieve noot WEL tonen */
   .chart-explainer { display: none !important; }
+  #chartNoteFlat, #chartNoteStijg { display: block !important; font-size: 7pt !important; padding-top: 6pt !important; margin-top: 6pt !important; }
+  .chart-tog-group { display: none !important; }
+  #chartSliderWrap { display: none !important; }
+  #chartKpiBe, #chartKpiBesp, #chartKpiRoi { font-size: 13pt !important; }
   .chart-wrap { page-break-inside: avoid !important; box-shadow: none !important; border: 0.5pt solid #E3DDD8 !important; padding: 10pt !important; background: white !important; margin-bottom: 0 !important; }
   .chart-legend { margin-top: 8pt !important; display: flex !important; }
   .chart-legend-item { font-size: 8pt !important; }
@@ -4673,19 +4788,42 @@ function updateHuidigeKosten() {
 //  BESPARINGSGRAFIEK
 // =============================================================================
 
+// Globale state voor prijsstijging toggle
+window._chartStijgingMode = false;
+window._chartStijgingPct  = 4;
+
+function cumBesparingData(jaarBesparing, stijging) {
+  const jaren = 15;
+  if (!stijging) {
+    return Array.from({length: jaren + 1}, (_, i) => Math.round(jaarBesparing * i));
+  }
+  let cum = 0;
+  return Array.from({length: jaren + 1}, (_, i) => {
+    if (i === 0) return 0;
+    cum += Math.round(jaarBesparing * Math.pow(1 + window._chartStijgingPct / 100, i));
+    return cum;
+  });
+}
+
 function updateChart(jaarBesparing, investering) {
   const canvas = document.getElementById('besparingChart');
   if (!canvas) return;
 
+  // Sla huidige waarden op voor hertekenen bij toggle
+  window._lastJaarBesparing = jaarBesparing;
+  window._lastInvestering   = investering;
+
   const jaren = 15;
   const labels = Array.from({length: jaren + 1}, (_, i) => 'Jaar ' + i);
-  const cumBesparing = labels.map((_, i) => Math.round(jaarBesparing * i));
-  const invLijn = labels.map(() => Math.round(investering));
+  const flatData  = cumBesparingData(jaarBesparing, false);
+  const stijgData = cumBesparingData(jaarBesparing, true);
+  const invLijn   = labels.map(() => Math.round(investering));
 
-  // Break-even jaar
+  // Break-even berekening op actieve dataset
+  const activeData = window._chartStijgingMode ? stijgData : flatData;
   let breakevenJaar = null;
   for (let i = 0; i <= jaren; i++) {
-    if (jaarBesparing * i >= investering) { breakevenJaar = i; break; }
+    if (activeData[i] >= investering) { breakevenJaar = i; break; }
   }
 
   const badge = document.getElementById('breakevenBadge');
@@ -4693,15 +4831,25 @@ function updateChart(jaarBesparing, investering) {
     badge.textContent = breakevenJaar
       ? '✓ Break-even: jaar ' + breakevenJaar
       : investering === 0 ? 'Selecteer maatregelen' : '> 15 jaar';
-    badge.style.background = (breakevenJaar && breakevenJaar <= 10)
-      ? 'var(--green-bg)' : 'var(--amber-bg)';
-    badge.style.color = (breakevenJaar && breakevenJaar <= 10)
-      ? 'var(--green)' : 'var(--amber)';
+    badge.style.background = (breakevenJaar && breakevenJaar <= 10) ? 'var(--green-bg)' : 'var(--amber-bg)';
+    badge.style.color      = (breakevenJaar && breakevenJaar <= 10) ? 'var(--green)'    : 'var(--amber)';
   }
 
+  // Update KPI blokjes
+  const bespNa15 = activeData[jaren];
+  const roi = investering > 0 ? Math.round((bespNa15 - investering) / investering * 100) : 0;
+  const kpiBesp = document.getElementById('chartKpiBesp');
+  const kpiRoi  = document.getElementById('chartKpiRoi');
+  const kpiBe   = document.getElementById('chartKpiBe');
+  if (kpiBesp) kpiBesp.textContent = fmtEuro(bespNa15);
+  if (kpiRoi)  kpiRoi.textContent  = roi + '%';
+  if (kpiBe)   kpiBe.textContent   = breakevenJaar ? 'Jaar ' + breakevenJaar : '> 15 jr';
+
   if (_chartInstance) {
-    _chartInstance.data.datasets[0].data = cumBesparing;
+    _chartInstance.data.datasets[0].data = flatData;
     _chartInstance.data.datasets[1].data = invLijn;
+    _chartInstance.data.datasets[2].data = window._chartStijgingMode ? stijgData : [];
+    _chartInstance.data.datasets[2].hidden = !window._chartStijgingMode;
     _chartInstance.update('active');
     return;
   }
@@ -4713,26 +4861,31 @@ function updateChart(jaarBesparing, investering) {
       datasets: [
         {
           label: 'Cumulatieve besparing',
-          data: cumBesparing,
+          data: flatData,
           borderColor: '#2A7A50',
           backgroundColor: 'rgba(42,122,80,0.08)',
           borderWidth: 2.5,
-          pointRadius: 0,
-          pointHoverRadius: 5,
-          fill: true,
-          tension: 0.3,
+          pointRadius: 0, pointHoverRadius: 5,
+          fill: true, tension: 0.3,
         },
         {
           label: 'Investering',
           data: invLijn,
           borderColor: '#E26836',
           backgroundColor: 'transparent',
-          borderWidth: 2,
-          borderDash: [6, 4],
-          pointRadius: 0,
-          pointHoverRadius: 0,
-          fill: false,
-          tension: 0,
+          borderWidth: 2, borderDash: [6, 4],
+          pointRadius: 0, pointHoverRadius: 0,
+          fill: false, tension: 0,
+        },
+        {
+          label: 'Met prijsstijging',
+          data: [],
+          hidden: true,
+          borderColor: '#1B597B',
+          backgroundColor: 'rgba(27,89,123,0.07)',
+          borderWidth: 2.5,
+          pointRadius: 0, pointHoverRadius: 5,
+          fill: true, tension: 0.3,
         }
       ]
     },
@@ -4748,8 +4901,8 @@ function updateChart(jaarBesparing, investering) {
           borderWidth: 1,
           titleColor: '#3A3A3A',
           bodyColor: '#6B6B6B',
-          titleFont: { family: 'Sora, sans-serif', weight: '600', size: 12 },
-          bodyFont: { family: 'Inter, sans-serif', size: 12 },
+          titleFont: { family: 'IBM Plex Sans, sans-serif', weight: '600', size: 12 },
+          bodyFont: { family: 'IBM Plex Sans, sans-serif', size: 12 },
           padding: 12,
           callbacks: {
             label: ctx => ' ' + ctx.dataset.label + ': ' + fmtEuro(ctx.parsed.y)
@@ -4759,17 +4912,12 @@ function updateChart(jaarBesparing, investering) {
       scales: {
         x: {
           grid: { color: 'rgba(0,0,0,0.04)' },
-          ticks: {
-            font: { family: 'Inter, sans-serif', size: 10 },
-            color: '#A0A0A0',
-            maxTicksLimit: 8,
-          }
+          ticks: { font: { size: 10 }, color: '#A0A0A0', maxTicksLimit: 8 }
         },
         y: {
           grid: { color: 'rgba(0,0,0,0.04)' },
           ticks: {
-            font: { family: 'Inter, sans-serif', size: 10 },
-            color: '#A0A0A0',
+            font: { size: 10 }, color: '#A0A0A0',
             callback: v => '€ ' + (v >= 1000 ? (v/1000).toFixed(0) + 'k' : v),
           }
         }
@@ -4778,38 +4926,96 @@ function updateChart(jaarBesparing, investering) {
   });
 }
 
+// Toggle handler — aangeroepen vanuit HTML
+window._toggleChartStijging = function(mode) {
+  window._chartStijgingMode = (mode === 'stijging');
+  // Update toggle knoppen
+  ['flat','stijging'].forEach(k => {
+    const b = document.getElementById('chartTog-' + k);
+    if (b) b.classList.toggle('chart-tog-active', k === mode);
+  });
+  // Slider zichtbaar?
+  const sw = document.getElementById('chartSliderWrap');
+  if (sw) sw.style.display = window._chartStijgingMode ? 'flex' : 'none';
+  // Legenda stijgingslijn
+  const legStijg = document.getElementById('chartLegStijg');
+  if (legStijg) legStijg.style.display = window._chartStijgingMode ? 'flex' : 'none';
+  // Noot tekst
+  const noteFlat  = document.getElementById('chartNoteFlat');
+  const noteStijg = document.getElementById('chartNoteStijg');
+  if (noteFlat)  noteFlat.style.display  = window._chartStijgingMode ? 'none'  : 'block';
+  if (noteStijg) noteStijg.style.display = window._chartStijgingMode ? 'block' : 'none';
+  // Herteken
+  if (window._lastJaarBesparing != null) updateChart(window._lastJaarBesparing, window._lastInvestering);
+};
+
+window._onStijgingSlider = function(val) {
+  window._chartStijgingPct = parseInt(val);
+  const lbl = document.getElementById('chartStijgLbl');
+  if (lbl) lbl.textContent = val + '%';
+  if (window._lastJaarBesparing != null) updateChart(window._lastJaarBesparing, window._lastInvestering);
+};
+
 function renderChartSection() {
   const el = document.getElementById('chartSection');
   if (!el) return;
-  el.innerHTML = `
-    <div class="sec-head rpt-section-head">
-      <span class="sec-label">Cumulatieve besparing over tijd</span>
-      <div class="sec-line"></div>
-    </div>
+  el.innerHTML = secHead('Cumulatieve besparing over tijd') + `
     <div class="chart-wrap">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
-        <div style="font-size:12px;color:var(--ink-4);font-family:var(--f-body);line-height:1.5;">
-          Selecteer maatregelen hierboven om het break-even punt te berekenen
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <div class="chart-tog-group">
+            <button id="chartTog-flat" class="chart-tog chart-tog-active" onclick="window._toggleChartStijging('flat')">Vaste energieprijs</button>
+            <button id="chartTog-stijging" class="chart-tog" onclick="window._toggleChartStijging('stijging')">Met prijsstijging</button>
+          </div>
+          <div id="chartSliderWrap" style="display:none;align-items:center;gap:8px;font-size:11.5px;color:var(--ink-3);">
+            <span>Stijging/jr:</span>
+            <input type="range" min="1" max="10" step="1" value="4"
+              style="width:80px;accent-color:var(--blue);"
+              oninput="window._onStijgingSlider(this.value)">
+            <span id="chartStijgLbl" style="font-weight:600;color:var(--blue-deep);min-width:24px;">4%</span>
+          </div>
         </div>
-        <div class="chart-breakeven-badge" id="breakevenBadge" style="background:var(--amber-bg);color:var(--amber);">
-          Selecteer maatregelen
+        <div class="chart-breakeven-badge" id="breakevenBadge" style="background:var(--amber-bg);color:var(--amber);">Selecteer maatregelen</div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;">
+        <div style="background:var(--page);border-radius:var(--r-sm);padding:10px 13px;">
+          <div style="font-size:9.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--ink-4);margin-bottom:3px;">Break-even</div>
+          <div id="chartKpiBe" style="font-size:18px;font-weight:700;color:var(--orange);font-family:var(--f-head);">—</div>
+        </div>
+        <div style="background:var(--page);border-radius:var(--r-sm);padding:10px 13px;">
+          <div style="font-size:9.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--ink-4);margin-bottom:3px;">Besparing na 15 jr</div>
+          <div id="chartKpiBesp" style="font-size:18px;font-weight:700;color:var(--green);font-family:var(--f-head);">—</div>
+        </div>
+        <div style="background:var(--page);border-radius:var(--r-sm);padding:10px 13px;">
+          <div style="font-size:9.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--ink-4);margin-bottom:3px;">Rendement</div>
+          <div id="chartKpiRoi" style="font-size:18px;font-weight:700;color:var(--blue-deep);font-family:var(--f-head);">—</div>
         </div>
       </div>
+
       <div class="chart-canvas-wrap">
-        <canvas id="besparingChart"></canvas>
+        <canvas id="besparingChart" role="img" aria-label="Lijndiagram cumulatieve besparing vs investering over 15 jaar">Cumulatieve besparing versus investering over 15 jaar.</canvas>
       </div>
-      <div class="chart-legend">
+
+      <div class="chart-legend" style="margin-top:10px;">
         <div class="chart-legend-item">
           <div class="chart-legend-dot" style="background:#2A7A50;"></div>
           Cumulatieve besparing
+        </div>
+        <div class="chart-legend-item" id="chartLegStijg" style="display:none;">
+          <div class="chart-legend-dot" style="background:#1B597B;"></div>
+          Met prijsstijging
         </div>
         <div class="chart-legend-item">
           <div class="chart-legend-dot" style="background:#E26836;border-radius:2px;height:3px;width:16px;"></div>
           Investering
         </div>
       </div>
-      <div class="chart-explainer" style="margin-top:16px;padding-top:14px;border-top:1px solid var(--line);font-size:11.5px;color:var(--ink-4);font-family:var(--f-body);line-height:1.55;">
-        <strong style="color:var(--ink-2);font-weight:600;">Hoe u deze grafiek leest:</strong> de oranje stippellijn toont de totale investering voor de geselecteerde maatregelen. De groene lijn toont de opgetelde energiebesparing per jaar. Waar beide lijnen elkaar kruisen is het <em>break-even punt</em> — vanaf dat moment levert de investering netto geld op. Bedragen zijn exclusief btw en gebaseerd op huidige energietarieven; toekomstige prijsstijgingen en onderhoudskosten zijn niet meegerekend.
+      <div id="chartNoteFlat" class="chart-explainer" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--rule);font-size:11.5px;color:var(--ink-4);line-height:1.55;">
+        <strong style="color:var(--ink-2);font-weight:600;">Hoe u deze grafiek leest:</strong> de oranje stippellijn toont de totale investering. De groene lijn de cumulatieve energiebesparing per jaar. Bedragen op basis van huidige energietarieven.
+      </div>
+      <div id="chartNoteStijg" class="chart-explainer" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--rule);font-size:11.5px;color:var(--ink-4);line-height:1.55;">
+        <strong style="color:var(--ink-2);font-weight:600;">Met prijsstijging:</strong> de blauwe lijn toont de besparing als energieprijzen elk jaar met het ingestelde percentage stijgen. Break-even punt verschuift eerder, totale besparing loopt hoger op.
       </div>
     </div>`;
 }
@@ -5513,40 +5719,61 @@ function renderScenarioSection(r) {
   function renderCard(s) {
     const st = window._scStats[s.key];
     const isActive = s.key === activeKey;
-    const barColor = s.key==='quick' ? 'var(--green)' : s.key==='budget' ? 'var(--blue)' : s.key==='volledig' ? 'var(--orange)' : 'var(--green)';
-    const aanbevolen = s.key === 'budget'
-      ? `<span style="font-size:9px;background:var(--blue-faint);color:var(--blue-deep);padding:2px 6px;border-radius:3px;font-weight:700;margin-left:5px;">Aanbevolen</span>` : '';
+    const barColor = s.key==='volledig' ? 'var(--orange)' : s.key==='budget' ? 'var(--blue-deep)' : 'var(--green)';
 
-    const measureDots = m.map(x=>{
+    const measureDots = m.map(x => {
       const on = st.sel.has(x._i);
-      return `<div class="sc-m${on?'':' off'}"><span class="sc-dot ${on?'on':'off'}"></span>${x.naam}</div>`;
+      return `<div class="sc-m${on ? '' : ' off'}"><span class="sc-dot ${on ? 'on' : 'off'}"></span>${x.naam}</div>`;
     }).join('');
 
-    const tvtTxt = st.tvtW > 0 ? st.tvtW.toFixed(1)+' jr' : '—';
-    const co2Txt = st.co2 >= 1000 ? (st.co2/1000).toFixed(1)+' ton' : Math.round(st.co2)+' kg';
+    const tvtTxt = st.tvtW > 0 ? st.tvtW.toFixed(1) + ' jr' : '—';
+    const co2Txt = st.co2 >= 1000 ? (st.co2/1000).toFixed(1) + ' ton' : Math.round(st.co2) + ' kg';
 
-    return `<div class="sc-card${isActive?' sc-active':''}" data-k="${s.key}" onclick="window._applyScenario('${s.key}')">
+    const labelMap = {
+      quick: 'Quick wins', budget: 'Budgetvriendelijk',
+      volledig: 'Volledig pakket', co2: 'Maximaal CO₂'
+    };
+
+    return `<div class="sc-card${isActive ? ' sc-active' : ''}" data-k="${s.key}" onclick="window._applyScenario('${s.key}')">
+      <div class="sc-accent sc-accent-${s.key}"></div>
       <div class="sc-card-head">
-        <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-bottom:6px;">
-          <span class="sc-badge ${s.badgeClass}">${s.label}</span>${aanbevolen}
-        </div>
+        <span class="sc-label">${labelMap[s.key]}</span>
         <p class="sc-name">${s.desc}</p>
         <p class="sc-desc">${st.items.length} van ${m.length} maatregelen</p>
       </div>
       <div class="sc-body">
-        <div class="sc-row"><span class="sc-row-lbl">Besparing/jr</span><span class="sc-row-val green">${fmtEuro(st.besp)}</span></div>
-        <div class="sc-row"><span class="sc-row-lbl">Investering</span><span class="sc-row-val orange">${fmtEuro(st.inv)}</span></div>
-        <div class="sc-row"><span class="sc-row-lbl">Gem. TVT</span><span class="sc-row-val">${tvtTxt}</span></div>
-        <div class="sc-row"><span class="sc-row-lbl">CO₂-reductie</span><span class="sc-row-val">${co2Txt}/jr</span></div>
+        <div class="sc-stats">
+          <div class="sc-stat">
+            <div class="sc-stat-lbl">Besparing/jr</div>
+            <div class="sc-stat-val green">${fmtEuro(st.besp)}</div>
+          </div>
+          <div class="sc-stat">
+            <div class="sc-stat-lbl">Investering</div>
+            <div class="sc-stat-val orange">${fmtEuro(st.inv)}</div>
+          </div>
+          <div class="sc-stat">
+            <div class="sc-stat-lbl">Gem. TVT</div>
+            <div class="sc-stat-val">${tvtTxt}</div>
+          </div>
+          <div class="sc-stat">
+            <div class="sc-stat-lbl">CO₂-reductie</div>
+            <div class="sc-stat-val blue">${co2Txt}/jr</div>
+          </div>
+        </div>
         <div class="sc-measures">${measureDots}</div>
       </div>
       <div class="sc-footer">
-        <div class="sc-netto-lbl">Indicatieve maandlast</div>
-        <div class="sc-netto-val${s.key==='budget'?' green':''}">€ ${st.maand.toLocaleString('nl-NL')}<span style="font-size:12px;font-weight:400;">/mnd</span></div>
-        <div class="sc-maand">bij 5% rente · 15 jr · 20% eigen</div>
+        <div class="sc-maand-lbl">Indicatieve maandlast</div>
+        <div class="sc-maand-val">€ ${st.maand.toLocaleString('nl-NL')}<span class="sc-maand-eenheid">/mnd</span></div>
+        <div class="sc-maand-sub">bij 5% rente · 15 jaar · 20% eigen inbreng</div>
         <div class="sc-bar-wrap">
-          <div class="sc-bar-lbl"><span>Dekking volledig pakket</span><span>${st.pctVolledig}%</span></div>
-          <div class="sc-bar-track"><div class="sc-bar-fill" style="width:${st.pctVolledig}%;background:${barColor};"></div></div>
+          <div class="sc-bar-lbl">
+            <span>Aandeel volledig pakket</span>
+            <span>${st.pctVolledig}%</span>
+          </div>
+          <div class="sc-bar-track">
+            <div class="sc-bar-fill" style="width:${st.pctVolledig}%;background:${barColor};"></div>
+          </div>
         </div>
       </div>
     </div>`;
