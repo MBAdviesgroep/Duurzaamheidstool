@@ -3236,8 +3236,8 @@ select.finput {
         <div id="scenarioSection"></div>
         <div id="maatregelenChartSection"></div>
         <div id="chartSection" class="chart-section"></div>
-        <div id="maandlastenSection"></div>
         <div id="nettoSection"></div>
+        <div id="maandlastenSection"></div>
         <div id="subsidiesSection"></div>
         <div id="phasesSection"></div>
         <div id="aandachtSection"></div>
@@ -4431,6 +4431,8 @@ function updateNettoTabel(brutoBedrag) {
     const eindRij = document.createElement('tr');
     eindRij.className = 'dynamic-row';
     const eindNetto = Math.max(0, nettoBedrag - totaalFiscaal);
+    // Sla op voor maandlasten-koppeling
+    window._nettoNaFiscaal = eindNetto;
     eindRij.innerHTML = `
       <td style="padding-top:10px;border-top:2px solid var(--blue-faint2);">
         <strong>Geschatte netto investering</strong><br>
@@ -4450,6 +4452,7 @@ function updateNettoTabel(brutoBedrag) {
     tbody.appendChild(noteRij);
   } else {
     // Geen fiscale regelingen van toepassing — toon eindrij gelijk aan netto
+    window._nettoNaFiscaal = Math.max(0, nettoBedrag);
     const eindRij = document.createElement('tr');
     eindRij.className = 'dynamic-row';
     eindRij.innerHTML = `
@@ -4457,6 +4460,8 @@ function updateNettoTabel(brutoBedrag) {
       <td style="padding-top:10px;border-top:2px solid var(--blue-faint2);"><strong style="font-size:17px;">${fmtEuro(Math.max(0, nettoBedrag))}</strong></td>`;
     tbody.appendChild(eindRij);
   }
+  // Maandlasten bijwerken na elke herberekening netto-tabel
+  if (typeof window._mlRender === 'function') window._mlRender();
 }
 
 // Update subsidies sectie op basis van momenteel geselecteerde maatregelen
@@ -5080,31 +5085,33 @@ function renderMaandlastenSection(r) {
       : allMaatregelen; // fallback: alle maatregelen als checkboxes nog niet in DOM staan
     const besparing = sel.reduce((s,m)=>s+parseEuro(m.besparing),0);
     const bruto = sel.reduce((s,m)=>s+parseEuro(m.investering),0);
-    // Bereken netto investering op basis van directe subsidies (geen fiscale aftrekken)
+    // Gebruik de netto investering NA fiscaal voordeel als die beschikbaar is (berekend door netto-tabel)
+    // Zo zijn maandlasten altijd gekoppeld aan de netto-tabel hierboven
     let netto = bruto;
-    const ni = (_rptData || window._mlRptData || r).netto_investering;
-    if (ni && ni.posten && ni.posten.length > 0 && bruto > 0) {
-      let aftrekTotaal = 0;
-      const origBruto = parseEuro(ni.bruto || '0');
-      const ratio = origBruto > 0 ? bruto / origBruto : 1;
-      for (const p of ni.posten) {
-        if (!p.is_aftrek) continue;
-        // Sla fiscale aftrekken over — geen directe korting op factuurbedrag
-        const naamUpper = (p.naam || '').toUpperCase();
-        if (FISCALE_AFTREK_CODES && FISCALE_AFTREK_CODES.some(c => naamUpper.includes(c))) continue;
-        const raw = (p.bedrag || '').toString();
-        const pctMatch = raw.match(/([\d,\.]+)\s*%/);
-        if (pctMatch) {
-          aftrekTotaal += Math.round(bruto * parseFloat(pctMatch[1].replace(',', '.')) / 100);
-        } else {
-          aftrekTotaal += Math.round(parseEuro(raw) * ratio);
+    if (window._nettoNaFiscaal != null && window._nettoNaFiscaal > 0 && bruto > 0) {
+      // Schaal proportioneel als niet alle maatregelen geselecteerd zijn
+      const allBruto = ((_rptData || window._mlRptData || r).maatregelen || []).reduce((s,m)=>s+parseEuro(m.investering),0);
+      const ratio = allBruto > 0 ? bruto / allBruto : 1;
+      netto = Math.max(0, window._nettoNaFiscaal * ratio);
+    } else {
+      // Fallback: alleen directe subsidies
+      const ni = (_rptData || window._mlRptData || r).netto_investering;
+      if (ni && ni.posten && ni.posten.length > 0 && bruto > 0) {
+        let aftrekTotaal = 0;
+        const origBruto = parseEuro(ni.bruto || '0');
+        const ratioNi = origBruto > 0 ? bruto / origBruto : 1;
+        for (const p of ni.posten) {
+          if (!p.is_aftrek) continue;
+          const naamUpper = (p.naam || '').toUpperCase();
+          if (FISCALE_AFTREK_CODES && FISCALE_AFTREK_CODES.some(c => naamUpper.includes(c))) continue;
+          const raw = (p.bedrag || '').toString();
+          const pctMatch = raw.match(/([\d,\.]+)\s*%/);
+          aftrekTotaal += pctMatch
+            ? Math.round(bruto * parseFloat(pctMatch[1].replace(',', '.')) / 100)
+            : Math.round(parseEuro(raw) * ratioNi);
         }
+        netto = Math.max(0, bruto - aftrekTotaal);
       }
-      netto = Math.max(0, bruto - aftrekTotaal);
-    } else if (ni && ni.bruto && ni.netto) {
-      // Fallback: gebruik simpele ratio als geen posten beschikbaar
-      const ratioBruto = parseEuro(ni.bruto), ratioNetto = parseEuro(ni.netto);
-      if (ratioBruto > 0 && ratioNetto < ratioBruto) netto = bruto * (ratioNetto / ratioBruto);
     }
     return { besparing, bruto, netto };
   }
@@ -5235,7 +5242,7 @@ function renderMaandlastenSection(r) {
       </div>
       <div class="maandlasten-head">
         <div class="maandlasten-titel">Wat betaalt u per maand?</div>
-        <div class="maandlasten-sub">Vergelijking met optionele verduurzamingslening · op basis van geselecteerde maatregelen</div>
+        <div class="maandlasten-sub">Leningbedrag gebaseerd op netto investering na subsidies &amp; fiscale voordelen (zie tabel hierboven)</div>
       </div>
 
       <!-- Financieringsbedrag direct invoer -->
@@ -5386,8 +5393,8 @@ function renderTocRail() {
     { id:'measuresSection', label:'Maatregelen' },
     { id:'scenarioSection', label:'Scenario\'s' },
     { id:'chartSection', label:'Besparing' },
-    { id:'maandlastenSection', label:'Maandlasten' },
     { id:'nettoSection', label:'Netto investering' },
+    { id:'maandlastenSection', label:'Maandlasten' },
     { id:'subsidiesSection', label:'Subsidies' },
     { id:'phasesSection', label:'Aanpak' },
     { id:'vervolgSection', label:'Vervolgstappen' },
