@@ -3955,47 +3955,42 @@ function renderReport(r) {
     recalcTotals();
   }, 50);
 
-  // Netto investering tabel
-  let nettoHtml = '';
+  // Sla netto investering data globaal op voor dynamische herberekening
+  window._niData = r.netto_investering || null;
+  window._rptAanvragerType = r.__aanvrager_type;
+  window._rptMaatregelen = r.maatregelen || [];
+
+  // Netto investering tabel — wordt dynamisch bijgewerkt via recalcTotals
   const ni = r.netto_investering;
   if (ni && ni.posten && ni.posten.length > 0) {
-    const rows = ni.posten.map(p => `
-      <tr class="${p.is_aftrek?'sub-row':''}">
-        <td>${p.naam}</td>
-        <td>${p.is_aftrek?'<span style="color:var(--green)">- '+p.bedrag+'</span>':p.bedrag}</td>
-      </tr>`).join('');
-    nettoHtml = secHead('Netto investering na subsidies') +
-      `<table class="netto-table">
+    const nettoHtml = secHead('Netto investering na subsidies') +
+      `<table class="netto-table" id="nettoTable">
         <thead><tr><th>Post</th><th style="text-align:right">Bedrag</th></tr></thead>
-        <tbody>
-          <tr id="nettoBrutoRij"><td>Bruto investering</td><td id="nettoBrutoVal">${ni.bruto||r.totaal_investering||'&#8212;'}</td></tr>
-          ${rows}
-          <tr><td>Geschatte netto investering</td><td>${ni.netto||'&#8212;'}</td></tr>
+        <tbody id="nettoTbody">
+          <tr id="nettoBrutoRij"><td>Bruto investering</td><td id="nettoBrutoVal">${fmtEuro(parseEuro(ni.bruto||r.totaal_investering||'0'))}</td></tr>
         </tbody>
       </table>`;
+    document.getElementById('nettoSection').innerHTML = nettoHtml;
+  } else {
+    document.getElementById('nettoSection').innerHTML = '';
   }
-  document.getElementById('nettoSection').innerHTML = nettoHtml;
 
   // Subsidies — combineer AI-output met subsidie database
-  // Gebruik database als primaire bron, AI-data als aanvulling
-  const dbSubs = matchSubsidies(r.maatregelen, r.__aanvrager_type);
-  // Voeg eventuele extra subsidies uit AI toe die niet in DB staan
-  const aiSubCodes = (r.subsidies||[]).map(s => (s.code||'').toUpperCase());
-  const dbCodes = dbSubs.map(s => s.code.toUpperCase());
-  // Filter uit AI-output subsidies die niet bij dit type aanvrager horen
+  // Subsidies — sla AI-extra subsidies globaal op voor dynamische herberekening
   const EXCLUDED_BY_TYPE = {
     particulier: ['EIA', 'MIA', 'VAMIL', 'MIA/VAMIL', 'KIA', 'SDE++', 'SDE', 'WBSO', 'BMKB', 'BMKB-GROEN'],
     ondernemer:  ['SEEH', 'SVVE'],
     vve:         ['EIA', 'MIA', 'VAMIL', 'MIA/VAMIL', 'KIA', 'SDE++', 'SDE', 'WBSO', 'BMKB', 'BMKB-GROEN']
   };
   const excluded = EXCLUDED_BY_TYPE[r.__aanvrager_type] || [];
-  const extraAiSubs = (r.subsidies||[]).filter(s => {
+  // Bewaar extra AI-subsidies (niet in DB) voor dynamisch gebruik
+  window._aiExtraSubs = (r.subsidies||[]).filter(s => {
     const c = (s.code||'').toUpperCase();
-    if (dbCodes.includes(c)) return false;
     if (excluded.includes(c)) return false;
+    // Controleer of het al in DB zit
+    if (SUBSIDIE_DB.some(d => d.code.toUpperCase() === c)) return false;
     return true;
   });
-  const allSubs = [...dbSubs, ...extraAiSubs];
 
   function renderSubCard(s) {
     const stappen = (s.stappen||[]).map((st,i)=>
@@ -4021,8 +4016,12 @@ function renderReport(r) {
       <div>${urlBtn}</div>
     </div>`;
   }
+  window._renderSubCard = renderSubCard;
 
-  const subsHtml = allSubs.map(renderSubCard).join('');
+  // Initieel renderen — wordt ook bijgewerkt via recalcTotals
+  const initDbSubs = matchSubsidies(r.maatregelen, r.__aanvrager_type);
+  const initAllSubs = [...initDbSubs, ...window._aiExtraSubs];
+  const subsHtml = initAllSubs.map(renderSubCard).join('');
   document.getElementById('subsidiesSection').innerHTML = subsHtml
     ? secHead('Subsidies &amp; fiscale regelingen') +
       `<div class="sub-list">${subsHtml}</div>` : '';
@@ -4221,14 +4220,123 @@ function recalcTotals() {
     const selected = (_rptData.maatregelen||[]).filter((_, i) => checked[i] && checked[i].checked);
     renderMaatregelenChart(selected);
   }
-  // Update scenario summary indien aanwezig
-  if (typeof window._updateScenarioSummary === 'function') window._updateScenarioSummary();
   // Update bruto investering in netto-tabel
   const nettoBrutoVal = document.getElementById('nettoBrutoVal');
   if (nettoBrutoVal) nettoBrutoVal.textContent = fmtEuro(totalInvestering);
 
+  // Update netto investering tabel — herbereken aftrekposten op basis van geselecteerde investering
+  updateNettoTabel(totalInvestering);
+
+  // Update subsidies sectie op basis van geselecteerde maatregelen
+  updateSubsidies();
+
+  // Update scenario summary indien aanwezig
+  if (typeof window._updateScenarioSummary === 'function') window._updateScenarioSummary();
   // Update maandlasten met geselecteerde besparing/investering
   if (typeof window._mlRender === 'function') window._mlRender();
+}
+
+// Herbereken en update de netto-investeringstabel op basis van de geselecteerde bruto investering
+function updateNettoTabel(brutoBedrag) {
+  const tbody = document.getElementById('nettoTbody');
+  if (!tbody) return;
+  const ni = window._niData;
+  if (!ni || !ni.posten || ni.posten.length === 0) return;
+
+  // Originele bruto uit AI (voor ratio-berekening)
+  const origBruto = parseEuro(ni.bruto || '0');
+
+  // Bereken aftrekposten proportioneel: elke post die een percentage of absoluut bedrag is
+  // schaalt mee met de geselecteerde investering t.o.v. originele bruto
+  const ratio = origBruto > 0 ? brutoBedrag / origBruto : 1;
+
+  let nettoBedrag = brutoBedrag;
+  // Verwijder bestaande dynamische rijen (alles behalve bruto-rij)
+  Array.from(tbody.querySelectorAll('tr.dynamic-row')).forEach(r => r.remove());
+
+  for (const p of ni.posten) {
+    let aftrekBedrag = 0;
+    const rawBedrag = (p.bedrag || '').toString();
+
+    if (p.is_aftrek) {
+      // Probeer percentage te parsen (bijv. "13,5%" of "40%")
+      const pctMatch = rawBedrag.match(/([\d,\.]+)\s*%/);
+      if (pctMatch) {
+        const pct = parseFloat(pctMatch[1].replace(',', '.'));
+        aftrekBedrag = Math.round(brutoBedrag * pct / 100);
+      } else {
+        // Absoluut bedrag — schaal mee met selectie
+        const absVal = parseEuro(rawBedrag);
+        aftrekBedrag = Math.round(absVal * ratio);
+      }
+      nettoBedrag -= aftrekBedrag;
+    }
+
+    const tr = document.createElement('tr');
+    tr.className = p.is_aftrek ? 'sub-row dynamic-row' : 'dynamic-row';
+    if (p.is_aftrek) {
+      // Toon beschrijving: als percentage, toon het percentage + berekend bedrag
+      const pctMatch = rawBedrag.match(/([\d,\.]+)\s*%/);
+      const aftrekLabel = pctMatch
+        ? `- ${pctMatch[1]}% = ${fmtEuro(aftrekBedrag)}`
+        : `- ${fmtEuro(aftrekBedrag)}`;
+      tr.innerHTML = `<td>${p.naam}</td><td><span style="color:var(--green)">${aftrekLabel}</span></td>`;
+    } else {
+      tr.innerHTML = `<td>${p.naam}</td><td>${rawBedrag}</td>`;
+    }
+    tbody.appendChild(tr);
+  }
+
+  // Totaalrij — update of maak aan
+  let totaalRij = tbody.querySelector('tr.netto-totaal-row');
+  if (!totaalRij) {
+    totaalRij = document.createElement('tr');
+    totaalRij.className = 'netto-totaal-row dynamic-row';
+    tbody.appendChild(totaalRij);
+  }
+  const nettoLabel = nettoBedrag < brutoBedrag
+    ? `<strong>${fmtEuro(Math.max(0, nettoBedrag))}</strong>`
+    : `<strong>${fmtEuro(brutoBedrag)}</strong> <span style="color:var(--ink-4);font-size:11px;font-style:italic;">(subsidie afhankelijk per maatregel)</span>`;
+  totaalRij.innerHTML = `<td><strong>Geschatte netto investering</strong></td><td>${nettoLabel}</td>`;
+}
+
+// Update subsidies sectie op basis van momenteel geselecteerde maatregelen
+function updateSubsidies() {
+  const subEl = document.getElementById('subsidiesSection');
+  if (!subEl) return;
+  if (!window._renderSubCard || !window._rptAanvragerType) return;
+
+  // Haal geselecteerde maatregelen op
+  const checks = [...document.querySelectorAll('.m-checkbox')];
+  const allMaatregelen = (_rptData ? _rptData.maatregelen : window._rptMaatregelen) || [];
+  const selectedMaatregelen = checks.length > 0
+    ? allMaatregelen.filter((_, i) => checks[i] && checks[i].checked)
+    : allMaatregelen;
+
+  if (selectedMaatregelen.length === 0) {
+    subEl.innerHTML = '';
+    return;
+  }
+
+  const dbSubs = matchSubsidies(selectedMaatregelen, window._rptAanvragerType);
+  // Voeg AI-extra subsidies toe die relevant zijn voor geselecteerde maatregelen
+  const extraSubs = (window._aiExtraSubs || []).filter(s => {
+    // Controleer of de AI-subsidie nog relevant is voor de geselecteerde maatregelen
+    const toepassingList = Array.isArray(s.van_toepassing_op)
+      ? s.van_toepassing_op : [s.van_toepassing_op || ''];
+    return toepassingList.some(t => {
+      const tl = t.toLowerCase();
+      if (tl === 'alle maatregelen' || tl === '' || tl === 'gehele investering') return true;
+      return selectedMaatregelen.some(m => {
+        const mn = (m.naam || '').toLowerCase();
+        return mn.includes(tl) || tl.includes(mn.split(' ')[0]);
+      });
+    });
+  });
+  const allSubs = [...dbSubs, ...extraSubs];
+  const subsHtml = allSubs.map(window._renderSubCard).join('');
+  subEl.innerHTML = subsHtml
+    ? secHead('Subsidies &amp; fiscale regelingen') + `<div class="sub-list">${subsHtml}</div>` : '';
 }
 
 function selectAllMeasures(val) {
@@ -4787,12 +4895,28 @@ function renderMaandlastenSection(r) {
       : allMaatregelen; // fallback: alle maatregelen als checkboxes nog niet in DOM staan
     const besparing = sel.reduce((s,m)=>s+parseEuro(m.besparing),0);
     const bruto = sel.reduce((s,m)=>s+parseEuro(m.investering),0);
-    // Subsidie-aftrek-ratio uit netto_investering, indien beschikbaar
+    // Bereken netto investering op basis van aftrekposten (percentage-bewust)
     let netto = bruto;
-    const ni = _rptData.netto_investering;
-    if (ni && ni.bruto && ni.netto) {
+    const ni = (_rptData || window._mlRptData || r).netto_investering;
+    if (ni && ni.posten && ni.posten.length > 0 && bruto > 0) {
+      let aftrekTotaal = 0;
+      const origBruto = parseEuro(ni.bruto || '0');
+      const ratio = origBruto > 0 ? bruto / origBruto : 1;
+      for (const p of ni.posten) {
+        if (!p.is_aftrek) continue;
+        const raw = (p.bedrag || '').toString();
+        const pctMatch = raw.match(/([\d,\.]+)\s*%/);
+        if (pctMatch) {
+          aftrekTotaal += Math.round(bruto * parseFloat(pctMatch[1].replace(',', '.')) / 100);
+        } else {
+          aftrekTotaal += Math.round(parseEuro(raw) * ratio);
+        }
+      }
+      netto = Math.max(0, bruto - aftrekTotaal);
+    } else if (ni && ni.bruto && ni.netto) {
+      // Fallback: gebruik simpele ratio als geen posten beschikbaar
       const ratioBruto = parseEuro(ni.bruto), ratioNetto = parseEuro(ni.netto);
-      if (ratioBruto > 0) netto = bruto * (ratioNetto / ratioBruto);
+      if (ratioBruto > 0 && ratioNetto < ratioBruto) netto = bruto * (ratioNetto / ratioBruto);
     }
     return { besparing, bruto, netto };
   }
@@ -4981,8 +5105,6 @@ function renderMaandlastenSection(r) {
   // Nogmaals renderen na DOM-settle zodat checkboxes zeker beschikbaar zijn
   setTimeout(() => render(), 80);
 }
-
-// Scenario-slider: budget / minimaal / volledig
 function renderScenarioSection(r) {
   const el = document.getElementById('scenarioSection');
   if (!el) return;
