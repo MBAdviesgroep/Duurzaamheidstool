@@ -4043,20 +4043,17 @@ function renderReport(r) {
   window._rptAanvragerType = r.__aanvrager_type;
   window._rptMaatregelen = r.maatregelen || [];
 
-  // Netto investering tabel — wordt dynamisch bijgewerkt via recalcTotals
+  // Netto investering tabel — altijd tonen, wordt dynamisch bijgewerkt via recalcTotals
   const ni = r.netto_investering;
-  if (ni && ni.posten && ni.posten.length > 0) {
-    const nettoHtml = secHead('Netto investering na subsidies') +
-      `<table class="netto-table" id="nettoTable">
-        <thead><tr><th>Post</th><th style="text-align:right">Bedrag</th></tr></thead>
-        <tbody id="nettoTbody">
-          <tr id="nettoBrutoRij"><td>Bruto investering</td><td id="nettoBrutoVal">${fmtEuro(parseEuro(ni.bruto||r.totaal_investering||'0'))}</td></tr>
-        </tbody>
-      </table>`;
-    document.getElementById('nettoSection').innerHTML = nettoHtml;
-  } else {
-    document.getElementById('nettoSection').innerHTML = '';
-  }
+  const initBruto = parseEuro((ni && ni.bruto) || r.totaal_investering || '0');
+  const nettoHtml = secHead('Netto investering na subsidies') +
+    `<table class="netto-table" id="nettoTable">
+      <thead><tr><th>Post</th><th style="text-align:right">Bedrag</th></tr></thead>
+      <tbody id="nettoTbody">
+        <tr id="nettoBrutoRij"><td>Bruto investering</td><td id="nettoBrutoVal">${fmtEuro(initBruto)}</td></tr>
+      </tbody>
+    </table>`;
+  document.getElementById('nettoSection').innerHTML = nettoHtml;
 
   // Subsidies — combineer AI-output met subsidie database
   // Subsidies — sla AI-extra subsidies globaal op voor dynamische herberekening
@@ -4325,93 +4322,94 @@ const FISCALE_AFTREK_CODES = ['EIA', 'MIA', 'KIA', 'VAMIL', 'MIA/VAMIL', 'WBSO',
 function updateNettoTabel(brutoBedrag) {
   const tbody = document.getElementById('nettoTbody');
   if (!tbody) return;
-  const ni = window._niData;
-  if (!ni || !ni.posten || ni.posten.length === 0) {
-    // Geen posten: toon alleen bruto = netto
-    Array.from(tbody.querySelectorAll('tr.dynamic-row')).forEach(r => r.remove());
-    let totaalRij = tbody.querySelector('tr.netto-totaal-row');
-    if (!totaalRij) {
-      totaalRij = document.createElement('tr');
-      totaalRij.className = 'netto-totaal-row dynamic-row';
-      tbody.appendChild(totaalRij);
-    }
-    totaalRij.innerHTML = `<td><strong>Geschatte netto investering</strong></td><td><strong>${fmtEuro(brutoBedrag)}</strong> <span style="color:var(--ink-4);font-size:11px;font-style:italic;">(subsidie afhankelijk per maatregel)</span></td>`;
-    return;
-  }
 
-  // Originele bruto uit AI (voor ratio-berekening van absolute bedragen)
-  const origBruto = parseEuro(ni.bruto || '0');
-  const ratio = origBruto > 0 ? brutoBedrag / origBruto : 1;
+  // Update bruto rij
+  const brutoVal = document.getElementById('nettoBrutoVal');
+  if (brutoVal) brutoVal.textContent = fmtEuro(brutoBedrag);
 
-  let nettoBedrag = brutoBedrag;
-  let heeftFiscaleAftrekken = false;
-  // Verwijder bestaande dynamische rijen (alles behalve bruto-rij)
+  // Verwijder bestaande dynamische rijen
   Array.from(tbody.querySelectorAll('tr.dynamic-row')).forEach(r => r.remove());
 
-  for (const p of ni.posten) {
-    const rawBedrag = (p.bedrag || '').toString();
-    const naamUpper = (p.naam || '').toUpperCase();
+  const ni = window._niData;
+  let nettoBedrag = brutoBedrag;
+  let heeftDirecteSubsidies = false;
+  const fiscaleRijen = [];
 
-    // Detecteer fiscale aftrekken — die horen NIET in de netto-tabel
-    const isFiscaal = FISCALE_AFTREK_CODES.some(code => naamUpper.includes(code));
-    if (isFiscaal && p.is_aftrek) {
-      heeftFiscaleAftrekken = true;
-      continue; // sla over — fiscale aftrekken zijn geen korting op factuurprijs
-    }
+  if (ni && ni.posten && ni.posten.length > 0) {
+    const origBruto = parseEuro(ni.bruto || '0');
+    const ratio = origBruto > 0 ? brutoBedrag / origBruto : 1;
 
-    if (p.is_aftrek) {
-      // Directe subsidie — verwerk als aftrek op brutobedrag
-      let aftrekBedrag = 0;
-      const pctMatch = rawBedrag.match(/([\d,\.]+)\s*%/);
-      if (pctMatch) {
-        // Percentage opgegeven — ongebruikelijk voor directe subsidie, maar verwerk voorzichtig
-        const pct = parseFloat(pctMatch[1].replace(',', '.'));
-        aftrekBedrag = Math.round(brutoBedrag * pct / 100);
-      } else {
-        // Absoluut bedrag (verwacht formaat voor directe subsidies)
-        const absVal = parseEuro(rawBedrag);
-        aftrekBedrag = Math.round(absVal * ratio);
+    for (const p of ni.posten) {
+      const rawBedrag = (p.bedrag || '').toString();
+      const naamUpper = (p.naam || '').toUpperCase();
+      const isFiscaal = FISCALE_AFTREK_CODES.some(code => naamUpper.includes(code));
+
+      if (p.is_aftrek && isFiscaal) {
+        fiscaleRijen.push(p); // informatief tonen, niet aftrekken
+        continue;
       }
-      nettoBedrag -= aftrekBedrag;
-
-      const tr = document.createElement('tr');
-      tr.className = 'sub-row dynamic-row';
-      const aftrekLabel = pctMatch
-        ? `- ${rawBedrag.match(/([\d,\.]+\s*%)/)[1]} = ${fmtEuro(aftrekBedrag)}`
-        : `- ${fmtEuro(aftrekBedrag)}`;
-      tr.innerHTML = `<td>${p.naam}</td><td><span style="color:var(--green)">${aftrekLabel}</span></td>`;
-      tbody.appendChild(tr);
-    } else {
-      const tr = document.createElement('tr');
-      tr.className = 'dynamic-row';
-      tr.innerHTML = `<td>${p.naam}</td><td>${rawBedrag}</td>`;
-      tbody.appendChild(tr);
+      if (p.is_aftrek) {
+        // Directe subsidie — wél aftrekken van brutobedrag
+        let aftrekBedrag = 0;
+        const pctMatch = rawBedrag.match(/([\d,\.]+)\s*%/);
+        if (pctMatch) {
+          aftrekBedrag = Math.round(brutoBedrag * parseFloat(pctMatch[1].replace(',', '.')) / 100);
+        } else {
+          aftrekBedrag = Math.round(parseEuro(rawBedrag) * ratio);
+        }
+        nettoBedrag -= aftrekBedrag;
+        heeftDirecteSubsidies = true;
+        const tr = document.createElement('tr');
+        tr.className = 'sub-row dynamic-row';
+        const label = pctMatch
+          ? `- ${rawBedrag.match(/([\d,\.]+\s*%)/)[1]} = ${fmtEuro(aftrekBedrag)}`
+          : `- ${fmtEuro(aftrekBedrag)}`;
+        tr.innerHTML = `<td>${p.naam}</td><td><span style="color:var(--green)">${label}</span></td>`;
+        tbody.appendChild(tr);
+      } else {
+        const tr = document.createElement('tr');
+        tr.className = 'dynamic-row';
+        tr.innerHTML = `<td>${p.naam}</td><td>${rawBedrag}</td>`;
+        tbody.appendChild(tr);
+      }
     }
   }
 
-  // Voeg noot toe als er fiscale aftrekken waren die zijn overgeslagen
-  if (heeftFiscaleAftrekken) {
+  // Totaalrij netto (na directe subsidies)
+  const totaalRij = document.createElement('tr');
+  totaalRij.className = 'netto-totaal-row dynamic-row';
+  if (heeftDirecteSubsidies) {
+    totaalRij.innerHTML = `<td><strong>Netto investering na subsidies</strong></td><td><strong style="color:var(--green)">${fmtEuro(Math.max(0, nettoBedrag))}</strong></td>`;
+  } else {
+    totaalRij.innerHTML = `<td><strong>Netto investering</strong></td><td><strong>${fmtEuro(brutoBedrag)}</strong> <span style="color:var(--ink-4);font-size:11px;font-style:italic;">(excl. fiscale voordelen)</span></td>`;
+  }
+  tbody.appendChild(totaalRij);
+
+  // Fiscale aftrekken — als aparte informatieve sectie onderaan
+  if (fiscaleRijen.length > 0) {
+    const sepRij = document.createElement('tr');
+    sepRij.className = 'dynamic-row';
+    sepRij.innerHTML = `<td colspan="2" style="padding-top:14px;padding-bottom:4px;">
+      <span style="font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-4);">Fiscale voordelen (via belastingaangifte)</span>
+    </td>`;
+    tbody.appendChild(sepRij);
+
+    for (const p of fiscaleRijen) {
+      const tr = document.createElement('tr');
+      tr.className = 'dynamic-row';
+      tr.innerHTML = `<td style="color:var(--ink-3)">${p.naam}</td><td style="color:var(--ink-4);font-size:12px;">subsidie afhankelijk per maatregel</td>`;
+      tbody.appendChild(tr);
+    }
+
     const noteRij = document.createElement('tr');
     noteRij.className = 'dynamic-row';
-    noteRij.innerHTML = `<td colspan="2" style="font-size:11px;color:var(--ink-4);font-style:italic;padding-top:6px;">
-      * EIA, MIA/Vamil en KIA zijn fiscale aftrekken op de belastbare winst — geen korting op het factuurbedrag.
-      Het werkelijke belastingvoordeel loopt via de jaarlijkse aangifte en is afhankelijk van uw belastingtarief.
+    noteRij.innerHTML = `<td colspan="2" style="font-size:11px;color:var(--ink-4);font-style:italic;padding-top:8px;line-height:1.5;">
+      EIA, MIA/Vamil en KIA zijn fiscale aftrekken op de belastbare winst, geen korting op het factuurbedrag.
+      Het werkelijke voordeel hangt af van uw belastingtarief en loopt via de jaarlijkse aangifte.
       Raadpleeg uw accountant voor de exacte impact.
     </td>`;
     tbody.appendChild(noteRij);
   }
-
-  // Totaalrij
-  let totaalRij = tbody.querySelector('tr.netto-totaal-row');
-  if (!totaalRij) {
-    totaalRij = document.createElement('tr');
-    totaalRij.className = 'netto-totaal-row dynamic-row';
-    tbody.appendChild(totaalRij);
-  }
-  const nettoLabel = nettoBedrag < brutoBedrag
-    ? `<strong>${fmtEuro(Math.max(0, nettoBedrag))}</strong>`
-    : `<strong>${fmtEuro(brutoBedrag)}</strong> <span style="color:var(--ink-4);font-size:11px;font-style:italic;">(subsidie afhankelijk per maatregel)</span>`;
-  totaalRij.innerHTML = `<td><strong>Geschatte netto investering</strong></td><td>${nettoLabel}</td>`;
 }
 
 // Update subsidies sectie op basis van momenteel geselecteerde maatregelen
