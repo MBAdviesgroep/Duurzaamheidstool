@@ -433,7 +433,7 @@ select.finput {
   transition: background var(--t-fast);
 }
 .btn-primary:hover:not(:disabled) { background: var(--blue-deep); box-shadow: 0 4px 16px rgba(27,89,123,0.3); }
-.btn-primary:active:not(:disabled) { transform: scale(0.997); }
+.btn-primary:active:not(:disabled) { transform: scale(0.93); }
 .btn-primary:disabled { opacity: 0.55; cursor: not-allowed; }
 
 .btn-orange {
@@ -454,7 +454,7 @@ select.finput {
   gap: 10px;
 }
 .btn-orange:hover:not(:disabled) { background: var(--orange-deep); box-shadow: 0 4px 20px rgba(226,104,54,0.35); }
-.btn-orange:active:not(:disabled) { transform: scale(0.997); }
+.btn-orange:active:not(:disabled) { transform: scale(0.93); }
 .btn-orange:disabled { opacity: 0.55; cursor: not-allowed; }
 
 .btn-ghost {
@@ -1047,9 +1047,9 @@ select.finput {
   animation: numBump 0.35s cubic-bezier(0.16,1,0.3,1);
 }
 @keyframes numBump {
-  0% { transform: scale(1); }
-  40% { transform: scale(1.12); }
-  100% { transform: scale(1); }
+  0% { transform: scale(0.93); }
+  40% { transform: scale(0.93); }
+  100% { transform: scale(0.93); }
 }
 
 /* LTV progress bar */
@@ -2102,7 +2102,7 @@ select.finput {
   background: var(--ink-5); flex-shrink: 0;
   transition: all var(--t-fast);
 }
-.toc-link.active .toc-dot { background: var(--orange); transform: scale(1.4); }
+.toc-link.active .toc-dot { background: var(--orange); transform: scale(0.93); }
 @media (max-width: 1280px) { .toc-rail { display: none !important; } }
 
 /* ═══════════════════════════════════════════════════════
@@ -2508,8 +2508,8 @@ select.finput {
   pointer-events: none;
 }
 @keyframes aiPulse {
-  0% { transform: scale(0.95); opacity: 0.5; }
-  100% { transform: scale(1.25); opacity: 0; }
+  0% { transform: scale(0.93); opacity: 0.5; }
+  100% { transform: scale(0.93); opacity: 0; }
 }
 .ai-panel {
   position: fixed;
@@ -2646,7 +2646,7 @@ select.finput {
   font-family: var(--f-head); padding: 0 7px;
 }
 .lvj-arrow { color: var(--ink-5); font-size: 14px; }
-.label-scale-track { position: relative; padding-bottom: 20px; }
+.label-scale-track { position: relative; padding-bottom: 120px; }
 .label-scale-bars { display: flex; gap: 2px; height: 28px; }
 .lsb {
   flex: 1; border-radius: 4px;
@@ -5067,7 +5067,7 @@ function updateNettoTabel(brutoBedrag) {
   if (voordelen.length > 0) {
     const sepRij = document.createElement('tr');
     sepRij.className = 'dynamic-row';
-    sepRij.innerHTML = `<td colspan="2" style="padding-top:16px;padding-bottom:4px;">
+    sepRij.innerHTML = `<td colspan="2" style="padding-top:16px;padding-bottom: 120px;">
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
         <span style="font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-4);">Geschat fiscaal voordeel (via aangifte)</span>
         <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--ink-3);">Belastingtarief:
