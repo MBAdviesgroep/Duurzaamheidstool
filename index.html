@@ -5222,11 +5222,14 @@ function renderMaandlastenSection(r) {
 
     // Bereken absolute eigen inbreng uit percentage (capped 0-100)
     const pct = Math.min(100, Math.max(0, s.eigenInbrengPct));
-    const eigenInbreng = Math.round(netto * pct / 100);
     // Als er een handmatig leningbedrag is ingesteld, gebruik dat (gecapped op netto)
     const teLenen = s._manualBedrag != null
       ? Math.min(Math.max(0, s._manualBedrag), netto)
-      : Math.max(0, netto - eigenInbreng);
+      : Math.max(0, netto - Math.round(netto * pct / 100));
+    // Eigen inbreng is altijd netto - teLenen zodat eigenInbreng + teLenen = netto
+    const eigenInbreng = Math.max(0, netto - teLenen);
+    // Bereken effectief eigen inbreng percentage voor slider/label
+    const effectiefPct = netto > 0 ? Math.round(eigenInbreng / netto * 100) : pct;
     const annuiteit = pmt(teLenen, s.rente, s.looptijd);
     const totaalRente = annuiteit * s.looptijd * 12 - teLenen;
 
@@ -5272,10 +5275,10 @@ function renderMaandlastenSection(r) {
     const renteEl = document.getElementById('mlRenteVal'); if (renteEl) renteEl.textContent = s.rente.toFixed(1).replace('.',',') + '%';
     const looptijdEl = document.getElementById('mlLooptijdVal'); if (looptijdEl) looptijdEl.textContent = s.looptijd + ' jr';
     const eigenEl = document.getElementById('mlEigenVal');
-    if (eigenEl) eigenEl.textContent = `${pct}% (${fmtEuro(eigenInbreng)})`;
+    if (eigenEl) eigenEl.textContent = `${effectiefPct}% (${fmtEuro(eigenInbreng)})`;
 
     const eigSlider = document.getElementById('mlEigenSlider');
-    if (eigSlider && parseFloat(eigSlider.value) !== pct) eigSlider.value = pct;
+    if (eigSlider && parseInt(eigSlider.value) !== effectiefPct) eigSlider.value = effectiefPct;
 
     // Sync het financieringsbedrag-invoerveld
     // Als netto veranderd is (maatregel aan/uit), reset het handmatig ingevoerde bedrag
@@ -5292,7 +5295,7 @@ function renderMaandlastenSection(r) {
     const badge = document.getElementById('mlFinPctBadge');
     if (badge) {
       if (teLenen > 0) {
-        badge.textContent = `${pct}% eigen · leen ${fmtEuro(teLenen)}`;
+        badge.textContent = `${effectiefPct}% eigen · leen ${fmtEuro(teLenen)}`;
       } else if (netto > 0) {
         badge.textContent = `100% eigen inbreng`;
       } else {
