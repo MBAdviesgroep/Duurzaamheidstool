@@ -2168,9 +2168,74 @@ select.finput {
   border-bottom: 1px dashed var(--rule);
   background: repeating-linear-gradient(135deg, var(--page) 0 8px, var(--page-2) 8px 16px);
 }
+
+/* Financieringsbedrag direct invoer */
+.ml-fin-invoer {
+  padding: 12px 22px 14px;
+  background: var(--blue-faint);
+  border-top: 1px solid var(--blue-faint2);
+  border-bottom: 1px solid var(--blue-faint2);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.ml-fin-invoer-lbl {
+  font-size: 10px; letter-spacing: 0.8px; text-transform: uppercase;
+  color: var(--blue-deep); font-weight: 700; font-family: var(--f-head);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.ml-fin-invoer-wrap {
+  display: flex; align-items: center; gap: 10px; flex: 1; flex-wrap: wrap;
+}
+.ml-fin-input-box {
+  display: flex; align-items: center; gap: 0;
+  background: white;
+  border: 1.5px solid var(--blue-faint2);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+.ml-fin-input-box:focus-within {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(27,89,123,0.10);
+}
+.ml-fin-prefix {
+  padding: 0 10px;
+  font-size: 13px; font-weight: 600; color: var(--blue-deep);
+  background: var(--blue-faint); height: 36px;
+  display: flex; align-items: center;
+  border-right: 1.5px solid var(--blue-faint2);
+  font-family: var(--f-head);
+}
+.ml-fin-number {
+  border: none; outline: none;
+  width: 110px; height: 36px;
+  padding: 0 10px;
+  font-size: 14px; font-weight: 600; font-family: var(--f-head);
+  color: var(--ink); background: transparent;
+  -moz-appearance: textfield;
+}
+.ml-fin-number::-webkit-outer-spin-button,
+.ml-fin-number::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.ml-fin-hint {
+  font-size: 11px; color: var(--ink-4); font-family: var(--f-head);
+  font-style: italic;
+  flex: 1; min-width: 160px;
+}
+.ml-fin-hint strong { color: var(--blue-deep); font-style: normal; font-weight: 700; }
+.ml-fin-pct-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--blue); color: white;
+  font-size: 10.5px; font-weight: 700; font-family: var(--f-head);
+  padding: 3px 9px; border-radius: 20px; letter-spacing: 0.3px;
+  white-space: nowrap;
+}
 .ml-empty strong { color: var(--ink); font-weight: 600; display: block; margin-bottom: 4px; font-family: var(--f-head); }
 .maandlasten-block.is-empty .maandlasten-head,
 .maandlasten-block.is-empty .maandlasten-grid,
+.maandlasten-block.is-empty .ml-fin-invoer,
 .maandlasten-block.is-empty .ml-controls { display: none; }
 .maandlasten-block.is-empty .ml-empty { display: block; }
 
@@ -4806,8 +4871,49 @@ function renderMaandlastenSection(r) {
 
     const eigSlider = document.getElementById('mlEigenSlider');
     if (eigSlider && parseFloat(eigSlider.value) !== pct) eigSlider.value = pct;
+
+    // Sync het financieringsbedrag-invoerveld
+    const finInput = document.getElementById('mlFinBedragInput');
+    if (finInput) {
+      // Alleen updaten als de gebruiker er niet zelf in aan het typen is
+      if (document.activeElement !== finInput) {
+        finInput.value = teLenen > 0 ? Math.round(teLenen) : '';
+      }
+    }
+    // Update de badge: toon % eigen inbreng en het geleende bedrag
+    const badge = document.getElementById('mlFinPctBadge');
+    if (badge) {
+      if (teLenen > 0) {
+        badge.textContent = `${pct}% eigen · leen ${fmtEuro(teLenen)}`;
+      } else if (netto > 0) {
+        badge.textContent = `100% eigen inbreng`;
+      } else {
+        badge.textContent = `–`;
+      }
+    }
   }
   window._mlRender = render;
+
+  // Handler voor directe invoer van financieringsbedrag
+  window._mlOnFinBedragInput = function(rawVal) {
+    const { netto } = getSelected();
+    if (netto <= 0) return;
+    const val = parseFloat(rawVal);
+    if (isNaN(val) || rawVal === '') {
+      // Leeg veld → terug naar percentage-modus (geen override)
+      window._mlState._manualBedrag = null;
+    } else {
+      const capped = Math.min(Math.max(0, val), netto);
+      window._mlState._manualBedrag = capped;
+      // Bereken bijpassend percentage en update de slider
+      const newPct = Math.round((netto - capped) / netto * 100);
+      window._mlState.eigenInbrengPct = Math.min(100, Math.max(0, newPct));
+      const eigSlider = document.getElementById('mlEigenSlider');
+      if (eigSlider) eigSlider.value = window._mlState.eigenInbrengPct;
+    }
+    window._mlState._userTouched = true;
+    window._mlRender();
+  };
 
   // Single source of truth for HTML — controls altijd renderen, alleen visueel verborgen wanneer is-empty
   el.innerHTML = secHead('Maandlasten — voor en na verduurzaming') + `
@@ -4820,6 +4926,31 @@ function renderMaandlastenSection(r) {
         <div class="maandlasten-titel">Wat betaalt u per maand?</div>
         <div class="maandlasten-sub">Vergelijking met optionele verduurzamingslening · op basis van geselecteerde maatregelen</div>
       </div>
+
+      <!-- ── Financieringsbedrag direct invoer ── -->
+      <div class="ml-fin-invoer" id="mlFinInvoerBar">
+        <span class="ml-fin-invoer-lbl">🏦 Financieringsbedrag</span>
+        <div class="ml-fin-invoer-wrap">
+          <div class="ml-fin-input-box">
+            <span class="ml-fin-prefix">€</span>
+            <input
+              id="mlFinBedragInput"
+              class="ml-fin-number"
+              type="number"
+              min="0"
+              step="500"
+              placeholder="0"
+              oninput="window._mlOnFinBedragInput(this.value)"
+            >
+          </div>
+          <div class="ml-fin-hint">
+            Laat leeg voor automatisch — of vul het <strong>exacte leningbedrag</strong> in.
+            Eigen inbreng wordt dan automatisch berekend.
+            &nbsp;<span class="ml-fin-pct-badge" id="mlFinPctBadge">20% eigen</span>
+          </div>
+        </div>
+      </div>
+
       <div class="maandlasten-grid">
         <div class="ml-col is-now">
           <span class="ml-eyebrow is-now">Huidige situatie</span>
@@ -4851,7 +4982,7 @@ function renderMaandlastenSection(r) {
         </div>
         <div class="ml-control">
           <span class="ml-control-lbl">Eigen inbreng <span class="v" id="mlEigenVal">20%</span></span>
-          <input id="mlEigenSlider" type="range" min="0" max="100" step="5" value="${window._mlState.eigenInbrengPct}" oninput="window._mlState.eigenInbrengPct=parseInt(this.value);window._mlState._userTouched=true;window._mlRender();">
+          <input id="mlEigenSlider" type="range" min="0" max="100" step="1" value="${window._mlState.eigenInbrengPct}" oninput="window._mlState.eigenInbrengPct=parseInt(this.value);window._mlState._manualBedrag=null;window._mlState._userTouched=true;window._mlRender();">
         </div>
       </div>
     </div>`;
