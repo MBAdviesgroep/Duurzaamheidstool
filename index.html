@@ -4316,99 +4316,146 @@ function recalcTotals() {
   if (typeof window._mlRender === 'function') window._mlRender();
 }
 
-// Herbereken en update de netto-investeringstabel op basis van de geselecteerde bruto investering
-// Alleen directe subsidies (ISDE, SEEH, SVVE etc.) worden meegenomen — GEEN fiscale aftrekken.
+// KIA schijven 2025
+function kiaPercentage(investering) {
+  if (investering < 2901)   return 0;
+  if (investering <= 71683)  return 0.28;
+  if (investering <= 103748) return 0.21;
+  if (investering <= 131748) return 0.14;
+  if (investering <= 159748) return 0.07;
+  return 0;
+}
+
+// Bereken geschatte fiscale voordelen op basis van geselecteerde subsidies
+function berekenFiscaleVoordelen(brutoBedrag, geselecteerdeSubs, belastingtarief) {
+  const voordelen = [];
+  if (geselecteerdeSubs.some(s => s.code === 'EIA')) {
+    const aftrekBedrag = brutoBedrag * 0.40;
+    voordelen.push({ naam: 'EIA (40% aftrek fiscale winst)', voordeel: Math.round(aftrekBedrag * belastingtarief) });
+  }
+  if (geselecteerdeSubs.some(s => s.code === 'MIA/Vamil')) {
+    const aftrekBedrag = brutoBedrag * 0.36;
+    voordelen.push({ naam: 'MIA (gem. 36% aftrek fiscale winst)', voordeel: Math.round(aftrekBedrag * belastingtarief) });
+  }
+  if (geselecteerdeSubs.some(s => s.code === 'KIA')) {
+    const kiaPct = kiaPercentage(brutoBedrag);
+    if (kiaPct > 0) {
+      const aftrekBedrag = brutoBedrag * kiaPct;
+      voordelen.push({ naam: `KIA (${Math.round(kiaPct*100)}% aftrek fiscale winst)`, voordeel: Math.round(aftrekBedrag * belastingtarief) });
+    }
+  }
+  return voordelen;
+}
+
 const FISCALE_AFTREK_CODES = ['EIA', 'MIA', 'KIA', 'VAMIL', 'MIA/VAMIL', 'WBSO', 'SDE', 'SDE++', 'BMKB'];
 function updateNettoTabel(brutoBedrag) {
   const tbody = document.getElementById('nettoTbody');
   if (!tbody) return;
 
-  // Update bruto rij
   const brutoVal = document.getElementById('nettoBrutoVal');
   if (brutoVal) brutoVal.textContent = fmtEuro(brutoBedrag);
 
-  // Verwijder bestaande dynamische rijen
   Array.from(tbody.querySelectorAll('tr.dynamic-row')).forEach(r => r.remove());
 
+  const tarief = window._nettoTarief != null ? window._nettoTarief : 0.258;
   const ni = window._niData;
   let nettoBedrag = brutoBedrag;
   let heeftDirecteSubsidies = false;
-  const fiscaleRijen = [];
 
+  // Directe subsidies uit AI-data
   if (ni && ni.posten && ni.posten.length > 0) {
     const origBruto = parseEuro(ni.bruto || '0');
     const ratio = origBruto > 0 ? brutoBedrag / origBruto : 1;
-
     for (const p of ni.posten) {
       const rawBedrag = (p.bedrag || '').toString();
       const naamUpper = (p.naam || '').toUpperCase();
-      const isFiscaal = FISCALE_AFTREK_CODES.some(code => naamUpper.includes(code));
-
-      if (p.is_aftrek && isFiscaal) {
-        fiscaleRijen.push(p); // informatief tonen, niet aftrekken
-        continue;
-      }
+      if (p.is_aftrek && FISCALE_AFTREK_CODES.some(c => naamUpper.includes(c))) continue;
       if (p.is_aftrek) {
-        // Directe subsidie — wél aftrekken van brutobedrag
-        let aftrekBedrag = 0;
         const pctMatch = rawBedrag.match(/([\d,\.]+)\s*%/);
-        if (pctMatch) {
-          aftrekBedrag = Math.round(brutoBedrag * parseFloat(pctMatch[1].replace(',', '.')) / 100);
-        } else {
-          aftrekBedrag = Math.round(parseEuro(rawBedrag) * ratio);
-        }
+        const aftrekBedrag = pctMatch
+          ? Math.round(brutoBedrag * parseFloat(pctMatch[1].replace(',', '.')) / 100)
+          : Math.round(parseEuro(rawBedrag) * ratio);
         nettoBedrag -= aftrekBedrag;
         heeftDirecteSubsidies = true;
         const tr = document.createElement('tr');
         tr.className = 'sub-row dynamic-row';
-        const label = pctMatch
-          ? `- ${rawBedrag.match(/([\d,\.]+\s*%)/)[1]} = ${fmtEuro(aftrekBedrag)}`
-          : `- ${fmtEuro(aftrekBedrag)}`;
-        tr.innerHTML = `<td>${p.naam}</td><td><span style="color:var(--green)">${label}</span></td>`;
-        tbody.appendChild(tr);
-      } else {
-        const tr = document.createElement('tr');
-        tr.className = 'dynamic-row';
-        tr.innerHTML = `<td>${p.naam}</td><td>${rawBedrag}</td>`;
+        tr.innerHTML = `<td>${p.naam}</td><td><span style="color:var(--green)">- ${fmtEuro(aftrekBedrag)}</span></td>`;
         tbody.appendChild(tr);
       }
     }
   }
 
-  // Totaalrij netto (na directe subsidies)
-  const totaalRij = document.createElement('tr');
-  totaalRij.className = 'netto-totaal-row dynamic-row';
-  if (heeftDirecteSubsidies) {
-    totaalRij.innerHTML = `<td><strong>Netto investering na subsidies</strong></td><td><strong style="color:var(--green)">${fmtEuro(Math.max(0, nettoBedrag))}</strong></td>`;
-  } else {
-    totaalRij.innerHTML = `<td><strong>Netto investering</strong></td><td><strong>${fmtEuro(brutoBedrag)}</strong> <span style="color:var(--ink-4);font-size:11px;font-style:italic;">(excl. fiscale voordelen)</span></td>`;
-  }
-  tbody.appendChild(totaalRij);
+  // Subtotaal na directe subsidies
+  const subtotaalRij = document.createElement('tr');
+  subtotaalRij.className = 'netto-totaal-row dynamic-row';
+  subtotaalRij.innerHTML = heeftDirecteSubsidies
+    ? `<td><strong>Na directe subsidies</strong></td><td><strong>${fmtEuro(Math.max(0, nettoBedrag))}</strong></td>`
+    : `<td><strong>Bruto investering</strong></td><td><strong>${fmtEuro(brutoBedrag)}</strong></td>`;
+  tbody.appendChild(subtotaalRij);
 
-  // Fiscale aftrekken — als aparte informatieve sectie onderaan
-  if (fiscaleRijen.length > 0) {
+  // Fiscale voordelen sectie
+  const checks = [...document.querySelectorAll('.m-checkbox')];
+  const allMaatregelen = (_rptData ? _rptData.maatregelen : window._rptMaatregelen) || [];
+  const selectedMaatregelen = checks.length > 0 ? allMaatregelen.filter((_,i) => checks[i]?.checked) : allMaatregelen;
+  const geselecteerdeSubs = matchSubsidies(selectedMaatregelen, window._rptAanvragerType || 'ondernemer');
+  const voordelen = berekenFiscaleVoordelen(Math.max(0, nettoBedrag), geselecteerdeSubs, tarief);
+
+  if (voordelen.length > 0) {
     const sepRij = document.createElement('tr');
     sepRij.className = 'dynamic-row';
-    sepRij.innerHTML = `<td colspan="2" style="padding-top:14px;padding-bottom:4px;">
-      <span style="font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-4);">Fiscale voordelen (via belastingaangifte)</span>
+    sepRij.innerHTML = `<td colspan="2" style="padding-top:16px;padding-bottom:4px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+        <span style="font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-4);">Geschat fiscaal voordeel (via aangifte)</span>
+        <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--ink-3);">Belastingtarief:
+          <select id="nettoTariefSelect" style="font-size:11px;border:1px solid var(--rule);border-radius:4px;padding:2px 5px;background:var(--page);color:var(--ink-2);cursor:pointer;"
+            onchange="window._nettoTarief=parseFloat(this.value);updateNettoTabel(${brutoBedrag});">
+            <option value="0.258" ${tarief===0.258?'selected':''}>25,8% VPB (groot)</option>
+            <option value="0.19"  ${Math.abs(tarief-0.19)<0.001?'selected':''}>19% VPB (klein/MKB)</option>
+            <option value="0.495" ${Math.abs(tarief-0.495)<0.001?'selected':''}>49,5% IB (hoog)</option>
+            <option value="0.369" ${Math.abs(tarief-0.369)<0.001?'selected':''}>36,9% IB (laag)</option>
+          </select>
+        </span>
+      </div>
     </td>`;
     tbody.appendChild(sepRij);
 
-    for (const p of fiscaleRijen) {
+    let totaalFiscaal = 0;
+    for (const v of voordelen) {
+      totaalFiscaal += v.voordeel;
       const tr = document.createElement('tr');
-      tr.className = 'dynamic-row';
-      tr.innerHTML = `<td style="color:var(--ink-3)">${p.naam}</td><td style="color:var(--ink-4);font-size:12px;">subsidie afhankelijk per maatregel</td>`;
+      tr.className = 'sub-row dynamic-row';
+      tr.innerHTML = `<td style="color:var(--ink-2)">${v.naam}</td><td><span style="color:var(--green)">≈ - ${fmtEuro(v.voordeel)}</span></td>`;
       tbody.appendChild(tr);
     }
 
+    const eindRij = document.createElement('tr');
+    eindRij.className = 'dynamic-row';
+    const eindNetto = Math.max(0, nettoBedrag - totaalFiscaal);
+    eindRij.innerHTML = `
+      <td style="padding-top:10px;border-top:2px solid var(--blue-faint2);">
+        <strong>Geschatte netto investering</strong><br>
+        <span style="font-size:10.5px;color:var(--ink-4);font-style:italic;">incl. fiscaal voordeel bij ${Math.round(tarief*100)}% tarief</span>
+      </td>
+      <td style="padding-top:10px;border-top:2px solid var(--blue-faint2);">
+        <strong style="color:var(--green);font-size:17px;">${fmtEuro(eindNetto)}</strong>
+      </td>`;
+    tbody.appendChild(eindRij);
+
     const noteRij = document.createElement('tr');
     noteRij.className = 'dynamic-row';
-    noteRij.innerHTML = `<td colspan="2" style="font-size:11px;color:var(--ink-4);font-style:italic;padding-top:8px;line-height:1.5;">
-      EIA, MIA/Vamil en KIA zijn fiscale aftrekken op de belastbare winst, geen korting op het factuurbedrag.
-      Het werkelijke voordeel hangt af van uw belastingtarief en loopt via de jaarlijkse aangifte.
+    noteRij.innerHTML = `<td colspan="2" style="font-size:11px;color:var(--ink-4);font-style:italic;padding-top:6px;line-height:1.5;">
+      Fiscaal voordeel is een schatting o.b.v. standaardpercentages. EIA/MIA/KIA lopen via de jaarlijkse VPB- of IB-aangifte.
       Raadpleeg uw accountant voor de exacte impact.
     </td>`;
     tbody.appendChild(noteRij);
+  } else {
+    // Geen fiscale regelingen van toepassing — toon eindrij gelijk aan netto
+    const eindRij = document.createElement('tr');
+    eindRij.className = 'dynamic-row';
+    eindRij.innerHTML = `
+      <td style="padding-top:10px;border-top:2px solid var(--blue-faint2);"><strong>Geschatte netto investering</strong></td>
+      <td style="padding-top:10px;border-top:2px solid var(--blue-faint2);"><strong style="font-size:17px;">${fmtEuro(Math.max(0, nettoBedrag))}</strong></td>`;
+    tbody.appendChild(eindRij);
   }
 }
 
