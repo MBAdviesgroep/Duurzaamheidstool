@@ -2160,6 +2160,19 @@ select.finput {
   .maandlasten-grid, .ml-controls { grid-template-columns: 1fr; }
   .ml-col { border-right: none; border-bottom: 1px solid var(--rule); }
 }
+.ml-empty {
+  display: none;
+  padding: 24px 26px;
+  font-size: 13px; color: var(--ink-3); line-height: 1.55;
+  text-align: left;
+  border-bottom: 1px dashed var(--rule);
+  background: repeating-linear-gradient(135deg, var(--page) 0 8px, var(--page-2) 8px 16px);
+}
+.ml-empty strong { color: var(--ink); font-weight: 600; display: block; margin-bottom: 4px; font-family: var(--f-head); }
+.maandlasten-block.is-empty .maandlasten-head,
+.maandlasten-block.is-empty .maandlasten-grid,
+.maandlasten-block.is-empty .ml-controls { display: none; }
+.maandlasten-block.is-empty .ml-empty { display: block; }
 
 /* ═══════════════════════════════════════════════════════
    SCENARIO-SLIDER
@@ -2670,6 +2683,8 @@ select.finput {
   .ml-eenheid { font-size: 9pt !important; }
   .ml-detail { margin-top: 8pt !important; padding-top: 7pt !important; font-size: 8pt !important; }
   .ml-detail-row { padding: 1pt 0 !important; }
+  .ml-empty { display: none !important; }
+  .maandlasten-block.is-empty { display: none !important; }
   .m-check { display: none !important; }
   .rt th:first-child { display: none !important; }
 
@@ -4692,15 +4707,19 @@ function renderGeenActieSection(r) {
     </div>`;
 }
 
-// Maandlasten-vergelijker met financiering
+// Maandlasten-vergelijker met financiering — voor financieel-adviseurs (MB Adviesgroep)
 function renderMaandlastenSection(r) {
   const el = document.getElementById('maandlastenSection');
   if (!el) return;
   const huidig = parseEuro(r.huidige_kosten);
   if (!huidig) { el.innerHTML = ''; return; }
 
-  // Persisteer state in window voor herberekening
-  window._mlState = window._mlState || { rente: 4.5, looptijd: 15, eigenInbreng: 0 };
+  // Persisteer state in window voor herberekening; defaults afgestemd op realistische verduurzamingslening
+  // (rente ~5% indicatief, looptijd 15jr standaard, eigen inbreng 20% van netto-investering)
+  window._mlState = window._mlState || { rente: 5.0, looptijd: 15, eigenInbrengPct: 20, _userTouched: false };
+  // Migratie: oudere state met absolute eigenInbreng → omzetten naar percentage
+  if (typeof window._mlState.eigenInbrengPct !== 'number') window._mlState.eigenInbrengPct = 20;
+  if (typeof window._mlState._userTouched !== 'boolean') window._mlState._userTouched = false;
 
   function pmt(principal, ratePct, years) {
     if (principal <= 0) return 0;
@@ -4728,55 +4747,78 @@ function renderMaandlastenSection(r) {
   function render() {
     const s = window._mlState;
     const { besparing, netto } = getSelected();
-    // Cap eigenInbreng zodat slider niet boven netto uitkomt
-    if (s.eigenInbreng > netto) s.eigenInbreng = netto;
-    if (s.eigenInbreng < 0) s.eigenInbreng = 0;
-    const teLenen = Math.max(0, netto - s.eigenInbreng);
+
+    // Geen investering geselecteerd → empty state tonen, controls verbergen
+    const isEmpty = netto <= 0;
+    const block = el.querySelector('.maandlasten-block');
+    if (block) block.classList.toggle('is-empty', isEmpty);
+
+    // Bereken absolute eigen inbreng uit percentage (capped 0-100)
+    const pct = Math.min(100, Math.max(0, s.eigenInbrengPct));
+    const eigenInbreng = Math.round(netto * pct / 100);
+    const teLenen = Math.max(0, netto - eigenInbreng);
     const annuiteit = pmt(teLenen, s.rente, s.looptijd);
-    // Cap besparing op huidige kosten zodat we niet onder € 0/mnd zakken (oversparing telt niet als negatieve rekening)
-    const effBesparing = Math.min(besparing, huidig);
+    const totaalRente = annuiteit * s.looptijd * 12 - teLenen;
+
+    // Cap besparing op huidige kosten (oversparing telt niet als negatieve rekening)
+    const volledigGedekt = besparing >= huidig && huidig > 0;
     const restEnergie = Math.max(0, huidig - besparing);
     const huidigMnd = huidig / 12;
     const directMnd = restEnergie / 12;
-    const finMnd = directMnd + annuiteit;
+    const leningMnd = annuiteit;
+    const finMnd = directMnd + leningMnd;
 
     const set = (id, html) => { const e = document.getElementById(id); if (e) e.innerHTML = html; };
-    set('mlNow', `${fmtEuro(huidigMnd)}<span class="ml-eenheid">/mnd</span>`);
-    set('mlDirect', `${fmtEuro(directMnd)}<span class="ml-eenheid">/mnd</span>`);
-    set('mlFin', `${fmtEuro(finMnd)}<span class="ml-eenheid">/mnd</span>`);
-    set('mlNowDet', `<div class="ml-detail-row"><span class="lbl">Energie/jr</span><span class="val">${fmtEuro(huidig)}</span></div>`);
-    set('mlDirectDet',
-      `<div class="ml-detail-row"><span class="lbl">Energie/jr</span><span class="val">${fmtEuro(restEnergie)}</span></div>
-       <div class="ml-detail-row"><span class="lbl">Bespaard/jr</span><span class="val" style="color:var(--green)">${fmtEuro(effBesparing)}</span></div>`);
-    set('mlFinDet',
-      `<div class="ml-detail-row"><span class="lbl">Energie/jr</span><span class="val">${fmtEuro(restEnergie)}</span></div>
-       <div class="ml-detail-row"><span class="lbl">Lening/jr</span><span class="val">${fmtEuro(annuiteit*12)}</span></div>
-       <div class="ml-detail-row"><span class="lbl">Geleend</span><span class="val">${fmtEuro(teLenen)}</span></div>`);
+    const nbsp = '\u00a0';
 
+    // === Huidig ===
+    set('mlNow', `${fmtEuro(huidigMnd)}<span class="ml-eenheid">/mnd</span>`);
+    set('mlNowDet', `<div class="ml-detail-row"><span class="lbl">Energie/jr</span><span class="val">${fmtEuro(huidig)}</span></div>`);
+
+    // === Na investering (eigen geld) ===
+    if (volledigGedekt) {
+      set('mlDirect', `<span style="font-size:20px;color:var(--green);">Volledig gedekt</span>`);
+      set('mlDirectDet',
+        `<div class="ml-detail-row"><span class="lbl">Energie/jr</span><span class="val">${fmtEuro(restEnergie)}</span></div>
+         <div class="ml-detail-row"><span class="lbl">Bespaard/jr</span><span class="val" style="color:var(--green)">${fmtEuro(huidig)}</span></div>
+         <div class="ml-detail-row"><span class="lbl">Surplus</span><span class="val" style="color:var(--ink-4);font-style:italic;">+ ${fmtEuro(besparing - huidig)}/jr</span></div>`);
+    } else {
+      set('mlDirect', `${fmtEuro(directMnd)}<span class="ml-eenheid">/mnd</span>`);
+      set('mlDirectDet',
+        `<div class="ml-detail-row"><span class="lbl">Energie/jr</span><span class="val">${fmtEuro(restEnergie)}</span></div>
+         <div class="ml-detail-row"><span class="lbl">Bespaard/jr</span><span class="val" style="color:var(--green)">${fmtEuro(besparing)}</span></div>`);
+    }
+
+    // === Met financiering ===
+    set('mlFin', `${fmtEuro(finMnd)}<span class="ml-eenheid">/mnd</span>`);
+    set('mlFinDet',
+      `<div class="ml-detail-row"><span class="lbl">Lening</span><span class="val" style="color:var(--blue-deep);font-weight:600;">${fmtEuro(leningMnd)}/mnd</span></div>
+       <div class="ml-detail-row"><span class="lbl">Resterende energie</span><span class="val">${fmtEuro(directMnd)}/mnd</span></div>
+       <div class="ml-detail-row" style="margin-top:6px;padding-top:6px;border-top:1px dotted var(--rule);"><span class="lbl">Geleend bedrag</span><span class="val">${fmtEuro(teLenen)}</span></div>
+       <div class="ml-detail-row"><span class="lbl">Eigen inbreng</span><span class="val">${fmtEuro(eigenInbreng)}</span></div>
+       <div class="ml-detail-row"><span class="lbl">Totale rente</span><span class="val" style="color:var(--ink-3);">${fmtEuro(totaalRente)}</span></div>`);
+
+    // Controls: labels & slider posities
     const renteEl = document.getElementById('mlRenteVal'); if (renteEl) renteEl.textContent = s.rente.toFixed(1).replace('.',',') + '%';
     const looptijdEl = document.getElementById('mlLooptijdVal'); if (looptijdEl) looptijdEl.textContent = s.looptijd + ' jr';
-    const eigenEl = document.getElementById('mlEigenVal'); if (eigenEl) eigenEl.textContent = s.eigenInbreng > 0 ? fmtEuro(s.eigenInbreng) : '€\u00a00';
-    // Update slider max bij wisselende selectie (zonder de huidige slider-waarde te overschrijven tijdens dragging)
+    const eigenEl = document.getElementById('mlEigenVal');
+    if (eigenEl) eigenEl.textContent = `${pct}% (${fmtEuro(eigenInbreng)})`;
+
     const eigSlider = document.getElementById('mlEigenSlider');
-    if (eigSlider) {
-      const newMax = Math.max(netto, 1);
-      if (parseFloat(eigSlider.max) !== newMax) {
-        eigSlider.max = newMax;
-        eigSlider.step = Math.max(Math.round(newMax/40), 100);
-      }
-      // Sync alleen als de waarde verschilt van state (bijv. na cap)
-      if (parseFloat(eigSlider.value) !== s.eigenInbreng) eigSlider.value = s.eigenInbreng;
-    }
+    if (eigSlider && parseFloat(eigSlider.value) !== pct) eigSlider.value = pct;
   }
   window._mlRender = render;
 
-  const { netto } = getSelected();
-
+  // Single source of truth for HTML — controls altijd renderen, alleen visueel verborgen wanneer is-empty
   el.innerHTML = secHead('Maandlasten — voor en na verduurzaming') + `
     <div class="maandlasten-block">
+      <div class="ml-empty">
+        <strong>Selecteer maatregelen om financiering door te rekenen.</strong>
+        Zodra er een investering bekend is, ziet u hier de maandlasten met en zonder verduurzamingslening.
+      </div>
       <div class="maandlasten-head">
         <div class="maandlasten-titel">Wat betaalt u per maand?</div>
-        <div class="maandlasten-sub">Vergelijking inclusief optionele verduurzamingslening · op basis van geselecteerde maatregelen</div>
+        <div class="maandlasten-sub">Vergelijking met optionele verduurzamingslening · op basis van geselecteerde maatregelen</div>
       </div>
       <div class="maandlasten-grid">
         <div class="ml-col is-now">
@@ -4800,16 +4842,16 @@ function renderMaandlastenSection(r) {
       </div>
       <div class="ml-controls">
         <div class="ml-control">
-          <span class="ml-control-lbl">Rente <span class="v" id="mlRenteVal">4,5%</span></span>
-          <input type="range" min="2" max="8" step="0.1" value="${window._mlState.rente}" oninput="window._mlState.rente=parseFloat(this.value);window._mlRender();">
+          <span class="ml-control-lbl">Rente <span class="v" id="mlRenteVal">5,0%</span></span>
+          <input type="range" min="0" max="8" step="0.1" value="${window._mlState.rente}" oninput="window._mlState.rente=parseFloat(this.value);window._mlState._userTouched=true;window._mlRender();">
         </div>
         <div class="ml-control">
           <span class="ml-control-lbl">Looptijd <span class="v" id="mlLooptijdVal">15 jr</span></span>
-          <input type="range" min="5" max="30" step="1" value="${window._mlState.looptijd}" oninput="window._mlState.looptijd=parseInt(this.value);window._mlRender();">
+          <input type="range" min="5" max="30" step="1" value="${window._mlState.looptijd}" oninput="window._mlState.looptijd=parseInt(this.value);window._mlState._userTouched=true;window._mlRender();">
         </div>
         <div class="ml-control">
-          <span class="ml-control-lbl">Eigen inbreng <span class="v" id="mlEigenVal">€ 0</span></span>
-          <input id="mlEigenSlider" type="range" min="0" max="${Math.max(netto,1)}" step="${Math.max(Math.round(netto/40),100)}" value="${window._mlState.eigenInbreng}" oninput="window._mlState.eigenInbreng=parseFloat(this.value);window._mlRender();">
+          <span class="ml-control-lbl">Eigen inbreng <span class="v" id="mlEigenVal">20%</span></span>
+          <input id="mlEigenSlider" type="range" min="0" max="100" step="5" value="${window._mlState.eigenInbrengPct}" oninput="window._mlState.eigenInbrengPct=parseInt(this.value);window._mlState._userTouched=true;window._mlRender();">
         </div>
       </div>
     </div>`;
