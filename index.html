@@ -1670,10 +1670,11 @@ select.finput {
   .rpt-footer { display: flex !important; border-top: 0.5pt solid #E3DDD8 !important; padding: 8pt 0 0 !important; margin-top: 12pt !important; font-size: 7.5pt !important; }
   .rpt-footer-disc { color: #A0A0A0 !important; line-height: 1.5 !important; }
 
-  /* ── Pagina-indeling ── */
+  /* ── Pagina-indeling algemeen ── */
   h2, .rpt-section-head { page-break-after: avoid; }
   .sub-item, .phase-block { page-break-inside: avoid; }
-  .rt, .netto-table, .aandacht-table { page-break-inside: auto; }
+  /* .rt handelt page-break via #measuresSection avoid — geen auto hier */
+  .netto-table, .aandacht-table { page-break-inside: auto; }
   .rt tr, .netto-table tr, .aandacht-table tr { page-break-inside: avoid; }
 }
 
@@ -2833,7 +2834,7 @@ select.finput {
   .chart-breakeven-badge { font-size: 8pt !important; padding: 3pt 8pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 
   /* Maatregelen tabel forceer zichtbaarheid */
-  #measuresSection { display: block !important; page-break-inside: auto !important; }
+  #measuresSection { display: block !important; }
   .rt { display: table !important; width: 100% !important; }
   .rt thead { display: table-header-group !important; }
   .rt tbody { display: table-row-group !important; }
@@ -2844,23 +2845,49 @@ select.finput {
 
   /* ══════════════════════════════════════════════════════
      PAGINA-INDELING PRINT
-     Pagina 1: Maatregelen + Besparing per maatregel + Cumulatieve besparing
-     Pagina 2: Netto investering + Maandlasten
-     Pagina 3+: Subsidies & fiscale regelingen
+     Pagina 1: Header + KPI + intro + label
+     Pagina 2: Maatregelen tabel + Besparing per maatregel + Cumulatieve besparing
+     Pagina 3: Netto investering + Maandlasten
+     Pagina 4+: Subsidies & fiscale regelingen
   ══════════════════════════════════════════════════════ */
 
-  /* Pagina 1: alles t/m grafiek bij elkaar — geen break ertussen */
-  #measuresSection  { page-break-before: avoid !important; break-before: avoid !important; page-break-inside: auto !important; }
-  #maatregelenChartSection { page-break-before: avoid !important; break-before: avoid !important; page-break-inside: avoid !important; }
-  #chartSection     { page-break-before: avoid !important; break-before: avoid !important; page-break-inside: avoid !important; }
+  /* Pagina 2: maatregelen starten altijd op nieuwe pagina, alles bij elkaar */
+  #measuresSection {
+    page-break-before: always !important;
+    break-before: page !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  /* Grafieken direct na maatregelen, geen breuk ertussen */
+  #maatregelenChartSection {
+    page-break-before: avoid !important;
+    break-before: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  #chartSection {
+    page-break-before: avoid !important;
+    break-before: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
 
-  /* Pagina 2 begint bij netto investering */
-  #nettoSection     { page-break-before: always !important; break-before: page !important; page-break-inside: avoid !important; break-inside: avoid !important; }
+  /* Pagina 3 begint bij netto investering */
+  #nettoSection {
+    page-break-before: always !important;
+    break-before: page !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  /* Maandlasten direct na netto — op zelfde pagina 3 */
+  #maandlastenSection {
+    page-break-before: avoid !important;
+    break-before: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
 
-  /* Maandlasten direct na netto — op zelfde pagina 2 houden */
-  #maandlastenSection { page-break-before: avoid !important; break-before: avoid !important; page-break-inside: avoid !important; break-inside: avoid !important; }
-
-  /* Pagina 3: subsidies altijd op nieuwe pagina */
+  /* Pagina 4+: subsidies altijd op nieuwe pagina */
   #subsidiesSection { page-break-before: always !important; break-before: page !important; }
 
   /* Vervolgstappen + adviseur bij elkaar houden */
