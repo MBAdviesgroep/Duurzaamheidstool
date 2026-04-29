@@ -1667,9 +1667,26 @@ select.finput {
   .aandacht-table td { padding: 6pt 6pt !important; border-bottom: 0.4pt solid #E3DDD8 !important; vertical-align: top !important; }
   .aandacht-table td:first-child { font-weight: 600 !important; color: #1B597B !important; width: 28% !important; }
 
-  /* ── Footer ── */
-  .rpt-footer { display: flex !important; border-top: 0.5pt solid #E3DDD8 !important; padding: 8pt 0 0 !important; margin-top: 12pt !important; font-size: 7.5pt !important; }
+  /* ── Footer — sticky at bottom of last page ── */
+  .rpt-footer { 
+    display: flex !important; 
+    border-top: 0.5pt solid #E3DDD8 !important; 
+    padding: 8pt 0 0 !important; 
+    margin-top: 12pt !important; 
+    font-size: 7.5pt !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 16mm !important;
+    right: 16mm !important;
+    background: white !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
   .rpt-footer-disc { color: #A0A0A0 !important; line-height: 1.5 !important; }
+  .rpt-footer-brand img { width: 18pt !important; height: 18pt !important; }
+  .rpt-footer-brand-name { font-size: 9pt !important; color: #3A3A3A !important; }
+  /* Padding onderaan zodat inhoud niet achter vaste footer verdwijnt */
+  .result .body { padding-bottom: 32pt !important; }
 
   /* ── Pagina-indeling algemeen ── */
   h2, .rpt-section-head { page-break-after: avoid; }
@@ -2984,6 +3001,13 @@ select.finput {
     page-break-inside: avoid !important;
     break-inside: avoid !important;
   }
+  /* Grafiek compacter zodat grafiek + uitleg op dezelfde pagina passen */
+  #chartSection .chart-wrap { padding: 8pt 10pt !important; margin-bottom: 0 !important; }
+  #chartSection .chart-canvas-wrap { height: auto !important; min-height: 120pt !important; max-height: 160pt !important; }
+  #chartSection .chart-print-img { max-height: 160pt !important; object-fit: contain !important; }
+  #chartSection .chart-legend { margin-top: 5pt !important; }
+  #chartSection #chartNoteFlat,
+  #chartSection #chartNoteStijg { font-size: 7pt !important; margin-top: 5pt !important; padding-top: 5pt !important; }
 
   /* Pagina 3 begint bij netto investering */
   #nettoSection {
@@ -3147,25 +3171,27 @@ select.finput {
     color: #1B597B !important;
   }
 
-  /* Vervolgstappen + adviseur in print */
-  .vervolg-item { padding: 8pt 0 !important; }
-  .vervolg-num { width: 20pt !important; height: 20pt !important; font-size: 9pt !important; }
-  .vervolg-title { font-size: 9pt !important; }
-  .vervolg-desc { font-size: 8pt !important; }
+  /* Vervolgstappen + adviseur in print — compact & luxe */
+  .vervolg-item { padding: 6pt 0 !important; }
+  .vervolg-item:last-child { padding-bottom: 0 !important; }
+  .vervolg-num { width: 18pt !important; height: 18pt !important; font-size: 8.5pt !important; background: #1B597B !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .vervolg-title { font-size: 8.5pt !important; font-weight: 700 !important; color: #141414 !important; margin-bottom: 1pt !important; }
+  .vervolg-desc { font-size: 7.5pt !important; color: #6B6B6B !important; line-height: 1.45 !important; }
   .adviseur-card {
-    background: #134460 !important;
+    background: linear-gradient(135deg, #134460 0%, #1B597B 100%) !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
-    padding: 14pt 18pt !important;
+    padding: 14pt 20pt !important;
     border-radius: 6pt !important;
-    margin-top: 8pt !important;
+    margin-top: 10pt !important;
     page-break-inside: avoid;
+    box-shadow: none !important;
   }
-  .adviseur-naam { font-size: 13pt !important; color: white !important; }
-  .adviseur-functie { font-size: 9pt !important; color: rgba(255,255,255,0.55) !important; }
-  .adviseur-label { font-size: 7pt !important; color: rgba(255,255,255,0.4) !important; }
-  .adviseur-contact a { font-size: 9.5pt !important; color: rgba(255,255,255,0.7) !important; }
-  .adviseur-avatar { background: rgba(255,255,255,0.15) !important; }
+  .adviseur-naam { font-size: 13pt !important; color: white !important; font-weight: 700 !important; }
+  .adviseur-functie { font-size: 9pt !important; color: rgba(255,255,255,0.65) !important; }
+  .adviseur-label { font-size: 7pt !important; color: rgba(255,255,255,0.5) !important; letter-spacing: 1pt !important; text-transform: uppercase !important; }
+  .adviseur-contact a { font-size: 9.5pt !important; color: rgba(255,255,255,0.8) !important; }
+  .adviseur-avatar { background: rgba(255,255,255,0.15) !important; width: 38pt !important; height: 38pt !important; }
 
   /* Bron (bank/duurzaamheidstool) */
   .bron-card {
@@ -4165,13 +4191,13 @@ function renderReport(r) {
     <div class="kpi-cell kpi-c2">
       <span class="kpi-lbl">Mogelijke besparing</span>
       <div class="kpi-num warn">${r.totaal_besparing||'&#8212;'}</div>
-      <div class="kpi-sub">per jaar bij volledig pakket</div>
+      <div class="kpi-sub">per jaar bij aangepast pakket</div>
     </div>
     <div class="kpi-cell kpi-c3" style="position:relative;">
       <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--green);"></div>
       <span class="kpi-lbl">CO&#8322; reductie</span>
       <div class="kpi-num good">${r.co2_reductie_pct||'&#8212;'}</div>
-      <div class="kpi-sub">${co2ctx || 'bij volledig pakket'}</div>
+      <div class="kpi-sub">${co2ctx || 'bij aangepast pakket'}</div>
     </div>`;
 
   // Intro tekst — sla originele huidige kosten op als data-attribuut voor live-update
@@ -5642,7 +5668,7 @@ function renderScenarioSection(r) {
   const scenarios = [
     { key:'quick',    label:'Quick wins',       desc:'TVT onder 5 jaar',    filter: x => x._tvt > 0 && x._tvt < 5 },
     { key:'budget',   label:'Budgetvriendelijk', desc:'Beste prijs-kwaliteit', filter: null },
-    { key:'volledig', label:'Volledig pakket',   desc:'Alle maatregelen',    filter: () => true },
+    { key:'volledig', label:'Aangepast pakket',   desc:'Alle maatregelen',    filter: () => true },
   ];
 
   function selectFor(key) {
@@ -5710,7 +5736,7 @@ function renderScenarioSection(r) {
     // Korte euro notatie voor stats
     const fmtK = v => v >= 1000 ? '€\u202F' + (v/1000).toFixed(0) + 'k' : fmtEuro(v);
 
-    const labelMap = { quick:'Quick wins', budget:'Budgetvriendelijk', volledig:'Volledig pakket' };
+    const labelMap = { quick:'Quick wins', budget:'Budgetvriendelijk', volledig:'Aangepast pakket' };
     const nameMap  = { quick:'Snel rendement', budget:'Beste balans', volledig:'Alles' };
 
     return `<div class="sc-card${isActive ? ' sc-active' : ''}" data-k="${s.key}" onclick="window._applyScenario('${s.key}')">
@@ -5747,7 +5773,7 @@ function renderScenarioSection(r) {
         <div class="sc-maand-val">€&thinsp;${st.maand.toLocaleString('nl-NL')}<span class="sc-maand-eenheid"> /mnd</span></div>
         <div class="sc-maand-sub">5% rente &middot; 15 jaar &middot; 20% eigen inbreng</div>
         <div class="sc-bar-wrap">
-          <div class="sc-bar-lbl"><span>Aandeel volledig pakket</span><span>${st.pctVolledig}%</span></div>
+          <div class="sc-bar-lbl"><span>Aandeel geselecteerd</span><span>${st.pctVolledig}%</span></div>
           <div class="sc-bar-track"><div class="sc-bar-fill" style="width:${st.pctVolledig}%;background:${barColor};"></div></div>
         </div>
       </div>
