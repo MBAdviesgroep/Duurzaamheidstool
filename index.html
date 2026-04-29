@@ -1943,6 +1943,422 @@ select.finput {
 }
 
 /* ═══════════════════════════════════════════════════════
+   STICKY INHOUDSOPGAVE
+═══════════════════════════════════════════════════════ */
+.toc-rail {
+  position: fixed;
+  top: 50%;
+  right: 24px;
+  transform: translateY(-50%);
+  z-index: 50;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-md);
+  padding: 10px 6px;
+  box-shadow: var(--shadow-md);
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+  font-family: var(--f-head);
+  max-width: 220px;
+}
+.toc-rail.on { display: flex; }
+.toc-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 12px;
+  font-size: 11.5px;
+  color: var(--ink-3);
+  text-decoration: none;
+  border-radius: var(--r-xs);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--t-fast);
+  white-space: nowrap;
+}
+.toc-link:hover { background: var(--blue-faint); color: var(--blue); }
+.toc-link.active { background: var(--blue-faint); color: var(--blue-deep); font-weight: 600; }
+.toc-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--ink-5); flex-shrink: 0;
+  transition: all var(--t-fast);
+}
+.toc-link.active .toc-dot { background: var(--orange); transform: scale(1.4); }
+@media (max-width: 1280px) { .toc-rail { display: none !important; } }
+
+/* ═══════════════════════════════════════════════════════
+   "WAT ALS U NIETS DOET?" BLOK
+═══════════════════════════════════════════════════════ */
+.geen-actie-block {
+  margin: 0 0 28px;
+  border: 1px solid var(--rule);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  overflow: hidden;
+  page-break-inside: avoid;
+}
+.geen-actie-head {
+  background: linear-gradient(135deg, #2a1818 0%, #4a2222 100%);
+  color: white;
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.geen-actie-icon {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.geen-actie-eyebrow {
+  font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+  opacity: 0.65; font-weight: 600; margin-bottom: 2px;
+}
+.geen-actie-title {
+  font-size: 16px; font-weight: 600; font-family: var(--f-head);
+  letter-spacing: -0.2px;
+}
+.geen-actie-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background: var(--page);
+}
+.geen-actie-cell {
+  padding: 18px 20px;
+  border-right: 1px solid var(--rule);
+  display: flex; flex-direction: column; gap: 4px;
+}
+.geen-actie-cell:last-child { border-right: none; }
+.geen-actie-lbl {
+  font-size: 9.5px; letter-spacing: 1.3px; text-transform: uppercase;
+  color: var(--ink-4); font-weight: 600; font-family: var(--f-head);
+}
+.geen-actie-val {
+  font-size: 22px; font-weight: 700; font-family: var(--f-head);
+  color: var(--red); letter-spacing: -0.5px; line-height: 1.1;
+}
+.geen-actie-sub { font-size: 11px; color: var(--ink-3); line-height: 1.4; }
+.geen-actie-foot {
+  padding: 14px 24px;
+  font-size: 12px;
+  color: var(--ink-3);
+  line-height: 1.55;
+  background: var(--surface);
+  border-top: 1px solid var(--rule);
+}
+.geen-actie-foot strong { color: var(--ink); font-weight: 600; }
+@media (max-width: 720px) {
+  .geen-actie-grid { grid-template-columns: 1fr; }
+  .geen-actie-cell { border-right: none; border-bottom: 1px solid var(--rule); }
+}
+
+/* ═══════════════════════════════════════════════════════
+   MAANDLASTEN-VERGELIJKER
+═══════════════════════════════════════════════════════ */
+.maandlasten-block {
+  margin: 0 0 28px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  page-break-inside: avoid;
+}
+.maandlasten-head {
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--rule);
+  display: flex; align-items: baseline; justify-content: space-between;
+  flex-wrap: wrap; gap: 8px;
+}
+.maandlasten-titel {
+  font-size: 14px; font-weight: 600; font-family: var(--f-head);
+  color: var(--ink); letter-spacing: -0.1px;
+}
+.maandlasten-sub { font-size: 11px; color: var(--ink-4); }
+.maandlasten-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0;
+}
+.ml-col {
+  padding: 22px 22px 24px;
+  border-right: 1px solid var(--rule);
+  position: relative;
+  display: flex; flex-direction: column;
+}
+.ml-col:last-child { border-right: none; }
+.ml-col.is-now { background: var(--page); }
+.ml-col.is-direct { background: var(--surface); }
+.ml-col.is-fin { background: var(--blue-faint); }
+.ml-eyebrow {
+  font-size: 10px; letter-spacing: 1.3px; text-transform: uppercase;
+  font-weight: 600; font-family: var(--f-head);
+  margin-bottom: 4px;
+}
+.ml-eyebrow.is-now { color: var(--ink-4); }
+.ml-eyebrow.is-direct { color: var(--green); }
+.ml-eyebrow.is-fin { color: var(--blue); }
+.ml-titel {
+  font-size: 13px; font-weight: 600; font-family: var(--f-head);
+  color: var(--ink-2); margin-bottom: 14px;
+}
+.ml-bedrag {
+  font-size: 30px; font-weight: 700; font-family: var(--f-head);
+  letter-spacing: -1px; line-height: 1; color: var(--ink);
+}
+.ml-bedrag.is-direct { color: var(--green); }
+.ml-bedrag.is-fin { color: var(--blue-deep); }
+.ml-eenheid { font-size: 13px; color: var(--ink-4); margin-left: 4px; font-weight: 500; }
+.ml-detail {
+  margin-top: 14px;
+  font-size: 11px; color: var(--ink-3); line-height: 1.55;
+  border-top: 1px dashed var(--rule); padding-top: 12px;
+}
+.ml-detail-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 3px 0;
+}
+.ml-detail-row .lbl { color: var(--ink-4); }
+.ml-detail-row .val { color: var(--ink-2); font-weight: 500; }
+.ml-controls {
+  padding: 14px 22px;
+  background: var(--page-2);
+  border-top: 1px solid var(--rule);
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 18px;
+  align-items: center;
+}
+.ml-control { display: flex; flex-direction: column; gap: 4px; }
+.ml-control-lbl {
+  font-size: 10px; letter-spacing: 0.8px; text-transform: uppercase;
+  color: var(--ink-4); font-weight: 600; font-family: var(--f-head);
+  display: flex; justify-content: space-between;
+}
+.ml-control-lbl .v { color: var(--blue-deep); font-weight: 700; }
+.ml-control input[type="range"] {
+  -webkit-appearance: none; appearance: none;
+  width: 100%; height: 4px; background: var(--ink-5);
+  border-radius: 4px; outline: none;
+}
+.ml-control input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--blue); cursor: pointer;
+  border: 2px solid white; box-shadow: 0 1px 4px rgba(0,0,0,.2);
+}
+.ml-control input[type="range"]::-moz-range-thumb {
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--blue); cursor: pointer;
+  border: 2px solid white;
+}
+@media (max-width: 720px) {
+  .maandlasten-grid, .ml-controls { grid-template-columns: 1fr; }
+  .ml-col { border-right: none; border-bottom: 1px solid var(--rule); }
+}
+
+/* ═══════════════════════════════════════════════════════
+   SCENARIO-SLIDER
+═══════════════════════════════════════════════════════ */
+.scenario-block {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-lg);
+  padding: 18px 22px 20px;
+  margin: 0 0 24px;
+}
+.scenario-head {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 10px; margin-bottom: 14px;
+}
+.scenario-titel {
+  font-size: 13px; font-weight: 600; font-family: var(--f-head);
+  color: var(--ink);
+}
+.scenario-sub { font-size: 11px; color: var(--ink-4); }
+.scenario-tabs {
+  display: flex;
+  background: var(--page);
+  border-radius: 999px;
+  padding: 3px;
+  gap: 2px;
+}
+.scenario-tab {
+  font-family: var(--f-head); font-size: 11.5px; font-weight: 600;
+  padding: 6px 14px;
+  border: none; background: transparent;
+  color: var(--ink-3); cursor: pointer; border-radius: 999px;
+  transition: all var(--t-fast); white-space: nowrap;
+}
+.scenario-tab.active {
+  background: var(--blue-deep); color: white;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+}
+.scenario-tab:hover:not(.active) { color: var(--blue); }
+.scenario-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
+}
+.ssum-cell { display: flex; flex-direction: column; gap: 2px; }
+.ssum-lbl {
+  font-size: 9.5px; letter-spacing: 1.2px; text-transform: uppercase;
+  color: var(--ink-4); font-weight: 600; font-family: var(--f-head);
+}
+.ssum-val {
+  font-size: 17px; font-weight: 700; font-family: var(--f-head);
+  letter-spacing: -0.4px; color: var(--ink);
+}
+.ssum-val.green { color: var(--green); }
+.ssum-val.orange { color: var(--orange); }
+.ssum-val.blue { color: var(--blue-deep); }
+.ssum-sub { font-size: 10.5px; color: var(--ink-4); }
+@media (max-width: 720px) {
+  .scenario-summary { grid-template-columns: 1fr 1fr; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   AI-CHAT BUBBLE
+═══════════════════════════════════════════════════════ */
+.ai-fab {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: var(--blue-deep);
+  color: white;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--shadow-lg);
+  cursor: pointer; z-index: 60;
+  border: none;
+  transition: transform var(--t-fast), box-shadow var(--t-fast);
+}
+.ai-fab:hover { transform: translateY(-2px); box-shadow: var(--shadow-xl); }
+.ai-fab.hidden { display: none; }
+.ai-fab-pulse {
+  position: absolute; inset: -4px;
+  border-radius: 50%;
+  border: 2px solid var(--blue);
+  opacity: 0.4;
+  animation: aiPulse 2.4s ease-out infinite;
+  pointer-events: none;
+}
+@keyframes aiPulse {
+  0% { transform: scale(0.95); opacity: 0.5; }
+  100% { transform: scale(1.25); opacity: 0; }
+}
+.ai-panel {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  width: 380px; max-width: calc(100vw - 32px);
+  height: 540px; max-height: calc(100vh - 48px);
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-xl);
+  display: none;
+  flex-direction: column;
+  z-index: 70;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+}
+.ai-panel.on { display: flex; }
+.ai-panel-head {
+  background: var(--blue-deep);
+  color: white;
+  padding: 14px 18px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.ai-panel-head-l { display: flex; align-items: center; gap: 10px; }
+.ai-panel-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--orange);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-family: var(--f-head); color: white;
+  font-size: 13px;
+}
+.ai-panel-name { font-size: 13px; font-weight: 600; font-family: var(--f-head); }
+.ai-panel-status { font-size: 10.5px; opacity: 0.7; display: flex; align-items: center; gap: 5px; }
+.ai-panel-status::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: #4ade80;
+}
+.ai-panel-close {
+  background: rgba(255,255,255,0.12); border: none; color: white;
+  width: 28px; height: 28px; border-radius: 50%; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.ai-panel-close:hover { background: rgba(255,255,255,0.22); }
+.ai-msgs {
+  flex: 1; overflow-y: auto;
+  padding: 16px;
+  display: flex; flex-direction: column; gap: 12px;
+  background: var(--page);
+}
+.ai-msg {
+  display: flex; gap: 8px; max-width: 86%;
+  font-size: 13px; line-height: 1.5;
+}
+.ai-msg.user { align-self: flex-end; flex-direction: row-reverse; }
+.ai-msg-bubble {
+  padding: 10px 13px;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  color: var(--ink-2);
+  white-space: pre-wrap;
+}
+.ai-msg.user .ai-msg-bubble {
+  background: var(--blue-deep); color: white; border-color: var(--blue-deep);
+  border-bottom-right-radius: 4px;
+}
+.ai-msg.ai .ai-msg-bubble { border-bottom-left-radius: 4px; }
+.ai-msg.ai .ai-msg-bubble.thinking::after {
+  content: '...'; display: inline-block; animation: aidot 1.2s infinite;
+}
+@keyframes aidot {
+  0%,20% { content: '.'; } 40% { content: '..'; } 60%,100% { content: '...'; }
+}
+.ai-suggestions {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  padding: 10px 16px; border-top: 1px solid var(--rule);
+  background: var(--surface);
+}
+.ai-sugg {
+  font-family: var(--f-head); font-size: 11px;
+  background: var(--blue-faint); color: var(--blue-deep);
+  border: 1px solid var(--blue-faint2); border-radius: 999px;
+  padding: 5px 11px; cursor: pointer;
+  transition: all var(--t-fast);
+}
+.ai-sugg:hover { background: var(--blue-faint2); }
+.ai-input-row {
+  display: flex; gap: 8px; padding: 12px 14px;
+  border-top: 1px solid var(--rule);
+  background: var(--surface);
+}
+.ai-input {
+  flex: 1; border: 1px solid var(--rule);
+  border-radius: 999px; padding: 9px 14px;
+  font-family: var(--f-body); font-size: 13px;
+  outline: none; background: var(--page);
+}
+.ai-input:focus { border-color: var(--blue); background: var(--surface); }
+.ai-send {
+  background: var(--blue-deep); color: white; border: none;
+  width: 38px; height: 38px; border-radius: 50%; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.ai-send:disabled { opacity: 0.4; cursor: not-allowed; }
+.ai-send:hover:not(:disabled) { background: var(--blue); }
+
+/* ═══════════════════════════════════════════════════════
    ENERGIELABEL VISUALISATIE — verfijnd
 ═══════════════════════════════════════════════════════ */
 .label-vis-section { margin-bottom: 28px; }
@@ -2219,6 +2635,41 @@ select.finput {
 @media print {
   .measures-toolbar, .live-totals-bar,
   .wachten-banner { display: none !important; }
+
+  /* ── Hide screen-only modules in print ── */
+  .toc-rail, .ai-fab, .ai-panel,
+  .scenario-block, .ml-controls { display: none !important; }
+
+  /* ── Wat als u niets doet — print versie ── */
+  .geen-actie-block { border: 0.5pt solid #E3DDD8 !important; margin-bottom: 12pt !important; page-break-inside: avoid !important; }
+  .geen-actie-head { background: #2a1818 !important; padding: 10pt 14pt !important; gap: 8pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .geen-actie-icon { width: 22pt !important; height: 22pt !important; }
+  .geen-actie-eyebrow { font-size: 7pt !important; letter-spacing: 1pt !important; }
+  .geen-actie-title { font-size: 11pt !important; }
+  .geen-actie-grid { background: #F4F2EF !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .geen-actie-cell { padding: 9pt 12pt !important; border-right: 0.5pt solid #E3DDD8 !important; }
+  .geen-actie-lbl { font-size: 7pt !important; }
+  .geen-actie-val { font-size: 14pt !important; color: #8B2828 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .geen-actie-sub { font-size: 7.5pt !important; }
+  .geen-actie-foot { padding: 8pt 14pt !important; font-size: 8pt !important; }
+
+  /* ── Maandlasten-vergelijker print ── */
+  .maandlasten-block { border: 0.5pt solid #E3DDD8 !important; margin-bottom: 12pt !important; page-break-inside: avoid !important; }
+  .maandlasten-head { padding: 8pt 12pt !important; }
+  .maandlasten-titel { font-size: 10pt !important; }
+  .maandlasten-sub { font-size: 7.5pt !important; }
+  .maandlasten-grid { display: grid !important; grid-template-columns: 1fr 1fr 1fr !important; }
+  .ml-col { padding: 11pt 12pt !important; border-right: 0.5pt solid #E3DDD8 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .ml-col.is-now { background: #F4F2EF !important; }
+  .ml-col.is-fin { background: #EEF4F8 !important; }
+  .ml-eyebrow { font-size: 7pt !important; letter-spacing: 1pt !important; }
+  .ml-titel { font-size: 9pt !important; margin-bottom: 8pt !important; }
+  .ml-bedrag { font-size: 18pt !important; }
+  .ml-bedrag.is-direct { color: #2A7A50 !important; }
+  .ml-bedrag.is-fin { color: #134460 !important; }
+  .ml-eenheid { font-size: 9pt !important; }
+  .ml-detail { margin-top: 8pt !important; padding-top: 7pt !important; font-size: 8pt !important; }
+  .ml-detail-row { padding: 1pt 0 !important; }
   .m-check { display: none !important; }
   .rt th:first-child { display: none !important; }
 
@@ -2643,6 +3094,39 @@ select.finput {
       </div>
     </div>
 
+    <!-- TOC RAIL (sticky inhoudsopgave, screen-only) -->
+    <nav class="toc-rail" id="tocRail" aria-label="Inhoudsopgave"></nav>
+
+    <!-- AI CHAT FAB (screen-only) -->
+    <button class="ai-fab hidden" id="aiFab" aria-label="Vraag de adviseur" onclick="openAiPanel()">
+      <span class="ai-fab-pulse"></span>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    </button>
+
+    <!-- AI CHAT PANEL (screen-only) -->
+    <div class="ai-panel" id="aiPanel" role="dialog" aria-label="Adviseur AI">
+      <div class="ai-panel-head">
+        <div class="ai-panel-head-l">
+          <div class="ai-panel-avatar">MB</div>
+          <div>
+            <div class="ai-panel-name">Adviseur AI</div>
+            <div class="ai-panel-status">Beantwoordt vragen over dit rapport</div>
+          </div>
+        </div>
+        <button class="ai-panel-close" onclick="closeAiPanel()" aria-label="Sluiten">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l8 8M11 3l-8 8"/></svg>
+        </button>
+      </div>
+      <div class="ai-msgs" id="aiMsgs"></div>
+      <div class="ai-suggestions" id="aiSugg"></div>
+      <form class="ai-input-row" id="aiForm" onsubmit="return sendAiMsg(event)">
+        <input class="ai-input" id="aiInput" type="text" placeholder="Stel een vraag over dit rapport..." autocomplete="off">
+        <button class="ai-send" id="aiSend" type="submit" aria-label="Verstuur">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 14L14 8 2 2v5l8 1-8 1z"/></svg>
+        </button>
+      </form>
+    </div>
+
     <!-- RESULT -->
     <div class="result" id="result">
       <div class="print-cover-page" id="printCover"></div>
@@ -2662,9 +3146,12 @@ select.finput {
         <div id="labelVisSection" class="label-vis-section"></div>
         <div id="wachtenBanner"></div>
         <div id="introSection"></div>
+        <div id="geenActieSection"></div>
         <div id="measuresSection"></div>
+        <div id="scenarioSection"></div>
         <div id="maatregelenChartSection"></div>
         <div id="chartSection" class="chart-section"></div>
+        <div id="maandlastenSection"></div>
         <div id="nettoSection"></div>
         <div id="subsidiesSection"></div>
         <div id="phasesSection"></div>
@@ -3253,6 +3740,11 @@ function resetTool() {
   setFormVisible(true);
   document.getElementById('formError').style.display = 'none';
   [1,2,3].forEach(n => removeFile(n));
+  const tocRail = document.getElementById('tocRail'); if (tocRail) tocRail.classList.remove('on');
+  const aiPanel = document.getElementById('aiPanel'); if (aiPanel) aiPanel.classList.remove('on');
+  const aiFab = document.getElementById('aiFab'); if (aiFab) aiFab.classList.add('hidden');
+  const aiMsgs = document.getElementById('aiMsgs'); if (aiMsgs) aiMsgs.innerHTML = '';
+  window._aiInited = false;
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
@@ -3550,6 +4042,13 @@ function renderReport(r) {
   renderVervolgSection(r);
   renderAdviseurSection();
   renderBronSection(r);
+
+  // Nieuwe modules
+  renderGeenActieSection(r);
+  renderMaandlastenSection(r);
+  renderScenarioSection(r);
+  renderTocRail();
+  showAiFab();
 }
 
 function renderBronSection(r) {
@@ -3694,6 +4193,10 @@ function recalcTotals() {
     const selected = (_rptData.maatregelen||[]).filter((_, i) => checked[i] && checked[i].checked);
     renderMaatregelenChart(selected);
   }
+  // Update scenario summary indien aanwezig
+  if (typeof window._updateScenarioSummary === 'function') window._updateScenarioSummary();
+  // Update maandlasten met geselecteerde besparing/investering
+  if (typeof window._mlRender === 'function') window._mlRender();
 }
 
 function selectAllMeasures(val) {
@@ -4137,6 +4640,391 @@ function renderVervolgSection(r) {
     </div>`).join('');
 
   el.innerHTML = secHead('Aanbevolen vervolgstappen') + `<div class="vervolg-list">${html}</div>`;
+}
+
+function renderAdviseurSection() {
+  const el = document.getElementById('adviseurSection');
+  if (!el) return;
+  el.innerHTML = `
+    <div style="margin-top:8px;">
+      <div class="adviseur-card">
+        <div class="adviseur-avatar">
+          <img src="${LOGO_IMG}" alt="MB Adviesgroep">
+        </div>
+        <div class="adviseur-info">
+          <span class="adviseur-label">Uw adviseur</span>
+          <div class="adviseur-naam">MB Adviesgroep</div>
+          <div class="adviseur-functie">Verduurzamings- &amp; vastgoedadvies</div>
+        </div>
+        <div class="adviseur-contact">
+          <a href="https://mbadviesgroep.nl" target="_blank">mbadviesgroep.nl</a>
+          <a href="mailto:info@mbadviesgroep.nl">info@mbadviesgroep.nl</a>
+        </div>
+      </div>
+    </div>`;
+}
+
+// =============================================================================
+//  NIEUWE MODULES — "Wat als u niets doet" / Maandlasten / Scenario / TOC / AI
+// =============================================================================
+
+// "Wat als u niets doet?" — kosten van uitstel
+function renderGeenActieSection(r) {
+  const el = document.getElementById('geenActieSection');
+  if (!el) return;
+  const huidig = parseEuro(r.huidige_kosten);
+  const besparing = (r.maatregelen||[]).reduce((s,m)=>s+parseEuro(m.besparing),0);
+  if (!huidig && !besparing) { el.innerHTML = ''; return; }
+
+  // Aanname: 4% jaarlijkse energieprijsstijging, 5 jaar uitstel
+  const stijgingPct = 0.04;
+  const jaren = 5;
+  let kostenMetStijging = 0;
+  for (let i = 1; i <= jaren; i++) {
+    kostenMetStijging += huidig * Math.pow(1 + stijgingPct, i);
+  }
+  const kostenZonderStijging = huidig * jaren;
+  const extraDoorStijging = kostenMetStijging - kostenZonderStijging;
+  const gemistebesparing = besparing * jaren;
+  const totaalGemist = extraDoorStijging + gemistebesparing;
+  const co2kg = (r.maatregelen||[]).reduce((s,m)=>s+parseCO2kg(m.co2),0) * jaren;
+  const co2ton = co2kg / 1000;
+
+  el.innerHTML = `
+    <div class="geen-actie-block">
+      <div class="geen-actie-head">
+        <div class="geen-actie-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        </div>
+        <div>
+          <div class="geen-actie-eyebrow">De kosten van uitstel</div>
+          <div class="geen-actie-title">Wat als u de komende 5 jaar niets doet?</div>
+        </div>
+      </div>
+      <div class="geen-actie-grid">
+        <div class="geen-actie-cell">
+          <span class="geen-actie-lbl">Gemiste besparing</span>
+          <span class="geen-actie-val">${fmtEuro(gemistebesparing)}</span>
+          <span class="geen-actie-sub">5 × jaarlijkse besparing die u laat liggen</span>
+        </div>
+        <div class="geen-actie-cell">
+          <span class="geen-actie-lbl">Extra door prijsstijging</span>
+          <span class="geen-actie-val">${fmtEuro(extraDoorStijging)}</span>
+          <span class="geen-actie-sub">Bij 4% energieprijsstijging per jaar</span>
+        </div>
+        <div class="geen-actie-cell">
+          <span class="geen-actie-lbl">Vermijdbare CO₂-uitstoot</span>
+          <span class="geen-actie-val">${co2ton >= 10 ? co2ton.toFixed(0) : co2ton.toFixed(1)} ton</span>
+          <span class="geen-actie-sub">Cumulatief over 5 jaar uitstel</span>
+        </div>
+      </div>
+      <div class="geen-actie-foot">
+        <strong>Totaal gemist over 5 jaar: ${fmtEuro(totaalGemist)}.</strong>
+        Daarnaast spelen risico's als labelverplichtingen bij verkoop/verhuur, dalende WOZ-waarde en stijgende onderhoudskosten van verouderde installaties. Vroeg starten betekent vroeg profiteren — én het beste subsidieklimaat is nú.
+      </div>
+    </div>`;
+}
+
+// Maandlasten-vergelijker met financiering
+function renderMaandlastenSection(r) {
+  const el = document.getElementById('maandlastenSection');
+  if (!el) return;
+  const huidig = parseEuro(r.huidige_kosten);
+  if (!huidig) { el.innerHTML = ''; return; }
+
+  // Persisteer state in window voor herberekening
+  window._mlState = window._mlState || { rente: 4.5, looptijd: 15, eigenInbreng: 0 };
+
+  function pmt(principal, ratePct, years) {
+    if (principal <= 0) return 0;
+    const rt = (ratePct/100)/12;
+    const n = years * 12;
+    if (rt === 0) return principal / n;
+    return principal * (rt * Math.pow(1+rt, n)) / (Math.pow(1+rt, n) - 1);
+  }
+
+  function getSelected() {
+    const checks = [...document.querySelectorAll('.m-checkbox')];
+    const sel = (_rptData.maatregelen||[]).filter((_,i)=> checks[i] ? checks[i].checked : true);
+    const besparing = sel.reduce((s,m)=>s+parseEuro(m.besparing),0);
+    const bruto = sel.reduce((s,m)=>s+parseEuro(m.investering),0);
+    // Subsidie-aftrek-ratio uit netto_investering, indien beschikbaar
+    let netto = bruto;
+    const ni = _rptData.netto_investering;
+    if (ni && ni.bruto && ni.netto) {
+      const ratioBruto = parseEuro(ni.bruto), ratioNetto = parseEuro(ni.netto);
+      if (ratioBruto > 0) netto = bruto * (ratioNetto / ratioBruto);
+    }
+    return { besparing, bruto, netto };
+  }
+
+  function render() {
+    const s = window._mlState;
+    const { besparing, netto } = getSelected();
+    // Cap eigenInbreng zodat slider niet boven netto uitkomt
+    if (s.eigenInbreng > netto) s.eigenInbreng = netto;
+    const teLenen = Math.max(0, netto - s.eigenInbreng);
+    const annuiteit = pmt(teLenen, s.rente, s.looptijd);
+    const huidigMnd = huidig / 12;
+    const directMnd = (huidig - besparing) / 12;
+    const finMnd = directMnd + annuiteit;
+
+    const set = (id, html) => { const e = document.getElementById(id); if (e) e.innerHTML = html; };
+    set('mlNow', `${fmtEuro(huidigMnd)}<span class="ml-eenheid">/mnd</span>`);
+    set('mlDirect', `${fmtEuro(directMnd)}<span class="ml-eenheid">/mnd</span>`);
+    set('mlFin', `${fmtEuro(finMnd)}<span class="ml-eenheid">/mnd</span>`);
+    set('mlNowDet', `<div class="ml-detail-row"><span class="lbl">Energie/jr</span><span class="val">${fmtEuro(huidig)}</span></div>`);
+    set('mlDirectDet',
+      `<div class="ml-detail-row"><span class="lbl">Energie/jr</span><span class="val">${fmtEuro(huidig-besparing)}</span></div>
+       <div class="ml-detail-row"><span class="lbl">Bespaard/jr</span><span class="val" style="color:var(--green)">${fmtEuro(besparing)}</span></div>`);
+    set('mlFinDet',
+      `<div class="ml-detail-row"><span class="lbl">Energie/jr</span><span class="val">${fmtEuro(huidig-besparing)}</span></div>
+       <div class="ml-detail-row"><span class="lbl">Lening/jr</span><span class="val">${fmtEuro(annuiteit*12)}</span></div>
+       <div class="ml-detail-row"><span class="lbl">Geleend</span><span class="val">${fmtEuro(teLenen)}</span></div>`);
+
+    const renteEl = document.getElementById('mlRenteVal'); if (renteEl) renteEl.textContent = s.rente.toFixed(1) + '%';
+    const looptijdEl = document.getElementById('mlLooptijdVal'); if (looptijdEl) looptijdEl.textContent = s.looptijd + ' jr';
+    const eigenEl = document.getElementById('mlEigenVal'); if (eigenEl) eigenEl.textContent = fmtEuro(s.eigenInbreng);
+    // Update slider max bij wisselende selectie
+    const eigSlider = document.getElementById('mlEigenSlider');
+    if (eigSlider) {
+      eigSlider.max = Math.max(netto, 1);
+      eigSlider.step = Math.max(Math.round(netto/40), 100);
+      eigSlider.value = s.eigenInbreng;
+    }
+  }
+  window._mlRender = render;
+
+  const { netto } = getSelected();
+
+  el.innerHTML = secHead('Maandlasten — voor en na verduurzaming') + `
+    <div class="maandlasten-block">
+      <div class="maandlasten-head">
+        <div class="maandlasten-titel">Wat betaalt u per maand?</div>
+        <div class="maandlasten-sub">Vergelijking inclusief optionele verduurzamingslening · op basis van geselecteerde maatregelen</div>
+      </div>
+      <div class="maandlasten-grid">
+        <div class="ml-col is-now">
+          <span class="ml-eyebrow is-now">Huidige situatie</span>
+          <div class="ml-titel">Alleen energiekosten</div>
+          <div class="ml-bedrag" id="mlNow"></div>
+          <div class="ml-detail" id="mlNowDet"></div>
+        </div>
+        <div class="ml-col is-direct">
+          <span class="ml-eyebrow is-direct">Na investering</span>
+          <div class="ml-titel">Eigen geld, lagere energie</div>
+          <div class="ml-bedrag is-direct" id="mlDirect"></div>
+          <div class="ml-detail" id="mlDirectDet"></div>
+        </div>
+        <div class="ml-col is-fin">
+          <span class="ml-eyebrow is-fin">Met financiering</span>
+          <div class="ml-titel">Energie + verduurzamingslening</div>
+          <div class="ml-bedrag is-fin" id="mlFin"></div>
+          <div class="ml-detail" id="mlFinDet"></div>
+        </div>
+      </div>
+      <div class="ml-controls">
+        <div class="ml-control">
+          <span class="ml-control-lbl">Rente <span class="v" id="mlRenteVal">4,5%</span></span>
+          <input type="range" min="2" max="8" step="0.1" value="${window._mlState.rente}" oninput="window._mlState.rente=parseFloat(this.value);window._mlRender();">
+        </div>
+        <div class="ml-control">
+          <span class="ml-control-lbl">Looptijd <span class="v" id="mlLooptijdVal">15 jr</span></span>
+          <input type="range" min="5" max="30" step="1" value="${window._mlState.looptijd}" oninput="window._mlState.looptijd=parseInt(this.value);window._mlRender();">
+        </div>
+        <div class="ml-control">
+          <span class="ml-control-lbl">Eigen inbreng <span class="v" id="mlEigenVal">€ 0</span></span>
+          <input id="mlEigenSlider" type="range" min="0" max="${Math.max(netto,1)}" step="${Math.max(Math.round(netto/40),100)}" value="${window._mlState.eigenInbreng}" oninput="window._mlState.eigenInbreng=parseFloat(this.value);window._mlRender();">
+        </div>
+      </div>
+    </div>`;
+  render();
+}
+
+// Scenario-slider: budget / minimaal / volledig
+function renderScenarioSection(r) {
+  const el = document.getElementById('scenarioSection');
+  if (!el) return;
+  const m = (r.maatregelen||[]).map((x,i)=>({...x, _i:i,
+    _b: parseEuro(x.besparing), _inv: parseEuro(x.investering),
+    _tvt: parseTVT(x.tvt), _co2: parseCO2kg(x.co2)}));
+  if (m.length < 2) { el.innerHTML = ''; return; }
+
+  const scenarios = [
+    { key:'quick', label:'Quick wins', desc:'Alleen maatregelen met TVT < 5 jaar', filter: x => x._tvt > 0 && x._tvt < 5 },
+    { key:'budget', label:'Budgetvriendelijk', desc:'Investering ≤ 50% van het volledige pakket', filter: null },
+    { key:'volledig', label:'Volledig pakket', desc:'Alle geadviseerde maatregelen', filter: () => true },
+    { key:'co2', label:'Maximaal CO₂', desc:'Top maatregelen op CO₂-besparing', filter: null },
+  ];
+
+  function selectFor(key) {
+    const sc = scenarios.find(s=>s.key===key);
+    if (key === 'budget') {
+      const totaal = m.reduce((s,x)=>s+x._inv,0);
+      const limiet = totaal * 0.5;
+      const sorted = [...m].sort((a,b)=> (b._b/Math.max(b._inv,1)) - (a._b/Math.max(a._inv,1)));
+      let used = 0; const sel = new Set();
+      for (const x of sorted) { if (used + x._inv <= limiet) { sel.add(x._i); used += x._inv; } }
+      return sel;
+    }
+    if (key === 'co2') {
+      const sorted = [...m].sort((a,b)=> b._co2 - a._co2);
+      const top = sorted.slice(0, Math.max(3, Math.ceil(m.length*0.6)));
+      return new Set(top.map(x=>x._i));
+    }
+    return new Set(m.filter(sc.filter).map(x=>x._i));
+  }
+
+  function applyScenario(key) {
+    const sel = selectFor(key);
+    document.querySelectorAll('.m-checkbox').forEach((cb,i)=>{ cb.checked = sel.has(i); });
+    if (typeof recalcTotals === 'function') recalcTotals();
+    document.querySelectorAll('.scenario-tab').forEach(t=>t.classList.toggle('active', t.dataset.k===key));
+    updateScenarioSummary();
+  }
+  window._applyScenario = applyScenario;
+
+  function updateScenarioSummary() {
+    const checked = [...document.querySelectorAll('.m-checkbox')];
+    const sel = m.filter((_,i)=> checked[i] && checked[i].checked);
+    const totB = sel.reduce((s,x)=>s+x._b,0);
+    const totI = sel.reduce((s,x)=>s+x._inv,0);
+    const totC = sel.reduce((s,x)=>s+x._co2,0);
+    const tvtW = totI>0 ? sel.reduce((s,x)=>s+x._tvt*x._inv,0)/totI : 0;
+    const e = id => document.getElementById(id);
+    if (e('ssumCount')) e('ssumCount').textContent = sel.length + ' / ' + m.length;
+    if (e('ssumBesp')) e('ssumBesp').textContent = fmtEuro(totB);
+    if (e('ssumInv')) e('ssumInv').textContent = fmtEuro(totI);
+    if (e('ssumTvt')) e('ssumTvt').textContent = totI>0 ? tvtW.toFixed(1)+' jr' : '—';
+  }
+  window._updateScenarioSummary = updateScenarioSummary;
+
+  const tabs = scenarios.map(s=>
+    `<button class="scenario-tab" data-k="${s.key}" onclick="window._applyScenario('${s.key}')">${s.label}</button>`
+  ).join('');
+
+  el.innerHTML = `
+    <div class="scenario-block">
+      <div class="scenario-head">
+        <div>
+          <div class="scenario-titel">Bekijk verschillende scenario's</div>
+          <div class="scenario-sub">Klik om snel een passende selectie te maken — past de tabel en grafiek hierboven aan</div>
+        </div>
+        <div class="scenario-tabs">${tabs}</div>
+      </div>
+      <div class="scenario-summary">
+        <div class="ssum-cell"><span class="ssum-lbl">Maatregelen</span><span class="ssum-val blue" id="ssumCount">—</span><span class="ssum-sub">geselecteerd</span></div>
+        <div class="ssum-cell"><span class="ssum-lbl">Besparing/jr</span><span class="ssum-val green" id="ssumBesp">—</span><span class="ssum-sub">jaarlijks</span></div>
+        <div class="ssum-cell"><span class="ssum-lbl">Investering</span><span class="ssum-val orange" id="ssumInv">—</span><span class="ssum-sub">bruto</span></div>
+        <div class="ssum-cell"><span class="ssum-lbl">Gem. TVT</span><span class="ssum-val" id="ssumTvt">—</span><span class="ssum-sub">gewogen</span></div>
+      </div>
+    </div>`;
+  setTimeout(updateScenarioSummary, 60);
+}
+
+// Sticky inhoudsopgave
+function renderTocRail() {
+  const rail = document.getElementById('tocRail');
+  if (!rail) return;
+  const items = [
+    { id:'kpiPanel', label:'Overzicht' },
+    { id:'measuresSection', label:'Maatregelen' },
+    { id:'scenarioSection', label:'Scenario\'s' },
+    { id:'chartSection', label:'Besparing' },
+    { id:'maandlastenSection', label:'Maandlasten' },
+    { id:'nettoSection', label:'Netto investering' },
+    { id:'subsidiesSection', label:'Subsidies' },
+    { id:'phasesSection', label:'Aanpak' },
+    { id:'vervolgSection', label:'Vervolgstappen' },
+  ];
+  rail.innerHTML = items.map(i =>
+    `<a class="toc-link" data-tgt="${i.id}" href="#${i.id}"><span class="toc-dot"></span><span>${i.label}</span></a>`
+  ).join('');
+  rail.classList.add('on');
+  // Smooth scroll
+  rail.querySelectorAll('.toc-link').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const tgt = document.getElementById(a.dataset.tgt);
+      if (tgt) window.scrollTo({ top: tgt.getBoundingClientRect().top + window.scrollY - 32, behavior: 'smooth' });
+    });
+  });
+  // Active highlight
+  if (window._tocObserver) window._tocObserver.disconnect();
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(en => {
+      if (en.isIntersecting) {
+        rail.querySelectorAll('.toc-link').forEach(l => l.classList.toggle('active', l.dataset.tgt === en.target.id));
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  items.forEach(i => { const e = document.getElementById(i.id); if (e) obs.observe(e); });
+  window._tocObserver = obs;
+}
+
+// AI-chat over het rapport
+function showAiFab() { const f = document.getElementById('aiFab'); if (f) f.classList.remove('hidden'); }
+function openAiPanel() {
+  document.getElementById('aiPanel').classList.add('on');
+  document.getElementById('aiFab').classList.add('hidden');
+  if (!window._aiInited) {
+    window._aiInited = true;
+    addAiMsg('ai', 'Hallo! Ik ben de adviseur-assistent. Stel mij gerust een vraag over dit verduurzamingsrapport — bijvoorbeeld waarom een bepaalde maatregel wel of niet is opgenomen, of hoe een subsidie werkt.');
+    renderAiSuggestions();
+  }
+  setTimeout(() => document.getElementById('aiInput').focus(), 100);
+}
+function closeAiPanel() {
+  document.getElementById('aiPanel').classList.remove('on');
+  document.getElementById('aiFab').classList.remove('hidden');
+}
+function addAiMsg(role, text) {
+  const box = document.getElementById('aiMsgs');
+  const d = document.createElement('div');
+  d.className = 'ai-msg ' + role;
+  d.innerHTML = `<div class="ai-msg-bubble">${text}</div>`;
+  box.appendChild(d);
+  box.scrollTop = box.scrollHeight;
+  return d;
+}
+function renderAiSuggestions() {
+  const sugg = ['Welke maatregel levert het meeste op?', 'Waarom geen warmtepomp?', 'Hoe vraag ik ISDE aan?', 'Wat als ik minder budget heb?'];
+  document.getElementById('aiSugg').innerHTML = sugg.map(q =>
+    `<button class="ai-sugg" type="button" onclick="askAi('${q.replace(/'/g,"\\'")}')">${q}</button>`).join('');
+}
+function askAi(q) { document.getElementById('aiInput').value = q; sendAiMsg({preventDefault(){}}); }
+async function sendAiMsg(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  const input = document.getElementById('aiInput');
+  const q = input.value.trim();
+  if (!q) return false;
+  addAiMsg('user', q);
+  input.value = '';
+  const send = document.getElementById('aiSend'); send.disabled = true;
+  const thinking = addAiMsg('ai', '');
+  thinking.querySelector('.ai-msg-bubble').classList.add('thinking');
+  try {
+    const ctx = JSON.stringify({
+      pand: _rptData.pand_naam, adres: _rptData.pand_adres,
+      bouwjaar: _rptData.bouwjaar, oppervlakte: _rptData.oppervlakte,
+      huidig_label: _rptData.huidig_label, streef_label: _rptData.streef_label,
+      huidige_kosten: _rptData.huidige_kosten,
+      totaal_besparing: _rptData.totaal_besparing,
+      maatregelen: (_rptData.maatregelen||[]).map(m=>({n:m.naam,b:m.besparing,i:m.investering,t:m.tvt,co2:m.co2,sub:m.subsidies})),
+      subsidies: (_rptData.subsidies||[]).map(s=>({code:s.code,naam:s.naam,voordeel:s.voordeel})),
+      fases: _rptData.fases, samenvatting: _rptData.samenvatting,
+      aandachtspunten: _rptData.aandachtspunten
+    });
+    const prompt = `Je bent een Nederlandstalige verduurzamingsadviseur namens MB Adviesgroep. Beantwoord vragen UITSLUITEND op basis van het meegestuurde rapport. Wees beknopt (max 4 zinnen), zakelijk en concreet. Verzin geen subsidies of bedragen die niet in het rapport staan. Als iets niet in het rapport staat, zeg dat eerlijk en stel voor om contact op te nemen met de adviseur.\n\nRapport:\n${ctx}\n\nVraag: ${q}`;
+    const answer = await window.claude.complete(prompt);
+    thinking.querySelector('.ai-msg-bubble').classList.remove('thinking');
+    thinking.querySelector('.ai-msg-bubble').textContent = answer;
+  } catch (err) {
+    thinking.querySelector('.ai-msg-bubble').classList.remove('thinking');
+    thinking.querySelector('.ai-msg-bubble').textContent = 'Sorry, er ging iets mis bij het beantwoorden. Probeer het opnieuw of neem contact op met info@mbadviesgroep.nl.';
+  }
+  send.disabled = false;
+  return false;
 }
 
 function renderAdviseurSection() {
