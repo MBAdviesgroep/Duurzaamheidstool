@@ -2311,7 +2311,7 @@ select.finput {
 .sc-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0,1fr));
-  gap: 20px;
+  gap: 16px;
   align-items: stretch;
 }
 @media (max-width: 680px) { .sc-grid { grid-template-columns: 1fr; } }
@@ -2319,91 +2319,82 @@ select.finput {
 .sc-card {
   background: var(--surface);
   border: 1px solid var(--rule);
-  border-radius: 20px;
+  border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  transition: transform 0.22s cubic-bezier(0.16,1,0.3,1),
-              box-shadow 0.22s cubic-bezier(0.16,1,0.3,1),
-              border-color 0.15s ease;
-  position: relative;
+  transition: transform 0.2s cubic-bezier(0.16,1,0.3,1), box-shadow 0.2s ease;
 }
 .sc-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 16px 48px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.05);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 36px rgba(0,0,0,0.09), 0 2px 6px rgba(0,0,0,0.04);
 }
 .sc-card.sc-active {
   border: 1.5px solid var(--blue-deep);
-  box-shadow: 0 12px 40px rgba(27,89,123,0.14), 0 2px 8px rgba(27,89,123,0.06);
+  box-shadow: 0 8px 32px rgba(27,89,123,0.13);
 }
 
-.sc-accent { height: 4px; flex-shrink: 0; }
+.sc-accent { height: 3px; flex-shrink: 0; }
 .sc-accent-quick    { background: var(--green); }
 .sc-accent-budget   { background: var(--blue-deep); }
 .sc-accent-volledig { background: var(--orange); }
 
-.sc-card-head {
-  padding: 26px 26px 20px;
-  border-bottom: 1px solid var(--rule);
-}
+/* HEAD */
+.sc-card-head { padding: 18px 18px 14px; border-bottom: 1px solid var(--rule); }
 .sc-label {
-  font-size: 9px; font-weight: 700; letter-spacing: 2.5px;
+  font-size: 8.5px; font-weight: 700; letter-spacing: 2px;
   text-transform: uppercase; color: var(--ink-4);
-  font-family: var(--f-head); margin-bottom: 10px;
-  display: block;
+  font-family: var(--f-head); margin-bottom: 7px; display: block;
 }
 .sc-name {
-  font-size: 22px; font-weight: 700; color: var(--ink);
-  margin: 0 0 5px; font-family: var(--f-head);
-  letter-spacing: -0.5px; line-height: 1.15;
+  font-size: 18px; font-weight: 700; color: var(--ink);
+  margin: 0 0 3px; font-family: var(--f-head);
+  letter-spacing: -0.4px; line-height: 1.2;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.sc-desc { font-size: 12px; color: var(--ink-4); margin: 0; line-height: 1.5; }
+.sc-desc { font-size: 11px; color: var(--ink-4); margin: 0; }
 
-.sc-body {
-  padding: 22px 26px 18px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
+/* BODY */
+.sc-body { padding: 16px 18px 14px; flex: 1; display: flex; flex-direction: column; gap: 14px; }
 
+/* Stats — 4 items in 2×2, vaste breedte zodat niets overloopt */
 .sc-stats {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  row-gap: 16px;
-  column-gap: 16px;
+  gap: 12px 12px;
 }
 .sc-stat-lbl {
-  font-size: 9px; font-weight: 700; letter-spacing: 1.5px;
+  font-size: 8px; font-weight: 700; letter-spacing: 1.2px;
   text-transform: uppercase; color: var(--ink-4);
-  font-family: var(--f-head); margin-bottom: 4px; display: block;
+  font-family: var(--f-head); margin-bottom: 3px; display: block;
 }
 .sc-stat-val {
-  font-size: 20px; font-weight: 700; font-family: var(--f-head);
-  letter-spacing: -0.5px; color: var(--ink); line-height: 1;
+  font-size: 15px; font-weight: 700; font-family: var(--f-head);
+  letter-spacing: -0.3px; color: var(--ink); line-height: 1;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .sc-stat-val.green  { color: var(--green); }
 .sc-stat-val.orange { color: var(--orange); }
 .sc-stat-val.blue   { color: var(--blue-deep); }
 
-.sc-divider { height: 1px; background: var(--rule); }
+.sc-divider { height: 1px; background: var(--rule); flex-shrink: 0; }
 
-.sc-measures {
-  display: flex; flex-direction: column; gap: 8px; flex: 1;
-}
+/* Maatregelen */
+.sc-measures { display: flex; flex-direction: column; gap: 5px; flex: 1; }
 .sc-m {
-  display: flex; align-items: center; gap: 10px;
-  font-size: 13px; color: var(--ink-2);
-  font-family: var(--f-head); font-weight: 500;
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; color: var(--ink-2); font-family: var(--f-head); font-weight: 500;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.sc-m.off { opacity: 0.22; font-weight: 400; }
-.sc-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.sc-m.off { opacity: 0.2; font-weight: 400; }
+.sc-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
 .sc-dot.on  { background: var(--green); }
 .sc-dot.off { background: var(--ink-5); }
 
+/* FOOTER */
 .sc-footer {
-  padding: 20px 26px 22px;
+  padding: 16px 18px 18px;
   background: var(--blue-faint);
   border-top: 1px solid var(--rule);
   flex-shrink: 0;
@@ -2411,31 +2402,27 @@ select.finput {
 .sc-card.sc-active .sc-footer { background: var(--blue-faint2); }
 
 .sc-maand-lbl {
-  font-size: 9px; font-weight: 700; letter-spacing: 2px;
-  text-transform: uppercase; color: var(--blue);
-  font-family: var(--f-head); margin-bottom: 8px;
-  display: block; opacity: 0.65;
+  font-size: 8px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--blue); opacity: 0.65;
+  font-family: var(--f-head); margin-bottom: 6px; display: block;
 }
 .sc-maand-val {
-  font-size: 38px; font-weight: 700; font-family: var(--f-head);
-  letter-spacing: -2px; color: var(--blue-deep); line-height: 1;
+  font-size: 32px; font-weight: 700; font-family: var(--f-head);
+  letter-spacing: -1.5px; color: var(--blue-deep); line-height: 1;
 }
-.sc-maand-eenheid { font-size: 16px; font-weight: 500; letter-spacing: 0; }
-.sc-maand-sub { font-size: 11px; color: var(--ink-4); margin-top: 6px; line-height: 1.5; }
+.sc-maand-eenheid { font-size: 14px; font-weight: 500; letter-spacing: 0; }
+.sc-maand-sub { font-size: 10px; color: var(--ink-4); margin-top: 5px; line-height: 1.4; }
 
-.sc-bar-wrap { margin-top: 14px; }
+.sc-bar-wrap { margin-top: 12px; }
 .sc-bar-lbl {
   display: flex; justify-content: space-between;
-  font-size: 10px; color: var(--ink-4); margin-bottom: 6px;
-  font-family: var(--f-head); font-weight: 600;
+  font-size: 9px; font-weight: 600; color: var(--ink-4);
+  font-family: var(--f-head); margin-bottom: 5px;
 }
-.sc-bar-track {
-  height: 4px; background: rgba(27,89,123,0.10);
-  border-radius: 4px; overflow: hidden;
-}
-.sc-bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+.sc-bar-track { height: 3px; background: rgba(27,89,123,0.10); border-radius: 3px; overflow: hidden; }
+.sc-bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
 
-.scenario-block { margin: 0 0 32px; }
+.scenario-block { margin: 0 0 28px; }
 .scenario-tab { display: none; }
 .ssum-cell { display: flex; flex-direction: column; gap: 2px; }
 .ssum-lbl { font-size: 9.5px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--ink-4); font-weight: 600; font-family: var(--f-head); }
@@ -5720,14 +5707,11 @@ function renderScenarioSection(r) {
     const tvtTxt = st.tvtW > 0 ? st.tvtW.toFixed(1) + ' jr' : '—';
     const co2Txt = st.co2 >= 1000 ? (st.co2/1000).toFixed(1) + ' ton' : Math.round(st.co2) + ' kg';
 
-    const labelMap = {
-      quick: 'Quick wins', budget: 'Budgetvriendelijk',
-      volledig: 'Volledig pakket', co2: 'Maximaal CO₂'
-    };
-    const nameMap = {
-      quick: 'Snel rendement', budget: 'Beste balans',
-      volledig: 'Alle maatregelen', co2: 'Hoogste impact'
-    };
+    // Korte euro notatie voor stats
+    const fmtK = v => v >= 1000 ? '€\u202F' + (v/1000).toFixed(0) + 'k' : fmtEuro(v);
+
+    const labelMap = { quick:'Quick wins', budget:'Budgetvriendelijk', volledig:'Volledig pakket' };
+    const nameMap  = { quick:'Snel rendement', budget:'Beste balans', volledig:'Alles' };
 
     return `<div class="sc-card${isActive ? ' sc-active' : ''}" data-k="${s.key}" onclick="window._applyScenario('${s.key}')">
       <div class="sc-accent sc-accent-${s.key}"></div>
@@ -5740,14 +5724,14 @@ function renderScenarioSection(r) {
         <div class="sc-stats">
           <div class="sc-stat">
             <span class="sc-stat-lbl">Besparing/jr</span>
-            <div class="sc-stat-val green">${fmtEuro(st.besp)}</div>
+            <div class="sc-stat-val green">${fmtK(st.besp)}</div>
           </div>
           <div class="sc-stat">
             <span class="sc-stat-lbl">Investering</span>
-            <div class="sc-stat-val orange">${fmtEuro(st.inv)}</div>
+            <div class="sc-stat-val orange">${fmtK(st.inv)}</div>
           </div>
           <div class="sc-stat">
-            <span class="sc-stat-lbl">Terugverdientijd</span>
+            <span class="sc-stat-lbl">TVT</span>
             <div class="sc-stat-val">${tvtTxt}</div>
           </div>
           <div class="sc-stat">
@@ -5763,13 +5747,8 @@ function renderScenarioSection(r) {
         <div class="sc-maand-val">€&thinsp;${st.maand.toLocaleString('nl-NL')}<span class="sc-maand-eenheid"> /mnd</span></div>
         <div class="sc-maand-sub">5% rente &middot; 15 jaar &middot; 20% eigen inbreng</div>
         <div class="sc-bar-wrap">
-          <div class="sc-bar-lbl">
-            <span>Aandeel volledig pakket</span>
-            <span style="font-weight:700;">${st.pctVolledig}%</span>
-          </div>
-          <div class="sc-bar-track">
-            <div class="sc-bar-fill" style="width:${st.pctVolledig}%;background:${barColor};"></div>
-          </div>
+          <div class="sc-bar-lbl"><span>Aandeel volledig pakket</span><span>${st.pctVolledig}%</span></div>
+          <div class="sc-bar-track"><div class="sc-bar-fill" style="width:${st.pctVolledig}%;background:${barColor};"></div></div>
         </div>
       </div>
     </div>`;
