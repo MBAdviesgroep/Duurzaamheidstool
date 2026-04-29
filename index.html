@@ -2834,6 +2834,48 @@ select.finput {
 .m-save { color: var(--green); font-weight: 600; font-family: var(--f-head); }
 
 /* ═══════════════════════════════════════════════════════
+   PRINT SCENARIO BANNER (alleen zichtbaar bij afdrukken)
+═══════════════════════════════════════════════════════ */
+.print-scenario-banner { display: none; }
+@media print {
+  .print-scenario-banner {
+    display: flex !important;
+    align-items: center;
+    gap: 10pt;
+    padding: 8pt 12pt;
+    margin-bottom: 10pt;
+    background: #EEF4F8 !important;
+    border: 1pt solid #1B597B !important;
+    border-left: 3pt solid #1B597B !important;
+    border-radius: 6pt;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    page-break-inside: avoid;
+  }
+  .psb-label {
+    font-size: 7pt; font-weight: 700; letter-spacing: 1.5pt;
+    text-transform: uppercase; color: #1B597B !important;
+    font-family: 'IBM Plex Sans', sans-serif; white-space: nowrap;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+  }
+  .psb-name {
+    font-size: 11pt; font-weight: 700; color: #141414 !important;
+    font-family: 'IBM Plex Sans', sans-serif;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+  }
+  .psb-desc {
+    font-size: 8.5pt; color: #6B6B6B !important;
+    font-family: 'IBM Plex Sans', sans-serif; margin-left: auto;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+  }
+  .psb-sep {
+    width: 1pt; height: 20pt; background: #1B597B !important; opacity: 0.3;
+    flex-shrink: 0;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
    PRINT COVER PAGE
 ═══════════════════════════════════════════════════════ */
 .print-cover-page { display: none; }
@@ -2952,7 +2994,7 @@ select.finput {
   .rt thead { display: table-header-group !important; }
   .rt tbody { display: table-row-group !important; }
   .rt tr { display: table-row !important; opacity: 1 !important; }
-  .rt tr.row-unchecked td { opacity: 1 !important; }
+  .rt tr.row-unchecked { display: none !important; }
   .rt td { display: table-cell !important; opacity: 1 !important; }
   .rt td.m-check, .rt th:first-child { display: none !important; }
 
@@ -4198,6 +4240,12 @@ function renderReport(r) {
       <td class="m-co2">${m.co2||'&#8212;'}</td>
     </tr>`).join('');
   let msec = secHead('Geadviseerde maatregelen');
+  msec += `<div id="printScenarioBanner" class="print-scenario-banner">
+    <span class="psb-label">Gekozen scenario</span>
+    <div class="psb-sep"></div>
+    <span class="psb-name" id="printScenarioName">Beste balans</span>
+    <span class="psb-desc" id="printScenarioDesc"></span>
+  </div>`;
   msec += `<div class="measures-toolbar">
     <span class="measures-toolbar-label">Selecteer maatregelen om totalen te berekenen</span>
     <div class="measures-select-btns">
@@ -4514,6 +4562,16 @@ function recalcTotals() {
   if (typeof window._updateScenarioSummary === 'function') window._updateScenarioSummary();
   // Update maandlasten met geselecteerde besparing/investering
   if (typeof window._mlRender === 'function') window._mlRender();
+
+  // Update print-scenario banner als selectie afwijkt van actief scenario
+  (function() {
+    const nameEl = document.getElementById('printScenarioName');
+    const descEl = document.getElementById('printScenarioDesc');
+    if (!nameEl) return;
+    const totalMaatregelen = (_rptData && _rptData.maatregelen) ? _rptData.maatregelen.length : 0;
+    nameEl.textContent = nameEl.textContent || 'Beste balans';
+    if (descEl) descEl.textContent = checked + ' van ' + totalMaatregelen + ' maatregelen geselecteerd';
+  })();
 }
 
 // KIA schijven 2025
@@ -5689,7 +5747,15 @@ function renderScenarioSection(r) {
     if (typeof recalcTotals === 'function') recalcTotals();
     // Update kaart active state
     document.querySelectorAll('.sc-card').forEach(c=>c.classList.toggle('sc-active', c.dataset.k===key));
-    // Update kaart inhoud (stats zijn statisch, maandlast update via _mlRender die al aangeroepen wordt)
+
+    // Update print-scenario banner
+    const labelMap = { quick:'Snel rendement — Quick wins', budget:'Beste balans — Budgetvriendelijk', volledig:'Alles — Volledig pakket' };
+    const nameMap  = { quick:'Snel rendement', budget:'Beste balans', volledig:'Alles (volledig pakket)' };
+    const st = window._scStats[key];
+    const nameEl = document.getElementById('printScenarioName');
+    const descEl = document.getElementById('printScenarioDesc');
+    if (nameEl) nameEl.textContent = nameMap[key] || key;
+    if (descEl) descEl.textContent = st ? st.items.length + ' van ' + m.length + ' maatregelen geselecteerd' : '';
   }
   window._applyScenario = applyScenario;
   window._updateScenarioSummary = function() {}; // leeg — kaarten zijn statisch
