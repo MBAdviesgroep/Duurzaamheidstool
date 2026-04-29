@@ -2828,7 +2828,9 @@ select.finput {
   .chart-canvas-wrap { height: auto !important; min-height: 160pt !important; position: relative !important; }
   .chart-canvas-wrap canvas[data-print-hidden] { display: none !important; }
   .chart-print-img { width: 100% !important; max-width: 100% !important; display: block !important; height: auto !important; }
-  .chart-wrap { page-break-inside: avoid !important; box-shadow: none !important; border: 0.5pt solid #E3DDD8 !important; padding: 10pt !important; background: white !important; }
+  /* Grafiek: uitleg verbergen in print (grafiek is zelfverklarend met legenda) */
+  .chart-explainer { display: none !important; }
+  .chart-wrap { page-break-inside: avoid !important; box-shadow: none !important; border: 0.5pt solid #E3DDD8 !important; padding: 10pt !important; background: white !important; margin-bottom: 0 !important; }
   .chart-legend { margin-top: 8pt !important; display: flex !important; }
   .chart-legend-item { font-size: 8pt !important; }
   .chart-breakeven-badge { font-size: 8pt !important; padding: 3pt 8pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
@@ -2893,7 +2895,32 @@ select.finput {
   /* Vervolgstappen + adviseur bij elkaar houden */
   #vervolgSection   { page-break-before: auto !important; page-break-inside: avoid !important; break-inside: avoid !important; }
   .vervolg-list     { page-break-inside: avoid !important; break-inside: avoid !important; }
-  #adviseurSection  { page-break-before: avoid !important; break-before: avoid !important; page-break-inside: avoid !important; }
+
+  /* Adviseur + bron + footer: altijd bij elkaar, nooit afbreken */
+  .rapport-einde-block {
+    page-break-before: avoid !important;
+    break-before: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  #adviseurSection  {
+    page-break-before: avoid !important;
+    break-before: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  #bronSection {
+    page-break-before: avoid !important;
+    break-before: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  .rpt-footer {
+    page-break-before: avoid !important;
+    break-before: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
 
   /* Aandachtspunten */
   #aandachtSection  { page-break-inside: auto !important; }
@@ -3296,8 +3323,10 @@ select.finput {
         <div id="phasesSection"></div>
         <div id="aandachtSection"></div>
         <div id="vervolgSection"></div>
-        <div id="adviseurSection"></div>
-        <div id="bronSection"></div>
+        <div class="rapport-einde-block">
+          <div id="adviseurSection"></div>
+          <div id="bronSection"></div>
+        </div>
       </div>
       <div class="rpt-footer">
         <div class="rpt-footer-disc">Alle bedragen zijn exclusief btw en ter indicatie op basis van kengetallen per maatregel. Definitieve bedragen volgen na inspectie en offertes. Raadpleeg een fiscalist voor de exacte verwerking van EIA, KIA en MIA/Vamil.</div>
