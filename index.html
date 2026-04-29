@@ -3513,6 +3513,134 @@ select.finput {
   thead { display: table-header-group !important; }
   tfoot { display: table-footer-group !important; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   DEFINITIEVE A4-FIT FIX — NIET DE LAYOUT VERBOUWEN
+   Doel:
+   - volledige rapportinhoud net iets kleiner maken zodat niets buiten A4 valt
+   - grafieken weer normaal leesbaar maken
+   - footer blijft full-width
+   - cover blijft full-bleed
+═══════════════════════════════════════════════════════════════════════ */
+@media print {
+
+  /* Iets ruimere veilige marges op alle normale pagina's */
+  @page {
+    size: A4 portrait !important;
+    margin: 12mm 14mm 19mm 14mm !important;
+  }
+
+  /* Cover blijft volledig A4 zonder marges */
+  @page :first {
+    margin: 0 !important;
+  }
+
+  /* De inhoud van normale rapportpagina's 4% smaller maken en centreren.
+     Niet via transform: dat geeft print-bugs. Gewoon echte layout-breedte. */
+  .result .body > *:not(.print-cover-page):not(.mb-pf) {
+    width: 96% !important;
+    max-width: 96% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Secties die tabellen/grafieken bevatten moeten ook intern netjes binnen die 96% blijven */
+  #measuresSection,
+  #maatregelenChartSection,
+  #chartSection,
+  #nettoSection,
+  #maandlastenSection,
+  #subsidiesSection,
+  #vervolgSection,
+  #aandachtSection,
+  #adviseurSection {
+    width: 96% !important;
+    max-width: 96% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+
+  /* Tabellen mogen nooit buiten de sectie lopen */
+  table,
+  .rt,
+  .netto-table,
+  .aandacht-table {
+    width: 100% !important;
+    max-width: 100% !important;
+    table-layout: fixed !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Lange besparingsteksten netjes laten afbreken i.p.v. buiten A4 duwen */
+  .rt th,
+  .rt td,
+  .netto-table th,
+  .netto-table td,
+  .aandacht-table th,
+  .aandacht-table td {
+    overflow-wrap: anywhere !important;
+    word-break: normal !important;
+  }
+
+  /* Grafieken: weer groter dan de te kleine versie, maar binnen A4 houden */
+  .chart-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 8pt 10pt !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  .chart-canvas-wrap {
+    width: 100% !important;
+    height: 150pt !important;
+    min-height: 150pt !important;
+    max-height: 150pt !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  .chart-canvas-wrap canvas {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 150pt !important;
+    max-height: 150pt !important;
+  }
+
+  .chart-print-img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: 150pt !important;
+    object-fit: contain !important;
+    display: block !important;
+  }
+
+  /* Voorkom dubbele grafiek als zowel canvas als print-image aanwezig is */
+  .chart-canvas-wrap:has(.chart-print-img) canvas {
+    display: none !important;
+  }
+
+  /* De maatregelenpagina niet meer opblazen door dubbele margins */
+  #maatregelenChartSection,
+  #chartSection {
+    margin-top: 6pt !important;
+    margin-bottom: 8pt !important;
+  }
+
+  /* Footer bewust full-width laten; niet meenemen in de 96%-verkleining */
+  .mb-pf,
+  .mb-pf-bar {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
 </style>
 </head>
 <body>
