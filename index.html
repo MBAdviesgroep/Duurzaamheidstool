@@ -2290,64 +2290,78 @@ select.finput {
 /* ═══════════════════════════════════════════════════════
    SCENARIO-SLIDER
 ═══════════════════════════════════════════════════════ */
-.scenario-block {
+.scenario-block { margin: 0 0 24px; }
+.sc-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap: 12px;
+  margin-bottom: 0;
+}
+@media (max-width: 700px) { .sc-grid { grid-template-columns: 1fr 1fr; } }
+.sc-card {
   background: var(--surface);
   border: 1px solid var(--rule);
-  border-radius: var(--r-lg);
-  padding: 18px 22px 20px;
-  margin: 0 0 24px;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color var(--t-fast), transform var(--t-fast);
 }
-.scenario-head {
-  display: flex; align-items: center; justify-content: space-between;
-  flex-wrap: wrap; gap: 10px; margin-bottom: 14px;
+.sc-card:hover { border-color: var(--blue); transform: translateY(-1px); }
+.sc-card.sc-active { border: 2px solid var(--blue-deep); }
+.sc-card-head {
+  padding: 12px 14px 10px;
+  border-bottom: 1px solid var(--rule);
 }
-.scenario-titel {
-  font-size: 13px; font-weight: 600; font-family: var(--f-head);
-  color: var(--ink);
+.sc-badge {
+  display: inline-block;
+  font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  padding: 2px 7px; border-radius: 4px; margin-bottom: 6px;
 }
-.scenario-sub { font-size: 11px; color: var(--ink-4); }
-.scenario-tabs {
-  display: flex;
+.sc-badge-quick   { background: var(--green-bg);   color: var(--green); }
+.sc-badge-budget  { background: var(--blue-faint);  color: var(--blue-deep); }
+.sc-badge-volledig{ background: var(--orange-faint); color: var(--orange-deep); }
+.sc-badge-co2     { background: var(--green-bg);    color: var(--green); }
+.sc-name { font-size: 12.5px; font-weight: 600; color: var(--ink); margin: 0 0 1px; font-family: var(--f-head); }
+.sc-desc { font-size: 10.5px; color: var(--ink-4); margin: 0; line-height: 1.4; }
+.sc-body { padding: 10px 14px; }
+.sc-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 3px 0; border-bottom: 0.5px solid var(--rule);
+  font-size: 11px;
+}
+.sc-row:last-child { border-bottom: none; }
+.sc-row-lbl { color: var(--ink-4); }
+.sc-row-val { font-weight: 600; font-family: var(--f-head); color: var(--ink-2); font-size: 11.5px; }
+.sc-row-val.green { color: var(--green); }
+.sc-row-val.orange { color: var(--orange); }
+.sc-measures { margin-top: 8px; display: flex; flex-direction: column; gap: 3px; }
+.sc-m { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--ink-3); }
+.sc-m.off { opacity: 0.35; }
+.sc-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+.sc-dot.on  { background: var(--green); }
+.sc-dot.off { background: var(--ink-5); }
+.sc-footer {
+  padding: 10px 14px;
   background: var(--page);
-  border-radius: 999px;
-  padding: 3px;
-  gap: 2px;
-}
-.scenario-tab {
-  font-family: var(--f-head); font-size: 11.5px; font-weight: 600;
-  padding: 6px 14px;
-  border: none; background: transparent;
-  color: var(--ink-3); cursor: pointer; border-radius: 999px;
-  transition: all var(--t-fast); white-space: nowrap;
-}
-.scenario-tab.active {
-  background: var(--blue-deep); color: white;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
-}
-.scenario-tab:hover:not(.active) { color: var(--blue); }
-.scenario-summary {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  padding-top: 14px;
   border-top: 1px solid var(--rule);
 }
+.sc-netto-lbl { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: var(--ink-4); font-weight: 600; font-family: var(--f-head); margin-bottom: 2px; }
+.sc-netto-val { font-size: 18px; font-weight: 700; letter-spacing: -0.5px; font-family: var(--f-head); color: var(--ink); }
+.sc-netto-val.green { color: var(--green); }
+.sc-maand { font-size: 10px; color: var(--ink-4); margin-top: 1px; }
+.sc-bar-wrap { margin-top: 8px; }
+.sc-bar-lbl { display: flex; justify-content: space-between; font-size: 9.5px; color: var(--ink-4); margin-bottom: 3px; }
+.sc-bar-track { height: 4px; background: var(--rule); border-radius: 2px; overflow: hidden; }
+.sc-bar-fill { height: 100%; border-radius: 2px; transition: width 0.5s ease; }
+/* old classes kept for compat */
+.scenario-tab { display: none; }
 .ssum-cell { display: flex; flex-direction: column; gap: 2px; }
-.ssum-lbl {
-  font-size: 9.5px; letter-spacing: 1.2px; text-transform: uppercase;
-  color: var(--ink-4); font-weight: 600; font-family: var(--f-head);
-}
-.ssum-val {
-  font-size: 17px; font-weight: 700; font-family: var(--f-head);
-  letter-spacing: -0.4px; color: var(--ink);
-}
+.ssum-lbl { font-size: 9.5px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--ink-4); font-weight: 600; font-family: var(--f-head); }
+.ssum-val { font-size: 17px; font-weight: 700; font-family: var(--f-head); letter-spacing: -0.4px; color: var(--ink); }
 .ssum-val.green { color: var(--green); }
 .ssum-val.orange { color: var(--orange); }
 .ssum-val.blue { color: var(--blue-deep); }
 .ssum-sub { font-size: 10.5px; color: var(--ink-4); }
-@media (max-width: 720px) {
-  .scenario-summary { grid-template-columns: 1fr 1fr; }
-}
 
 /* ═══════════════════════════════════════════════════════
    AI-CHAT BUBBLE
@@ -5436,76 +5450,113 @@ function renderScenarioSection(r) {
     _tvt: parseTVT(x.tvt), _co2: parseCO2kg(x.co2)}));
   if (m.length < 2) { el.innerHTML = ''; return; }
 
+  const totaalInv = m.reduce((s,x)=>s+x._inv,0);
+
   const scenarios = [
-    { key:'quick', label:'Quick wins', desc:'Alleen maatregelen met TVT < 5 jaar', filter: x => x._tvt > 0 && x._tvt < 5 },
-    { key:'budget', label:'Budgetvriendelijk', desc:'Investering ≤ 50% van het volledige pakket', filter: null },
-    { key:'volledig', label:'Volledig pakket', desc:'Alle geadviseerde maatregelen', filter: () => true },
-    { key:'co2', label:'Maximaal CO₂', desc:'Top maatregelen op CO₂-besparing', filter: null },
+    { key:'quick',    label:'Quick wins',       badgeClass:'sc-badge-quick',    desc:'TVT onder 5 jaar',
+      filter: x => x._tvt > 0 && x._tvt < 5 },
+    { key:'budget',   label:'Budgetvriendelijk', badgeClass:'sc-badge-budget',   desc:'Beste prijs-kwaliteit', filter: null },
+    { key:'volledig', label:'Volledig pakket',   badgeClass:'sc-badge-volledig', desc:'Alle maatregelen',
+      filter: () => true },
+    { key:'co2',      label:'Maximaal CO₂',      badgeClass:'sc-badge-co2',      desc:'Hoogste CO₂-impact', filter: null },
   ];
 
   function selectFor(key) {
-    const sc = scenarios.find(s=>s.key===key);
     if (key === 'budget') {
-      const totaal = m.reduce((s,x)=>s+x._inv,0);
-      const limiet = totaal * 0.5;
-      const sorted = [...m].sort((a,b)=> (b._b/Math.max(b._inv,1)) - (a._b/Math.max(a._inv,1)));
+      const limiet = totaalInv * 0.5;
+      const sorted = [...m].sort((a,b)=>(b._b/Math.max(b._inv,1))-(a._b/Math.max(a._inv,1)));
       let used = 0; const sel = new Set();
       for (const x of sorted) { if (used + x._inv <= limiet) { sel.add(x._i); used += x._inv; } }
       return sel;
     }
     if (key === 'co2') {
-      const sorted = [...m].sort((a,b)=> b._co2 - a._co2);
-      const top = sorted.slice(0, Math.max(3, Math.ceil(m.length*0.6)));
-      return new Set(top.map(x=>x._i));
+      const sorted = [...m].sort((a,b)=>b._co2-a._co2);
+      return new Set(sorted.slice(0, Math.max(3, Math.ceil(m.length*0.6))).map(x=>x._i));
     }
+    const sc = scenarios.find(s=>s.key===key);
     return new Set(m.filter(sc.filter).map(x=>x._i));
   }
 
-  function applyScenario(key) {
+  // Pre-bereken stats per scenario voor de kaarten
+  function statsFor(key) {
     const sel = selectFor(key);
+    const items = m.filter(x=>sel.has(x._i));
+    const besp = items.reduce((s,x)=>s+x._b,0);
+    const inv  = items.reduce((s,x)=>s+x._inv,0);
+    const co2  = items.reduce((s,x)=>s+x._co2,0);
+    const tvtW = inv>0 ? items.reduce((s,x)=>s+x._tvt*x._inv,0)/inv : 0;
+    // Maandlast schatting (5% rente, 15jr, 20% eigen)
+    const netto = inv * 0.8;
+    const rt = (0.05/100)/12*100/12; // 5%/12
+    const n = 15*12;
+    const maand = netto>0 ? Math.round(netto*(0.05/12*Math.pow(1+0.05/12,n))/(Math.pow(1+0.05/12,n)-1)) : 0;
+    return { sel, items, besp, inv, co2, tvtW, maand, pctVolledig: totaalInv>0?Math.round(inv/totaalInv*100):0 };
+  }
+
+  window._scStats = {};
+  scenarios.forEach(s=>{ window._scStats[s.key] = statsFor(s.key); });
+
+  let activeKey = 'budget';
+
+  function applyScenario(key) {
+    activeKey = key;
+    const sel = window._scStats[key].sel;
     document.querySelectorAll('.m-checkbox').forEach((cb,i)=>{ cb.checked = sel.has(i); });
     if (typeof recalcTotals === 'function') recalcTotals();
-    document.querySelectorAll('.scenario-tab').forEach(t=>t.classList.toggle('active', t.dataset.k===key));
-    updateScenarioSummary();
+    // Update kaart active state
+    document.querySelectorAll('.sc-card').forEach(c=>c.classList.toggle('sc-active', c.dataset.k===key));
+    // Update kaart inhoud (stats zijn statisch, maandlast update via _mlRender die al aangeroepen wordt)
   }
   window._applyScenario = applyScenario;
+  window._updateScenarioSummary = function() {}; // leeg — kaarten zijn statisch
 
-  function updateScenarioSummary() {
-    const checked = [...document.querySelectorAll('.m-checkbox')];
-    const sel = m.filter((_,i)=> checked[i] && checked[i].checked);
-    const totB = sel.reduce((s,x)=>s+x._b,0);
-    const totI = sel.reduce((s,x)=>s+x._inv,0);
-    const totC = sel.reduce((s,x)=>s+x._co2,0);
-    const tvtW = totI>0 ? sel.reduce((s,x)=>s+x._tvt*x._inv,0)/totI : 0;
-    const e = id => document.getElementById(id);
-    if (e('ssumCount')) e('ssumCount').textContent = sel.length + ' / ' + m.length;
-    if (e('ssumBesp')) e('ssumBesp').textContent = fmtEuro(totB);
-    if (e('ssumInv')) e('ssumInv').textContent = fmtEuro(totI);
-    if (e('ssumTvt')) e('ssumTvt').textContent = totI>0 ? tvtW.toFixed(1)+' jr' : '—';
-  }
-  window._updateScenarioSummary = updateScenarioSummary;
+  function renderCard(s) {
+    const st = window._scStats[s.key];
+    const isActive = s.key === activeKey;
+    const barColor = s.key==='quick' ? 'var(--green)' : s.key==='budget' ? 'var(--blue)' : s.key==='volledig' ? 'var(--orange)' : 'var(--green)';
+    const aanbevolen = s.key === 'budget'
+      ? `<span style="font-size:9px;background:var(--blue-faint);color:var(--blue-deep);padding:2px 6px;border-radius:3px;font-weight:700;margin-left:5px;">Aanbevolen</span>` : '';
 
-  const tabs = scenarios.map(s=>
-    `<button class="scenario-tab" data-k="${s.key}" onclick="window._applyScenario('${s.key}')">${s.label}</button>`
-  ).join('');
+    const measureDots = m.map(x=>{
+      const on = st.sel.has(x._i);
+      return `<div class="sc-m${on?'':' off'}"><span class="sc-dot ${on?'on':'off'}"></span>${x.naam}</div>`;
+    }).join('');
 
-  el.innerHTML = `
-    <div class="scenario-block">
-      <div class="scenario-head">
-        <div>
-          <div class="scenario-titel">Bekijk verschillende scenario's</div>
-          <div class="scenario-sub">Klik om snel een passende selectie te maken — past de tabel en grafiek hierboven aan</div>
+    const tvtTxt = st.tvtW > 0 ? st.tvtW.toFixed(1)+' jr' : '—';
+    const co2Txt = st.co2 >= 1000 ? (st.co2/1000).toFixed(1)+' ton' : Math.round(st.co2)+' kg';
+
+    return `<div class="sc-card${isActive?' sc-active':''}" data-k="${s.key}" onclick="window._applyScenario('${s.key}')">
+      <div class="sc-card-head">
+        <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-bottom:6px;">
+          <span class="sc-badge ${s.badgeClass}">${s.label}</span>${aanbevolen}
         </div>
-        <div class="scenario-tabs">${tabs}</div>
+        <p class="sc-name">${s.desc}</p>
+        <p class="sc-desc">${st.items.length} van ${m.length} maatregelen</p>
       </div>
-      <div class="scenario-summary">
-        <div class="ssum-cell"><span class="ssum-lbl">Maatregelen</span><span class="ssum-val blue" id="ssumCount">—</span><span class="ssum-sub">geselecteerd</span></div>
-        <div class="ssum-cell"><span class="ssum-lbl">Besparing/jr</span><span class="ssum-val green" id="ssumBesp">—</span><span class="ssum-sub">jaarlijks</span></div>
-        <div class="ssum-cell"><span class="ssum-lbl">Investering</span><span class="ssum-val orange" id="ssumInv">—</span><span class="ssum-sub">bruto</span></div>
-        <div class="ssum-cell"><span class="ssum-lbl">Gem. TVT</span><span class="ssum-val" id="ssumTvt">—</span><span class="ssum-sub">gewogen</span></div>
+      <div class="sc-body">
+        <div class="sc-row"><span class="sc-row-lbl">Besparing/jr</span><span class="sc-row-val green">${fmtEuro(st.besp)}</span></div>
+        <div class="sc-row"><span class="sc-row-lbl">Investering</span><span class="sc-row-val orange">${fmtEuro(st.inv)}</span></div>
+        <div class="sc-row"><span class="sc-row-lbl">Gem. TVT</span><span class="sc-row-val">${tvtTxt}</span></div>
+        <div class="sc-row"><span class="sc-row-lbl">CO₂-reductie</span><span class="sc-row-val">${co2Txt}/jr</span></div>
+        <div class="sc-measures">${measureDots}</div>
+      </div>
+      <div class="sc-footer">
+        <div class="sc-netto-lbl">Indicatieve maandlast</div>
+        <div class="sc-netto-val${s.key==='budget'?' green':''}">€ ${st.maand.toLocaleString('nl-NL')}<span style="font-size:12px;font-weight:400;">/mnd</span></div>
+        <div class="sc-maand">bij 5% rente · 15 jr · 20% eigen</div>
+        <div class="sc-bar-wrap">
+          <div class="sc-bar-lbl"><span>Dekking volledig pakket</span><span>${st.pctVolledig}%</span></div>
+          <div class="sc-bar-track"><div class="sc-bar-fill" style="width:${st.pctVolledig}%;background:${barColor};"></div></div>
+        </div>
       </div>
     </div>`;
-  setTimeout(updateScenarioSummary, 60);
+  }
+
+  el.innerHTML = secHead('Vergelijk scenario\'s') +
+    `<div class="scenario-block"><div class="sc-grid">${scenarios.map(renderCard).join('')}</div></div>`;
+
+  // Activeer standaard budgetvriendelijk
+  setTimeout(()=>applyScenario('budget'), 80);
 }
 
 // Sticky inhoudsopgave
