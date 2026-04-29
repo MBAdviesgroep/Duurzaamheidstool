@@ -701,6 +701,8 @@ select.finput {
   gap: 4px;
 }
 .kpi-edit-hint svg { flex-shrink: 0; }
+/* Print-span is alleen zichtbaar in print, niet op scherm */
+.kpi-print-val { display: none; }
 
 /* Analysis grid */
 .punten-grid {
@@ -1568,18 +1570,26 @@ select.finput {
     border-right: 0.5pt solid #E3DDD8 !important;
   }
   .kpi-cell:last-child { border-right: none !important; }
+  /* Kleurbalken bovenaan KPI cellen via border-top ipv ::before (die werkt niet in print) */
+  .kpi-c1 { border-top: 3pt solid #1B597B !important; }
+  .kpi-c2 { border-top: 3pt solid #E26836 !important; }
+  .kpi-c3 { border-top: 3pt solid #2A7A50 !important; }
   .kpi-cell::before { display: none !important; }
+  /* De inline groene div in CO2-cel verbergen (vervangen door border-top) */
+  .kpi-c3 > div[style*="position:absolute"] { display: none !important; }
   .kpi-lbl { font-size: 7.5pt !important; color: #6B6B6B !important; }
   .kpi-num { font-size: 17pt !important; font-weight: 700 !important; }
   .kpi-sub { font-size: 7.5pt !important; color: #6B6B6B !important; }
   .kpi-c1 .kpi-num { color: #1B597B !important; }
   .kpi-c2 .kpi-num { color: #E26836 !important; }
-  /* Input in KPI-panel → print als gewone tekst */
-  .kpi-edit-wrap { display: flex; align-items: baseline; gap: 4px; }
-  .kpi-edit-prefix { font-size: 17pt !important; font-weight: 700 !important; color: #1B597B !important; }
-  .kpi-edit-input { font-size: 17pt !important; font-weight: 700 !important; color: #1B597B !important; border: none !important; background: transparent !important; width: auto !important; padding: 0 !important; }
-  .kpi-edit-hint { display: none !important; }
   .good { color: #2A7A50 !important; }
+
+  /* Input verbergen, print-span tonen */
+  .kpi-edit-input { display: none !important; }
+  .kpi-edit-hint { display: none !important; }
+  .kpi-edit-prefix { font-size: 17pt !important; font-weight: 700 !important; color: #1B597B !important; }
+  .kpi-edit-wrap { display: flex; align-items: baseline; gap: 3px; }
+  .kpi-print-val { display: inline !important; font-size: 17pt !important; font-weight: 700 !important; color: #1B597B !important; font-family: 'IBM Plex Sans', sans-serif !important; letter-spacing: -0.5px !important; }
 
   /* ── Intro tekst ── */
   .intro-text { font-size: 9.5pt !important; line-height: 1.6 !important; margin-bottom: 12pt !important; }
@@ -1597,15 +1607,16 @@ select.finput {
     page-break-after: avoid;
   }
 
-  /* ── Maatregelen tabel ── */
-  .rt { font-size: 8.5pt !important; width: 100% !important; border-collapse: collapse !important; margin-bottom: 8pt !important; }
+  /* ── Maatregelen tabel — compact, alles op pagina 1 ── */
+  #measuresSection { page-break-inside: avoid !important; break-inside: avoid !important; }
+  .rt { font-size: 7.5pt !important; width: 100% !important; border-collapse: collapse !important; margin-bottom: 6pt !important; }
   .rt thead tr { border-bottom: 1.5pt solid #1B597B !important; background: white !important; }
-  .rt th { padding: 5pt 6pt !important; font-size: 7.5pt !important; color: #3A3A3A !important; font-weight: 600 !important; }
-  .rt td { padding: 5pt 6pt !important; border-bottom: 0.4pt solid #E3DDD8 !important; }
+  .rt th { padding: 4pt 5pt !important; font-size: 7pt !important; color: #3A3A3A !important; font-weight: 600 !important; }
+  .rt td { padding: 4pt 5pt !important; border-bottom: 0.4pt solid #E3DDD8 !important; }
   .rt tbody tr:last-child td { border-bottom: none !important; }
-  .m-save { color: var(--green) !important; font-weight: 600 !important; }
-  .m-sub { color: #1B597B !important; font-size: 7.5pt !important; }
-  .m-name { display: flex; align-items: center; gap: 5pt; }
+  .m-save { color: #2A7A50 !important; font-weight: 600 !important; }
+  .m-sub { color: #1B597B !important; font-size: 7pt !important; }
+  .m-name { display: flex; align-items: center; gap: 4pt; }
   .m-icon { display: none !important; }
 
   /* ── Totals block ── */
@@ -3975,6 +3986,7 @@ function renderReport(r) {
           oninput="window._onHuidigKostenInput(this.value)"
           title="Klik om aan te passen"
         >
+        <span class="kpi-print-val" id="kpiHuidigPrint">${window._huidigKosten.toLocaleString('nl-NL')}</span>
       </div>
       <div class="kpi-sub">per jaar
         <span class="kpi-edit-hint" style="margin-top:5px;">
@@ -3988,16 +4000,21 @@ function renderReport(r) {
       <div class="kpi-num warn">${r.totaal_besparing||'&#8212;'}</div>
       <div class="kpi-sub">per jaar bij volledig pakket</div>
     </div>
-    <div class="kpi-cell" style="position:relative;">
+    <div class="kpi-cell kpi-c3" style="position:relative;">
       <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--green);"></div>
       <span class="kpi-lbl">CO&#8322; reductie</span>
       <div class="kpi-num good">${r.co2_reductie_pct||'&#8212;'}</div>
       <div class="kpi-sub">${co2ctx || 'bij volledig pakket'}</div>
     </div>`;
 
-  // Intro tekst
-  document.getElementById('introSection').innerHTML = r.samenvatting
-    ? `<div class="intro-text">${r.samenvatting}</div>` : '';
+  // Intro tekst — sla originele huidige kosten op als data-attribuut voor live-update
+  if (r.samenvatting) {
+    const origBedrag = r.huidige_kosten || '';
+    document.getElementById('introSection').innerHTML =
+      `<div class="intro-text" id="introText" data-orig-kosten="${origBedrag}">${r.samenvatting}</div>`;
+  } else {
+    document.getElementById('introSection').innerHTML = '';
+  }
 
   // Energielabel visualisatie + wachten banner
   renderLabelVis(r);
@@ -4528,7 +4545,9 @@ function selectAllMeasures(val) {
 window._onHuidigKostenInput = function(rawVal) {
   const val = parseFloat(rawVal);
   window._huidigKosten = isNaN(val) || val < 0 ? 0 : Math.round(val);
-  // Herrender alle secties die afhangen van huidige_kosten
+  // Update print-span
+  const printSpan = document.getElementById('kpiHuidigPrint');
+  if (printSpan) printSpan.textContent = window._huidigKosten.toLocaleString('nl-NL');
   updateHuidigeKosten();
 };
 
@@ -4537,14 +4556,43 @@ function updateHuidigeKosten() {
   // Patch _rptData zodat alle functies de nieuwe waarde zien
   if (_rptData) _rptData.huidige_kosten = fmtEuro(huidig);
 
+  // Update intro-tekst: vervang het originele bedrag door het nieuwe
+  const introEl = document.getElementById('introText');
+  if (introEl && huidig > 0) {
+    const origBedrag = introEl.dataset.origKosten || '';
+    if (origBedrag) {
+      // Vervang het originele bedrag (bijv. "€ 13.209" of "13.209" of "€13.209")
+      // Gebruik de opgeslagen originele tekst als basis zodat we niet steeds vervangen
+      if (!introEl.dataset.origTekst) {
+        introEl.dataset.origTekst = introEl.innerHTML;
+      }
+      // Bouw regex die het originele bedrag matcht in verschillende notaties
+      const origNummer = parseEuro(origBedrag);
+      if (origNummer > 0) {
+        let tekst = introEl.dataset.origTekst;
+        // Vervang alle varianten van het originele bedrag (€ 13.209 / €13.209 / 13.209 etc.)
+        const origFormats = [
+          fmtEuro(origNummer).replace(/[€\s]/g, '').replace('.', '\\.'),  // "13.209"
+          fmtEuro(origNummer).replace(/\s/g, ''),                          // "€13.209"
+          fmtEuro(origNummer).replace(/\s/g, '\\s?'),                     // "€ 13.209" with optional space
+        ];
+        const nieuwBedrag = fmtEuro(huidig);
+        // Meest specifieke match: "€ 13.209" patroon
+        const escaped = fmtEuro(origNummer).replace(/[€.\s]/g, m => m === '€' ? '€' : m === '.' ? '\\.' : '\\s?');
+        const regex = new RegExp(escaped, 'g');
+        tekst = tekst.replace(regex, nieuwBedrag);
+        introEl.innerHTML = tekst;
+      }
+    }
+  }
+
   // Herrender geenActieSection
   if (_rptData && typeof renderGeenActieSection === 'function') {
     renderGeenActieSection(_rptData);
   }
 
-  // Herrender maandlasten — alleen de render()-functie aanroepen (state blijft bewaard)
+  // Herrender maandlasten
   if (typeof window._mlRender === 'function') {
-    // Maandlasten gebruikt huidig via closure op r.huidige_kosten — update de parse-waarde
     window._mlHuidigOverride = huidig;
     window._mlRender();
   }
