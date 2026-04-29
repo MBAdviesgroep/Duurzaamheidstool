@@ -2751,7 +2751,9 @@ select.finput {
 
   /* ── Hide screen-only modules in print ── */
   .toc-rail, .ai-fab, .ai-panel,
-  .scenario-block, .ml-controls { display: none !important; }
+  .scenario-block, .ml-controls,
+  .ml-fin-invoer, #geenActieSection,
+  #scenarioSection { display: none !important; }
 
   /* ── Wat als u niets doet — print versie ── */
   .geen-actie-block { border: 0.5pt solid #E3DDD8 !important; margin-bottom: 12pt !important; page-break-inside: avoid !important; }
@@ -2766,7 +2768,13 @@ select.finput {
   .geen-actie-sub { font-size: 7.5pt !important; }
   .geen-actie-foot { padding: 8pt 14pt !important; font-size: 8pt !important; }
 
-  /* ── Maandlasten-vergelijker print ── */
+  /* Netto tabel compact voor print */
+  #nettoTariefSelect { display: none !important; }
+  #nettoTable { font-size: 8.5pt !important; margin-bottom: 10pt !important; }
+  #nettoTable td { padding: 4pt 6pt !important; }
+  .netto-totaal-row td { font-size: 10pt !important; }
+
+  /* Maandlasten compact voor print */
   .maandlasten-block { border: 0.5pt solid #E3DDD8 !important; margin-bottom: 12pt !important; page-break-inside: avoid !important; }
   .maandlasten-head { padding: 8pt 12pt !important; }
   .maandlasten-titel { font-size: 10pt !important; }
@@ -2801,7 +2809,6 @@ select.finput {
   .label-vis-card { page-break-inside: avoid !important; }
   .rente-strip { page-break-inside: avoid !important; }
   .rt tr { page-break-inside: avoid !important; }
-  .sub-list-item + .rpt-section-head { page-break-before: always !important; }
 
   /* ── Grafieken in print via canvas→img (JS beforeprint) ── */
   .chart-section, #chartSection { display: block !important; }
@@ -2824,25 +2831,34 @@ select.finput {
   .rt td { display: table-cell !important; opacity: 1 !important; }
   .rt td.m-check, .rt th:first-child { display: none !important; }
 
-  /* Subsidies altijd op nieuwe pagina — voorkomt afbreken na grafiek */
+  /* ══════════════════════════════════════════════════════
+     PAGINA-INDELING PRINT
+     Pagina 1: Maatregelen + Besparing per maatregel + Cumulatieve besparing
+     Pagina 2: Netto investering + Maandlasten
+     Pagina 3+: Subsidies & fiscale regelingen
+  ══════════════════════════════════════════════════════ */
+
+  /* Pagina 1: alles t/m grafiek bij elkaar — geen break ertussen */
+  #measuresSection  { page-break-before: avoid !important; break-before: avoid !important; page-break-inside: auto !important; }
+  #maatregelenChartSection { page-break-before: avoid !important; break-before: avoid !important; page-break-inside: avoid !important; }
+  #chartSection     { page-break-before: avoid !important; break-before: avoid !important; page-break-inside: avoid !important; }
+
+  /* Pagina 2 begint bij netto investering */
+  #nettoSection     { page-break-before: always !important; break-before: page !important; page-break-inside: avoid !important; break-inside: avoid !important; }
+
+  /* Maandlasten direct na netto — op zelfde pagina 2 houden */
+  #maandlastenSection { page-break-before: avoid !important; break-before: avoid !important; page-break-inside: avoid !important; break-inside: avoid !important; }
+
+  /* Pagina 3: subsidies altijd op nieuwe pagina */
   #subsidiesSection { page-break-before: always !important; break-before: page !important; }
 
-  /* Vervolgstappen sectie bij elkaar houden — voorkomt dat stap 1 los staat */
-  #vervolgSection { page-break-before: auto !important; page-break-inside: avoid !important; break-inside: avoid !important; }
-  .vervolg-list { page-break-inside: avoid !important; break-inside: avoid !important; }
+  /* Vervolgstappen + adviseur bij elkaar houden */
+  #vervolgSection   { page-break-before: auto !important; page-break-inside: avoid !important; break-inside: avoid !important; }
+  .vervolg-list     { page-break-inside: avoid !important; break-inside: avoid !important; }
+  #adviseurSection  { page-break-before: avoid !important; break-before: avoid !important; page-break-inside: avoid !important; }
 
-  /* Netto investering tabel bij elkaar */
-  #nettoSection { page-break-inside: avoid !important; break-inside: avoid !important; }
-
-  /* Aandachtspunten bij elkaar (indien kort genoeg) */
-  #aandachtSection { page-break-inside: auto !important; }
-
-  /* Adviseurkaart altijd bij de vervolgstappen houden */
-  #adviseurSection { page-break-before: avoid !important; break-before: avoid !important; page-break-inside: avoid !important; }
-
-  /* ── Vervolg + aandacht ── */
-  .vervolg-list { page-break-inside: auto !important; }
-  .aandacht-table { page-break-inside: auto !important; }
+  /* Aandachtspunten */
+  #aandachtSection  { page-break-inside: auto !important; }
 
   /* Cover pagina */
   @page :first { margin: 0 !important; }
