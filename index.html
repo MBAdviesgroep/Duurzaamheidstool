@@ -1501,7 +1501,7 @@ select.finput {
   /* ── Pagina-setup ── */
   @page {
     size: A4 portrait;
-    margin: 14mm 16mm 14mm 16mm;
+    margin: 14mm 16mm 22mm 16mm;
   }
   @page :first { margin-top: 0; }
 
@@ -1667,17 +1667,163 @@ select.finput {
   .aandacht-table td { padding: 6pt 6pt !important; border-bottom: 0.4pt solid #E3DDD8 !important; vertical-align: top !important; }
   .aandacht-table td:first-child { font-weight: 600 !important; color: #1B597B !important; width: 28% !important; }
 
-  /* ── Footer ── */
-  .rpt-footer { display: flex !important; border-top: 0.5pt solid #E3DDD8 !important; padding: 8pt 0 0 !important; margin-top: 12pt !important; font-size: 7.5pt !important; }
-  .rpt-footer-disc { color: #A0A0A0 !important; line-height: 1.5 !important; }
+  /* ── Footer — compact disclaimer ── */
+  .rpt-footer { display: none !important; }
 
-  /* ── Pagina-indeling algemeen ── */
-  h2, .rpt-section-head { page-break-after: avoid; }
-  .sub-item, .phase-block { page-break-inside: avoid; }
-  /* .rt handelt page-break via #measuresSection avoid — geen auto hier */
-  .netto-table, .aandacht-table { page-break-inside: auto; }
-  .rt tr, .netto-table tr, .aandacht-table tr { page-break-inside: avoid; }
-}
+  /* ── Vaste MB Adviesgroep footer onderaan elke pagina ── */
+  .print-page-footer {
+    display: block !important;
+    position: fixed;
+    bottom: 0;
+    left: 0; right: 0;
+    height: 14mm;
+    background: #134460 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16mm;
+    z-index: 9999;
+  }
+  .ppf-left {
+    display: flex !important;
+    align-items: center;
+    gap: 8pt;
+  }
+  .ppf-logo {
+    width: 22pt; height: 22pt;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    overflow: hidden;
+    display: flex !important; align-items: center; justify-content: center;
+  }
+  .ppf-logo img { width: 100%; height: 100%; object-fit: cover; }
+  .ppf-name {
+    font-size: 8.5pt;
+    font-weight: 600;
+    color: white !important;
+    font-family: 'IBM Plex Sans', sans-serif;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .ppf-sub {
+    font-size: 6.5pt;
+    color: rgba(255,255,255,0.55) !important;
+    font-family: 'IBM Plex Sans', sans-serif;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .ppf-right {
+    font-size: 7pt;
+    color: rgba(255,255,255,0.5) !important;
+    font-family: 'IBM Plex Sans', sans-serif;
+    text-align: right;
+    line-height: 1.5;
+    max-width: 260pt;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* ── Grafiek + uitleg op één pagina ── */
+  #chartSection {
+    page-break-before: avoid !important;
+    break-before: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  .chart-wrap {
+    padding: 8pt 10pt !important;
+    border: 0.5pt solid #E3DDD8 !important;
+    box-shadow: none !important;
+    background: white !important;
+    margin-bottom: 0 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  .chart-canvas-wrap { height: auto !important; min-height: 130pt !important; max-height: 150pt !important; }
+  #chartNoteFlat, #chartNoteStijg {
+    display: block !important;
+    font-size: 6.5pt !important;
+    padding-top: 5pt !important;
+    margin-top: 5pt !important;
+    border-top: 0.4pt solid #E3DDD8 !important;
+    line-height: 1.5 !important;
+  }
+  .chart-legend { margin-top: 6pt !important; }
+  .chart-legend-item { font-size: 7pt !important; }
+
+  /* ── Laatste pagina: vervolgstappen + adviseur + bron compacter ── */
+  #vervolgSection { margin-bottom: 10pt !important; }
+  .vervolg-list { gap: 0 !important; }
+  .vervolg-item { padding: 6pt 0 !important; border-bottom: 0.4pt solid #E3DDD8 !important; }
+  .vervolg-item:last-child { border-bottom: none !important; }
+  .vervolg-num {
+    width: 18pt !important; height: 18pt !important;
+    font-size: 8pt !important; min-width: 18pt !important;
+    background: #1B597B !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .vervolg-title { font-size: 8.5pt !important; margin-bottom: 1pt !important; }
+  .vervolg-desc { font-size: 7.5pt !important; line-height: 1.45 !important; }
+
+  /* Adviseur card — luxe maar compact */
+  .adviseur-card {
+    background: linear-gradient(135deg, #134460 0%, #1B597B 100%) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    padding: 12pt 16pt !important;
+    border-radius: 6pt !important;
+    margin-top: 6pt !important;
+    margin-bottom: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12pt !important;
+    page-break-inside: avoid !important;
+    position: relative;
+    overflow: hidden;
+  }
+  .adviseur-card::after {
+    content: '' !important;
+    position: absolute !important;
+    bottom: 0 !important; left: 0 !important; right: 0 !important;
+    height: 2pt !important;
+    background: linear-gradient(90deg, #E26836, #f09060) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .adviseur-avatar {
+    width: 36pt !important; height: 36pt !important;
+    background: rgba(255,255,255,0.15) !important;
+    border-radius: 50% !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .adviseur-naam { font-size: 12pt !important; color: white !important; margin-bottom: 1pt !important; }
+  .adviseur-functie { font-size: 8pt !important; color: rgba(255,255,255,0.55) !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .adviseur-label { font-size: 6.5pt !important; color: rgba(255,255,255,0.4) !important; letter-spacing: 1.5pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .adviseur-contact { text-align: right !important; }
+  .adviseur-contact a { font-size: 9pt !important; color: rgba(255,255,255,0.8) !important; display: block !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+  /* Bron card */
+  .bron-card {
+    margin-top: 8pt !important;
+    padding: 6pt 9pt !important;
+    background: #FAF8F5 !important;
+    border: 0.5pt solid #E3DDD8 !important;
+    border-left: 2pt solid #E26836 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    page-break-inside: avoid !important;
+    gap: 7pt !important;
+    border-radius: 4pt !important;
+  }
+  .bron-label { font-size: 6pt !important; color: #E26836 !important; }
+  .bron-desc { font-size: 7.5pt !important; color: #3A3A3A !important; line-height: 1.4 !important; }
+  .rapport-einde-block { margin-bottom: 0 !important; }
 
 /* ── Nieuwe subsidiekaarten ── */
 .sub-grid {
@@ -3493,6 +3639,16 @@ select.finput {
   </div>
   <div class="disclaimer">Indicatieve analyse op basis van kengetallen. Geen officieel energieadvies.</div>
 </div>
+<div class="print-page-footer" id="printPageFooter">
+  <div class="ppf-left">
+    <div class="ppf-logo"><img id="ppfLogoImg" src="" alt="MB"></div>
+    <div>
+      <div class="ppf-name">MB Adviesgroep</div>
+      <div class="ppf-sub">Verduurzamings- &amp; vastgoedadvies</div>
+    </div>
+  </div>
+  <div class="ppf-right">Alle bedragen zijn exclusief btw en ter indicatie op basis van kengetallen per maatregel. Definitieve bedragen volgen na inspectie en offertes.</div>
+</div>
 
 <script>
 // =============================================================================
@@ -4563,15 +4719,94 @@ function recalcTotals() {
   // Update maandlasten met geselecteerde besparing/investering
   if (typeof window._mlRender === 'function') window._mlRender();
 
-  // Update print-scenario banner als selectie afwijkt van actief scenario
+  // Update print-scenario banner — detecteer of selectie afwijkt van een preset
   (function() {
     const nameEl = document.getElementById('printScenarioName');
     const descEl = document.getElementById('printScenarioDesc');
     if (!nameEl) return;
     const totalMaatregelen = (_rptData && _rptData.maatregelen) ? _rptData.maatregelen.length : 0;
-    nameEl.textContent = nameEl.textContent || 'Beste balans';
-    if (descEl) descEl.textContent = checked + ' van ' + totalMaatregelen + ' maatregelen geselecteerd';
+    const allChecks = [...document.querySelectorAll('.m-checkbox')];
+    const checkedSet = new Set(allChecks.map((cb,i)=>cb.checked?i:-1).filter(i=>i>=0));
+
+    // Vergelijk met bekende scenario-sets
+    let matchedName = null;
+    if (window._scStats) {
+      const nameMap = { quick:'Snel rendement', budget:'Beste balans', volledig:'Volledig pakket' };
+      for (const [key, st] of Object.entries(window._scStats)) {
+        const scSet = st.sel;
+        if (scSet.size === checkedSet.size && [...scSet].every(i => checkedSet.has(i))) {
+          matchedName = nameMap[key] || key;
+          break;
+        }
+      }
+    }
+    nameEl.textContent = matchedName || 'Aangepast pakket';
+    if (descEl) descEl.textContent = checkedSet.size + ' van ' + totalMaatregelen + ' maatregelen';
   })();
+
+  // Update fases en vervolgstappen op basis van geselecteerde maatregelen
+  if (_rptData) {
+    const allChecks = [...document.querySelectorAll('.m-checkbox')];
+    const geselecteerd = (_rptData.maatregelen || []).filter((_, i) => allChecks[i] && allChecks[i].checked);
+    updateFasesEnVervolg(geselecteerd);
+  }
+}
+
+// Live update fases en vervolgstappen op basis van geselecteerde maatregelen
+function updateFasesEnVervolg(geselecteerd) {
+  if (!_rptData) return;
+
+  // ── Vervolgstappen updaten ──
+  renderVervolgSection(_rptData, geselecteerd);
+
+  // ── Fases updaten: fase verbergen als geen van zijn maatregelen geselecteerd is ──
+  const fasesEl = document.getElementById('phasesSection');
+  if (!fasesEl) return;
+  const fases = _rptData.fases || [];
+  if (fases.length === 0) return;
+
+  const iconEuro = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M18 7a6 6 0 0 0-10 4.5A6 6 0 0 0 18 17"/><path d="M5 10h9"/><path d="M5 14h9"/></svg>';
+  const iconClock = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+
+  // Bepaal welke fases nog relevant zijn op basis van geselecteerde maatregelen
+  let faseNummer = 0;
+  const fasesHtml = fases.map((f) => {
+    const tekst = ((f.titel || '') + ' ' + (f.beschrijving || '')).toLowerCase();
+    const faseIsActief = geselecteerd.length === 0 ? false : geselecteerd.some(m => {
+      const naam = (m.naam || '').toLowerCase();
+      const woorden = naam.split(/\s+/).filter(w => w.length > 4);
+      return woorden.some(w => tekst.includes(w));
+    });
+
+    if (!faseIsActief) return ''; // Fase verbergen
+
+    faseNummer++;
+    const pills = [
+      f.totaal_investering ? iconEuro + f.totaal_investering : '',
+      f.tvt ? iconClock + 'TVT ' + f.tvt : ''
+    ].filter(Boolean).map(p => `<span class="phase-meta-pill">${p}</span>`).join('');
+
+    return `<div class="phase-block">
+      <div class="phase-header">
+        <div class="phase-num-badge">
+          <span class="phase-num-label">Fase</span>
+          <span class="phase-num-value">${faseNummer}</span>
+        </div>
+        <div class="phase-title">${f.titel}</div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-desc">${f.beschrijving}</div>
+        ${pills ? `<div class="phase-meta">${pills}</div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+
+  if (faseNummer === 0) {
+    fasesEl.innerHTML = ''; // Alle fases weg → sectie verbergen
+  } else {
+    fasesEl.innerHTML = secHead('Aanbevolen aanpak: gefaseerd &amp; slim') +
+      `<div class="phases-grid">${fasesHtml}</div>`;
+  }
 }
 
 // KIA schijven 2025
@@ -5305,15 +5540,38 @@ function renderMaatregelenChart(maatregelen) {
 //  VERVOLGSTAPPEN
 // =============================================================================
 
-function renderVervolgSection(r) {
+function renderVervolgSection(r, geselecteerdeMaatregelen) {
   const el = document.getElementById('vervolgSection');
   if (!el) return;
 
+  // Gebruik geselecteerde maatregelen als die meegegeven zijn, anders alle maatregelen
+  const activeMaatregelen = geselecteerdeMaatregelen || (r && r.maatregelen) || [];
+
   const stappen = [];
-  const heeftZonnepanelen = (r.maatregelen||[]).some(m => {
+  const heeftZonnepanelen = activeMaatregelen.some(m => {
     const n = m.naam ? m.naam.toLowerCase() : '';
     return n.includes('zonnepa') || n.includes('solar') || n.includes('pv');
   });
+  const heeftWarmtepomp = activeMaatregelen.some(m => {
+    const n = m.naam ? m.naam.toLowerCase() : '';
+    return n.includes('warmtepomp') || n.includes('warmte pomp') || n.includes('heat pump');
+  });
+  const heeftIsolatie = activeMaatregelen.some(m => {
+    const n = m.naam ? m.naam.toLowerCase() : '';
+    return n.includes('isolat') || n.includes('beglazing') || n.includes('glas');
+  });
+
+  if (activeMaatregelen.length === 0) {
+    el.innerHTML = secHead('Aanbevolen vervolgstappen') +
+      `<div class="vervolg-list"><div class="vervolg-item">
+        <div class="vervolg-num" style="background:var(--ink-5);">—</div>
+        <div class="vervolg-text">
+          <div class="vervolg-title" style="color:var(--ink-4);">Geen maatregelen geselecteerd</div>
+          <div class="vervolg-desc">Selecteer één of meer maatregelen om de aanbevolen vervolgstappen te zien.</div>
+        </div>
+      </div></div>`;
+    return;
+  }
 
   stappen.push({
     title: 'Offertes opvragen',
@@ -5329,11 +5587,27 @@ function renderVervolgSection(r) {
       desc: 'De salderingsregeling wordt stapsgewijs afgebouwd. Hoe eerder de zonnepanelen worden geïnstalleerd, hoe meer voordeel u kunt behalen.'
     });
   }
+
+  // Bepaal uitvoeringsvolgorde-tekst op basis van actieve fases (filter op geselecteerde maatregelen)
+  const rData = r || _rptData;
+  const activeFases = (rData && rData.fases || []).filter(f => {
+    if (!f.beschrijving && !f.titel) return true;
+    const tekst = ((f.titel || '') + ' ' + (f.beschrijving || '')).toLowerCase();
+    // Fase is actief als minstens één geselecteerde maatregel erin voorkomt
+    return activeMaatregelen.some(m => {
+      const naam = (m.naam || '').toLowerCase();
+      const woorden = naam.split(/\s+/).filter(w => w.length > 4);
+      return woorden.some(w => tekst.includes(w));
+    });
+  });
+
   stappen.push({
     title: 'Uitvoeringsvolgorde bepalen',
-    desc: r.fases && r.fases.length > 0
-      ? `Volg het gefaseerde aanpakplan: ${r.fases.map(f => f.titel).join(' → ')}. Begin met de maatregelen met de kortste terugverdientijd.`
-      : 'Stel samen met uw adviseur een gefaseerd uitvoeringsplan op, rekening houdend met cashflow en beschikbaarheid van installateurs.'
+    desc: activeFases.length > 1
+      ? `Volg het gefaseerde aanpakplan: ${activeFases.map(f => f.titel).join(' → ')}. Begin met de maatregelen met de kortste terugverdientijd.`
+      : activeFases.length === 1
+        ? `Focus op: ${activeFases[0].titel}. Begin met de maatregelen met de kortste terugverdientijd.`
+        : 'Stel samen met uw adviseur een uitvoeringsplan op, rekening houdend met cashflow en beschikbaarheid van installateurs.'
   });
   stappen.push({
     title: 'Plan een adviesgesprek',
@@ -5749,13 +6023,12 @@ function renderScenarioSection(r) {
     document.querySelectorAll('.sc-card').forEach(c=>c.classList.toggle('sc-active', c.dataset.k===key));
 
     // Update print-scenario banner
-    const labelMap = { quick:'Snel rendement — Quick wins', budget:'Beste balans — Budgetvriendelijk', volledig:'Alles — Volledig pakket' };
-    const nameMap  = { quick:'Snel rendement', budget:'Beste balans', volledig:'Alles (volledig pakket)' };
+    const nameMap  = { quick:'Snel rendement', budget:'Beste balans', volledig:'Volledig pakket' };
     const st = window._scStats[key];
     const nameEl = document.getElementById('printScenarioName');
     const descEl = document.getElementById('printScenarioDesc');
     if (nameEl) nameEl.textContent = nameMap[key] || key;
-    if (descEl) descEl.textContent = st ? st.items.length + ' van ' + m.length + ' maatregelen geselecteerd' : '';
+    if (descEl) descEl.textContent = st ? st.items.length + ' van ' + m.length + ' maatregelen' : '';
   }
   window._applyScenario = applyScenario;
   window._updateScenarioSummary = function() {}; // leeg — kaarten zijn statisch
@@ -5890,6 +6163,17 @@ function renderAdviseurSection() {
 }
 
 // =============================================================================
+
+// Stel logo in voor print footer
+(function() {
+  var el = document.getElementById('ppfLogoImg');
+  if (el && typeof LOGO_IMG !== 'undefined') el.src = LOGO_IMG;
+  // Also set on window load in case LOGO_IMG is set later
+  window.addEventListener('load', function() {
+    var el2 = document.getElementById('ppfLogoImg');
+    if (el2 && typeof LOGO_IMG !== 'undefined') el2.src = LOGO_IMG;
+  });
+})();
 
 // Canvas → img conversie voor print (Chart.js)
 function prepareChartsForPrint() {
