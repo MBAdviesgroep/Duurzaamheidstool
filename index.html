@@ -3260,6 +3260,64 @@ select.finput {
   .lsb-tag { display: none !important; }
   .lsb.is-current, .lsb.is-target { outline-width: 2pt !important; }
 }
+
+/* =========================================================
+   DEFINITIEVE PRINT/PDF FOOTER FIX - MB ADVIESGROEP
+   Oplossing: footer full-width en vast onderaan op elke PDF-pagina
+   ========================================================= */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 14mm 16mm 18mm 16mm !important;
+  }
+
+  @page :first {
+    margin: 14mm 16mm 18mm 16mm !important;
+  }
+
+  html, body, .page-wrap, .card, .result {
+    overflow: visible !important;
+    transform: none !important;
+    contain: none !important;
+  }
+
+  #mbPrintFooter.mb-pf {
+    display: block !important;
+    position: fixed !important;
+    left: -16mm !important;
+    right: -16mm !important;
+    bottom: -18mm !important;
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    z-index: 2147483647 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  #mbPrintFooter .mb-pf-bar {
+    width: 100% !important;
+    min-height: 18mm !important;
+    box-sizing: border-box !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    padding: 5pt 16mm !important;
+    background: linear-gradient(90deg, #0d3348 0%, #134460 45%, #1B597B 100%) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .result .body {
+    padding-bottom: 26mm !important;
+  }
+
+  .rpt-footer {
+    display: none !important;
+  }
+}
 </style>
 </head>
 <body>
