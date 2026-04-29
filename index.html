@@ -3262,17 +3262,15 @@ select.finput {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
-   PRINT OVERRIDES — PROFESSIONAL PDF LAYOUT (v17)
-   Deze sectie staat als laatste in de stylesheet en overschrijft
-   alle eerdere print-regels. Doel: strakke, voorspelbare A4 PDF
-   met footer onderaan elke pagina, nette page-breaks, en geen rommel.
+   PRINT OVERRIDES — PROFESSIONAL PDF LAYOUT (v18)
+   Compactere typografie + footer hiding on last page via cover technique.
 ═══════════════════════════════════════════════════════════════════════ */
 @media print {
 
   /* ── A4 met vaste marges; ruimte onderaan voor de footer ── */
   @page {
     size: A4 portrait !important;
-    margin: 14mm 14mm 22mm 14mm !important;  /* extra bottom margin = footer space */
+    margin: 12mm 13mm 20mm 13mm !important;
   }
 
   /* Cover heeft geen marges (full-bleed banner) */
@@ -3285,7 +3283,7 @@ select.finput {
     background: #ffffff !important;
     margin: 0 !important;
     padding: 0 !important;
-    font-size: 10pt !important;
+    font-size: 9.5pt !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
@@ -3301,7 +3299,7 @@ select.finput {
     display: none !important;
   }
 
-  /* Page-wrap moet onzichtbaar worden als wrapper, content wel zichtbaar */
+  /* Page-wrap onzichtbaar als wrapper, content wel zichtbaar */
   .page-wrap {
     padding: 0 !important;
     margin: 0 !important;
@@ -3333,10 +3331,114 @@ select.finput {
     margin: 0 !important;
   }
 
-  /* ── FOOTER: vast onderaan elke A4, eenmalig in DOM ───────────────────
-     position: fixed werkt in Chrome's print-engine BIJ ELKE pagina
-     mits we GEEN transform/filter/will-change op ouders zetten en
-     mits page-margin-bottom groot genoeg is. ─────────────────────────── */
+  /* ── COMPACTERE TYPOGRAFIE & SPACING ───────────────────────────────── */
+  .rpt-section-head,
+  .sub-head,
+  .sub-title {
+    font-size: 8pt !important;
+    margin-top: 10pt !important;
+    margin-bottom: 5pt !important;
+    letter-spacing: 1.8pt !important;
+  }
+
+  h2 { font-size: 13pt !important; margin-bottom: 5pt !important; }
+  h3 { font-size: 11pt !important; margin-bottom: 4pt !important; }
+
+  /* KPI panel compacter */
+  .kpi-panel { margin: 6pt 0 !important; }
+  .kpi-cell  { padding: 8pt 10pt !important; }
+  .kpi-print-val { font-size: 15pt !important; }
+  .kpi-label { font-size: 7pt !important; }
+  .kpi-sub   { font-size: 7pt !important; }
+
+  /* Tabellen compacter */
+  .rt, .netto-table, .aandacht-table {
+    font-size: 8.5pt !important;
+  }
+  .rt th, .rt td,
+  .netto-table th, .netto-table td,
+  .aandacht-table th, .aandacht-table td {
+    padding: 5pt 8pt !important;
+    line-height: 1.35 !important;
+  }
+  .rt th, .netto-table th, .aandacht-table th {
+    font-size: 7.5pt !important;
+    letter-spacing: 0.5pt !important;
+  }
+
+  /* Grafieken: kleiner zodat ze samen op een pagina passen */
+  .chart-canvas-wrap {
+    margin: 4pt 0 8pt !important;
+    padding: 6pt !important;
+  }
+  .chart-print-img {
+    max-height: 110pt !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Cumulatieve besparing grafiek krijgt iets meer ruimte (heeft KPI-row erboven) */
+  #breakevenSection .chart-print-img,
+  .chart-breakeven-wrap .chart-print-img {
+    max-height: 130pt !important;
+  }
+
+  /* Break-even KPI's compacter */
+  .chart-breakeven-kpis,
+  .ml-grid {
+    gap: 6pt !important;
+    margin: 4pt 0 !important;
+  }
+  .chart-breakeven-kpi,
+  .ml-col {
+    padding: 8pt 10pt !important;
+  }
+
+  /* Subsidie cards compacter */
+  .sub-item {
+    padding: 8pt 10pt !important;
+    margin-bottom: 6pt !important;
+  }
+  .sub-title { font-size: 10pt !important; }
+  .sub-meta  { font-size: 7.5pt !important; line-height: 1.4 !important; }
+  .sub-body  { font-size: 8.5pt !important; line-height: 1.5 !important; }
+
+  /* Fasen / scenario cards compacter */
+  .phase-block, .sc-card {
+    padding: 8pt 10pt !important;
+  }
+  .phase-num, .sc-num {
+    font-size: 8pt !important;
+  }
+
+  /* Vervolgstappen compacter */
+  .vervolg-item { padding: 4pt 0 !important; }
+  .vervolg-title { font-size: 9pt !important; }
+  .vervolg-desc  { font-size: 8pt !important; line-height: 1.4 !important; }
+
+  /* Adviseur card op laatste pagina compacter */
+  .adviseur-card {
+    padding: 12pt 16pt !important;
+    margin-top: 6pt !important;
+  }
+  .adviseur-naam { font-size: 13pt !important; }
+  .adviseur-functie { font-size: 9pt !important; }
+  .adviseur-label { font-size: 7pt !important; }
+  .adviseur-contact a { font-size: 9.5pt !important; }
+  .adviseur-avatar { width: 38pt !important; height: 38pt !important; }
+
+  /* Bron card compacter */
+  .bron-card {
+    padding: 8pt 12pt !important;
+    margin-top: 6pt !important;
+    font-size: 8pt !important;
+  }
+
+  /* Label energieprestatie compacter */
+  .label-vis-section { margin: 6pt 0 !important; }
+  .lsb { padding: 5pt 6pt !important; font-size: 9pt !important; }
+
+  /* ── FOOTER: vast onderaan elke A4 ─────────────────────────────────── */
   .mb-pf {
     display: block !important;
     position: fixed !important;
@@ -3346,7 +3448,7 @@ select.finput {
     width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
-    z-index: 9999 !important;
+    z-index: 50 !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
   }
@@ -3359,8 +3461,8 @@ select.finput {
     display: flex !important;
     align-items: center !important;
     justify-content: space-between !important;
-    padding: 5pt 14mm !important;
-    min-height: 14mm !important;
+    padding: 4pt 13mm !important;
+    min-height: 12mm !important;
     width: 100% !important;
     box-sizing: border-box !important;
     position: relative !important;
@@ -3377,19 +3479,19 @@ select.finput {
     print-color-adjust: exact !important;
   }
 
-  .mb-pf-left  { display: flex !important; align-items: center !important; gap: 8pt !important; flex: 0 0 auto !important; }
-  .mb-pf-mid   { display: block !important; flex: 1 1 auto !important; text-align: center !important; padding: 0 12pt !important; line-height: 1.5 !important; }
+  .mb-pf-left  { display: flex !important; align-items: center !important; gap: 7pt !important; flex: 0 0 auto !important; }
+  .mb-pf-mid   { display: block !important; flex: 1 1 auto !important; text-align: center !important; padding: 0 10pt !important; line-height: 1.4 !important; }
   .mb-pf-right { display: flex !important; flex-direction: column !important; align-items: flex-end !important; gap: 1pt !important; flex: 0 0 auto !important; }
   .mb-pf-brand { display: flex !important; flex-direction: column !important; gap: 1pt !important; }
 
-  .mb-pf-logo  { width: 18pt !important; height: 18pt !important; border-radius: 50% !important; background: #ffffff !important; padding: 1.5pt !important; flex-shrink: 0 !important; }
-  .mb-pf-name  { font-size: 8pt !important; font-weight: 700 !important; color: #ffffff !important; line-height: 1.2 !important; }
-  .mb-pf-sub   { font-size: 6pt !important; color: rgba(255,255,255,0.55) !important; line-height: 1.2 !important; }
-  .mb-pf-mid   { font-size: 6pt !important; color: rgba(255,255,255,0.5) !important; }
-  .mb-pf-email { font-size: 7pt !important; font-weight: 500 !important; color: rgba(255,255,255,0.85) !important; }
-  .mb-pf-url   { font-size: 6.5pt !important; color: rgba(255,255,255,0.5) !important; }
+  .mb-pf-logo  { width: 16pt !important; height: 16pt !important; border-radius: 50% !important; background: #ffffff !important; padding: 1pt !important; flex-shrink: 0 !important; }
+  .mb-pf-name  { font-size: 7.5pt !important; font-weight: 700 !important; color: #ffffff !important; line-height: 1.2 !important; }
+  .mb-pf-sub   { font-size: 5.5pt !important; color: rgba(255,255,255,0.55) !important; line-height: 1.2 !important; }
+  .mb-pf-mid   { font-size: 5.5pt !important; color: rgba(255,255,255,0.5) !important; }
+  .mb-pf-email { font-size: 6.5pt !important; font-weight: 500 !important; color: rgba(255,255,255,0.85) !important; }
+  .mb-pf-url   { font-size: 6pt !important; color: rgba(255,255,255,0.5) !important; }
 
-  /* Voorkom dat ANY parent met transform/filter de fixed footer breekt */
+  /* Voorkom dat parents met transform/filter de fixed footer breken */
   body, html, .page-wrap, .card, .result, .body, .result .body {
     transform: none !important;
     filter: none !important;
@@ -3397,7 +3499,60 @@ select.finput {
     overflow: visible !important;
   }
 
-  /* ── Page-break regels: nette overgangen tussen pagina's ─────────── */
+  /* ── FOOTER VERBERGEN OP LAATSTE PAGINA ─────────────────────────────
+     Aanpak: named page voor #adviseurSection. Op die pagina wordt de
+     adviseur-card sterk uitgebreid met witte padding-bottom + hoge
+     z-index, waardoor het de fixed footer afdekt. */
+  @page lastpage {
+    margin: 12mm 13mm 12mm 13mm !important;
+  }
+
+  #adviseurSection {
+    page: lastpage !important;
+    page-break-before: always !important;
+    break-before: page !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    position: relative !important;
+    z-index: 1000 !important;
+    background: #ffffff !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* Wrapper rondom adviseur-card krijgt extra ruimte zodat de fixed
+     footer eronder valt — daarna dekken we hem af met een witte spacer */
+  #adviseurSection::after {
+    content: '' !important;
+    display: block !important;
+    height: 30mm !important;
+    background: #ffffff !important;
+    position: relative !important;
+    z-index: 1000 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .adviseur-card {
+    position: relative !important;
+    z-index: 1001 !important;
+  }
+  .adviseur-card::before {
+    display: none !important;
+  }
+  .adviseur-card::after {
+    content: '' !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 1.5pt !important;
+    background: #E26836 !important;
+    background-image: linear-gradient(90deg, #E26836, #f09060) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* ── Page-break regels ─────────────────────────────────────────────── */
   h1, h2, h3, h4, h5,
   .rpt-section-head,
   .sub-title,
@@ -3422,18 +3577,23 @@ select.finput {
     break-inside: avoid !important;
   }
 
-  /* Behoud cover op eigen pagina */
+  /* Houd de adviseur-card en bron-card bij elkaar op de laatste pagina */
+  #adviseurSection,
+  .bron-card {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
   .print-cover-page {
     page-break-after: always !important;
     break-after: page !important;
   }
 
-  /* Zorg dat content NIET onder de footer schuift */
   .result .body {
     padding-bottom: 4mm !important;
   }
 
-  /* Verberg interactieve schermelementen die in print verwarrend zijn */
+  /* Verberg interactieve elementen */
   button,
   .btn-orange,
   .btn-ghost,
@@ -3444,14 +3604,12 @@ select.finput {
     display: none !important;
   }
 
-  /* Voorkom dat afbeeldingen of canvases over pagina's heen breken */
   img, canvas, svg, .chart-print-img {
     page-break-inside: avoid !important;
     break-inside: avoid !important;
     max-width: 100% !important;
   }
 
-  /* Tabellen netjes laten doorlopen */
   table { page-break-inside: auto !important; }
   tr    { page-break-inside: avoid !important; page-break-after: auto !important; }
   thead { display: table-header-group !important; }
@@ -6153,11 +6311,16 @@ function printRapport() {
   // Bereid grafieken voor (beforeprint event is niet altijd betrouwbaar in Chrome PDF-dialoog)
   prepareChartsForPrint();
 
+  // Markeer de body zodat print-CSS de adviseur-section + named page kan activeren
+  // (named pages alleen werken niet 100% — dit is de fallback marker)
+  document.body.classList.add('is-printing');
+
   // Korte delay zodat images gedecodeerd zijn voordat print-dialoog opent
   setTimeout(() => {
     window.print();
     setTimeout(() => {
       document.title = orig;
+      document.body.classList.remove('is-printing');
       restoreChartsAfterPrint();
     }, 1000);
   }, 250);
