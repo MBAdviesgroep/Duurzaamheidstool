@@ -4344,6 +4344,144 @@ select.finput {
   img,svg,canvas{max-width:100%!important;page-break-inside:avoid!important;break-inside:avoid!important}tr,.kpi-panel,.live-totals-bar,.totals-block,.chart-wrap,.phase-block,.sub-list-item,.vervolg-item{page-break-inside:avoid!important;break-inside:avoid!important}
 }
 
+
+/* MJ DEFINITIEVE PRINT-SCALE FIX v3 */
+@media print {
+  @page { size: A4 portrait !important; margin: 14mm 13mm 23mm 13mm !important; }
+  @page :first { margin: 0 !important; }
+
+  html, body {
+    width: 210mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    overflow: visible !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .page-wrap, .card, .result, .result .body {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+    box-shadow: none !important;
+  }
+
+  .mb-ph, .mb-pf, .mb-ph-bar, .mb-pf-bar, .print-cover-page {
+    transform: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .result .body > *:not(.print-cover-page):not(.mb-ph):not(.mb-pf):not(.action-row),
+  #rptHdr, #kpiPanel, #labelVisSection, #wachtenBanner, #introSection,
+  #geenActieSection, #measuresSection, #scenarioSection, #maatregelenChartSection,
+  #chartSection, #nettoSection, #maandlastenSection, #subsidiesSection,
+  #phasesSection, #aandachtSection, #vervolgSection, .rapport-einde-block {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+    transform: scale(0.89) !important;
+    transform-origin: top center !important;
+  }
+
+  .rpt-section-head, .sec-head { margin-top: 6pt !important; margin-bottom: 4pt !important; }
+  .kpi-panel, .totals-block, .live-totals-bar, .chart-section, .chart-wrap,
+  .netto-table, .maandlasten-block, .phases-grid, .aandacht-table, .vervolg-list {
+    margin-bottom: 5pt !important;
+  }
+
+  .result .body { padding-bottom: 34mm !important; }
+
+  table, .rt, .netto-table, .aandacht-table {
+    width: 100% !important;
+    max-width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: collapse !important;
+    box-sizing: border-box !important;
+  }
+
+  .rt th, .rt td, .netto-table th, .netto-table td, .aandacht-table th, .aandacht-table td {
+    overflow-wrap: anywhere !important;
+    word-break: normal !important;
+  }
+
+  .chart-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 6pt 8pt !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+    border-radius: 3pt !important;
+  }
+
+  .chart-canvas-wrap {
+    width: 100% !important;
+    height: 128pt !important;
+    min-height: 128pt !important;
+    max-height: 128pt !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  .chart-canvas-wrap canvas, .chart-print-img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: 128pt !important;
+    object-fit: contain !important;
+    display: block !important;
+  }
+
+  .chart-canvas-wrap:has(.chart-print-img) canvas { display: none !important; }
+  .chart-legend { margin-top: 3pt !important; }
+  .chart-legend-item { font-size: 6.5pt !important; }
+  #chartNoteFlat, #chartNoteStijg { font-size: 6pt !important; line-height: 1.3 !important; margin-top: 2pt !important; padding-top: 2pt !important; }
+
+  .mb-ph-bar { height: 12mm !important; padding-left: 13mm !important; padding-right: 13mm !important; }
+  .mb-pf-bar { min-height: 12mm !important; padding: 4pt 13mm !important; }
+
+  .action-row, .trust-bar, .hdr, .loading-state, .disclaimer, .form-error,
+  .toc-rail, .ai-fab, .ai-panel, button, input[type="range"], [data-print-hide] {
+    display: none !important;
+  }
+
+  .kpi-panel, .totals-block, .live-totals-bar, .chart-wrap, .netto-table,
+  .maandlasten-block, .phase-block, .sub-list-item, .vervolg-item,
+  .rapport-einde-block, .adviseur-card, .label-vis-card, .intro-text {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  h1, h2, h3, h4, .rpt-section-head, .sec-head {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+
+  img, canvas, svg {
+    max-width: 100% !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .memo-page {
+    width: 100% !important;
+    max-width: 190mm !important;
+    margin: 0 auto !important;
+    box-sizing: border-box !important;
+    transform: scale(0.89) !important;
+    transform-origin: top center !important;
+    padding-bottom: 140px !important;
+  }
+}
 </style>
 </head>
 <body>
