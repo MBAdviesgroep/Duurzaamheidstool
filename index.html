@@ -2911,6 +2911,66 @@ select.finput {
 .mb-pf { display: none; }
 
 /* ═══════════════════════════════════════════════════════
+   ADVISEUR SLUITING (premium closing block)
+═══════════════════════════════════════════════════════ */
+.adviseur-sluiting {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 28px 32px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--blue);
+  border-radius: var(--r-lg);
+  margin-top: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.adviseur-sluiting-left {
+  display: flex; align-items: center; gap: 14px; flex-shrink: 0;
+}
+.adviseur-sluiting-logo-wrap {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: var(--blue-faint); border: 2px solid var(--blue-faint2);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; overflow: hidden;
+}
+.adviseur-sluiting-logo { width: 36px; height: 36px; object-fit: contain; }
+.adviseur-sluiting-naam {
+  font-size: 16px; font-weight: 700; font-family: var(--f-head);
+  color: var(--ink); letter-spacing: -0.2px; line-height: 1.2;
+}
+.adviseur-sluiting-functie {
+  font-size: 11.5px; color: var(--ink-4); font-family: var(--f-head); margin-top: 3px;
+}
+.adviseur-sluiting-sep {
+  width: 1px; height: 48px; background: var(--rule); flex-shrink: 0;
+}
+.adviseur-sluiting-mid { flex: 1; min-width: 160px; }
+.adviseur-sluiting-cta-kop {
+  font-size: 14px; font-weight: 700; font-family: var(--f-head);
+  color: var(--blue-deep); letter-spacing: -0.1px; margin-bottom: 4px;
+}
+.adviseur-sluiting-cta-sub {
+  font-size: 12px; color: var(--ink-3); line-height: 1.6;
+}
+.adviseur-sluiting-contact {
+  display: flex; flex-direction: column; gap: 8px; flex-shrink: 0;
+}
+.adviseur-sluiting-link {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 12.5px; font-weight: 600; font-family: var(--f-head);
+  color: var(--blue); text-decoration: none;
+  transition: color var(--t-fast);
+}
+.adviseur-sluiting-link:hover { color: var(--blue-deep); }
+.adviseur-sluiting-link svg { flex-shrink: 0; opacity: 0.7; }
+@media (max-width: 640px) {
+  .adviseur-sluiting { flex-direction: column; gap: 18px; }
+  .adviseur-sluiting-sep { width: 48px; height: 1px; }
+}
+
+/* ═══════════════════════════════════════════════════════
    PRINT COVER PAGE
 ═══════════════════════════════════════════════════════ */
 .print-cover-page { display: none; }
@@ -3773,6 +3833,208 @@ select.finput {
     width: 100% !important;
     max-width: 100% !important;
   }
+
+  /* ═══════════════════════════════════════════════════════
+     LUXE PRINT VERBETERINGEN v23
+  ═══════════════════════════════════════════════════════ */
+
+  /* ── Adviseur sluiting — clean wit afsluitblok ── */
+  .adviseur-sluiting {
+    display: flex !important;
+    align-items: center !important;
+    gap: 16pt !important;
+    padding: 14pt 18pt !important;
+    background: #ffffff !important;
+    border: 0.5pt solid #E3DDD8 !important;
+    border-top: 2.5pt solid #1B597B !important;
+    border-radius: 6pt !important;
+    margin-top: 10pt !important;
+    margin-bottom: 6pt !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .adviseur-sluiting-logo-wrap {
+    width: 34pt !important; height: 34pt !important;
+    border-radius: 50% !important;
+    background: #EEF4F8 !important;
+    border: 1pt solid #ddeaf2 !important;
+    display: flex !important; align-items: center !important; justify-content: center !important;
+    flex-shrink: 0 !important; overflow: hidden !important;
+  }
+  .adviseur-sluiting-logo { width: 22pt !important; height: 22pt !important; object-fit: contain !important; }
+  .adviseur-sluiting-naam { font-size: 10pt !important; font-weight: 700 !important; color: #141414 !important; }
+  .adviseur-sluiting-functie { font-size: 7pt !important; color: #6B6B6B !important; margin-top: 1pt !important; }
+  .adviseur-sluiting-sep { width: 0.5pt !important; height: 30pt !important; background: #E3DDD8 !important; flex-shrink: 0 !important; }
+  .adviseur-sluiting-cta-kop { font-size: 9pt !important; font-weight: 700 !important; color: #134460 !important; margin-bottom: 2pt !important; }
+  .adviseur-sluiting-cta-sub { font-size: 7.5pt !important; color: #6B6B6B !important; line-height: 1.5 !important; }
+  .adviseur-sluiting-link { font-size: 7.5pt !important; color: #1B597B !important; font-weight: 600 !important; gap: 4pt !important; }
+  .adviseur-sluiting-link svg { display: none !important; }
+
+  /* Verberg oude adviseur-card definitief */
+  .adviseur-card { display: none !important; }
+
+  /* ── Maatregelentabel — luxe zebra ── */
+  .rt tbody tr:nth-child(even) td { background: #F7F5F2 !important; }
+  .rt tbody tr:hover td { background: inherit !important; }
+  .rt thead tr { background: #1B597B !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .rt th { color: #ffffff !important; font-size: 7pt !important; padding: 5pt 6pt !important; letter-spacing: 0.8pt !important; }
+  .rt td { padding: 5pt 6pt !important; font-size: 8pt !important; border-bottom: 0.4pt solid #E3DDD8 !important; }
+  .rt tbody tr:last-child td { border-bottom: none !important; }
+  .m-name { font-size: 8pt !important; font-weight: 600 !important; color: #141414 !important; }
+  .m-save { color: #2A7A50 !important; font-weight: 700 !important; }
+  .m-tvt { color: #1B597B !important; font-weight: 700 !important; }
+  .m-sub { color: #E26836 !important; font-size: 6.5pt !important; }
+
+  /* ── Totals block — donker en scherp ── */
+  .totals-block {
+    display: grid !important; grid-template-columns: 1fr 1fr 1fr !important;
+    gap: 0 !important; margin-bottom: 10pt !important;
+    background: #134460 !important;
+    border-radius: 5pt !important; overflow: hidden !important;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+    page-break-inside: avoid !important;
+  }
+  .totals-block > div {
+    padding: 9pt 12pt !important; background: transparent !important;
+    border-right: 0.5pt solid rgba(255,255,255,0.12) !important;
+  }
+  .totals-block > div:last-child { border-right: none !important; }
+  .total-label { font-size: 6.5pt !important; color: rgba(255,255,255,0.55) !important; letter-spacing: 1pt !important; margin-bottom: 3pt !important; }
+  .total-val { font-size: 14pt !important; font-weight: 700 !important; color: #ffffff !important; }
+  .total-val.orange { color: #F2A07A !important; }
+  .total-sub { font-size: 7pt !important; color: rgba(255,255,255,0.4) !important; margin-top: 2pt !important; }
+
+  /* ── KPI panel — strakker ── */
+  .kpi-panel {
+    display: grid !important; grid-template-columns: 1fr 1fr 1fr !important;
+    border: 0.5pt solid #E3DDD8 !important; overflow: hidden !important;
+    border-radius: 5pt !important; margin-bottom: 10pt !important;
+    page-break-inside: avoid !important;
+  }
+  .kpi-cell { padding: 9pt 12pt !important; background: #ffffff !important; }
+  .kpi-cell:not(:last-child) { border-right: 0.5pt solid #E3DDD8 !important; }
+  .kpi-lbl { font-size: 6.5pt !important; letter-spacing: 1pt !important; color: #6B6B6B !important; margin-bottom: 5pt !important; }
+  .kpi-num { font-size: 16pt !important; font-weight: 700 !important; line-height: 1 !important; }
+  .kpi-sub { font-size: 7pt !important; color: #6B6B6B !important; margin-top: 5pt !important; }
+
+  /* ── Netto investering tabel ── */
+  .netto-table { font-size: 8pt !important; border-collapse: collapse !important; margin-bottom: 10pt !important; }
+  .netto-table thead tr { background: #1B597B !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .netto-table th { font-size: 7pt !important; color: #ffffff !important; padding: 5pt 7pt !important; letter-spacing: 0.5pt !important; border-bottom: none !important; }
+  .netto-table td { padding: 5pt 7pt !important; border-bottom: 0.4pt solid #E3DDD8 !important; font-size: 8pt !important; }
+  .netto-table tr:last-child td {
+    background: #EEF4F8 !important; font-weight: 700 !important;
+    color: #134460 !important; font-size: 9pt !important;
+    border-top: 1pt solid #1B597B !important; border-bottom: none !important;
+  }
+  .netto-table .sub-row td { color: #2A7A50 !important; }
+
+  /* ── Subsidiekaarten — compacter, strakker ── */
+  .sub-grid { grid-template-columns: 1fr 1fr !important; gap: 6pt !important; }
+  .sub-card-new {
+    border: 0.5pt solid #E3DDD8 !important; border-top: 2pt solid #1B597B !important;
+    border-radius: 4pt !important; page-break-inside: avoid !important;
+  }
+  .sub-card-header { background: #EEF4F8 !important; padding: 7pt 9pt 6pt !important; }
+  .sub-badge-new { font-size: 6.5pt !important; padding: 2pt 6pt !important; background: #1B597B !important; color: white !important; }
+  .sub-name-new { font-size: 8pt !important; font-weight: 700 !important; }
+  .sub-type-new { font-size: 6.5pt !important; }
+  .sub-card-body { padding: 7pt 9pt !important; gap: 5pt !important; }
+  .sub-voordeel { font-size: 7.5pt !important; padding: 5pt 7pt !important; background: #EEF4F8 !important; border-left: 2pt solid #1B597B !important; }
+  .sub-toepassing { font-size: 7pt !important; }
+  .sub-alert { font-size: 7pt !important; padding: 4pt 7pt !important; border-left: 2pt solid #8B2828 !important; }
+  .sub-footer-row { padding: 5pt 9pt !important; background: #F4F2EF !important; }
+  .sub-combine { font-size: 7pt !important; padding: 2pt 6pt !important; }
+  .sub-nocombine { font-size: 7pt !important; padding: 2pt 6pt !important; }
+
+  /* ── Fase blokken ── */
+  .phases-grid { grid-template-columns: 1fr 1fr !important; gap: 6pt !important; }
+  .phase-block { border: 0.5pt solid #E3DDD8 !important; border-radius: 4pt !important; page-break-inside: avoid !important; }
+  .phase-header { padding: 7pt 9pt !important; background: #F4F2EF !important; border-bottom: 0.5pt solid #E3DDD8 !important; }
+  .phase-num-badge { width: 24pt !important; height: 24pt !important; font-size: 10pt !important; background: #E26836 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .phase-title { font-size: 8.5pt !important; }
+  .phase-body { padding: 6pt 9pt !important; }
+  .phase-desc { font-size: 7.5pt !important; }
+  .phase-meta-pill { font-size: 6.5pt !important; padding: 2pt 5pt !important; background: #EEF4F8 !important; color: #1B597B !important; }
+
+  /* ── Grafieken — scherp en goed formaat ── */
+  .chart-wrap { padding: 9pt 11pt !important; border: 0.5pt solid #E3DDD8 !important; border-radius: 4pt !important; }
+  .chart-canvas-wrap { height: 145pt !important; min-height: 145pt !important; max-height: 145pt !important; }
+  .chart-canvas-wrap canvas { height: 145pt !important; max-height: 145pt !important; }
+  .chart-print-img { max-height: 145pt !important; }
+  .chart-legend-item { font-size: 7pt !important; }
+  .chart-legend { margin-top: 5pt !important; gap: 14pt !important; }
+  .chart-breakeven-badge { font-size: 7pt !important; padding: 3pt 8pt !important; }
+
+  /* ── Intro tekst ── */
+  .intro-text {
+    font-size: 8.5pt !important; line-height: 1.6 !important;
+    padding: 9pt 12pt !important; margin-bottom: 10pt !important;
+    background: #EEF4F8 !important; border-left: 2.5pt solid #1B597B !important;
+    border-radius: 0 4pt 4pt 0 !important;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+  }
+
+  /* ── Rente strip ── */
+  .rente-strip {
+    background: #EEF4F8 !important; padding: 8pt 12pt !important;
+    margin-bottom: 10pt !important; border-radius: 4pt !important;
+    border: 0.5pt solid #ddeaf2 !important;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+  }
+  .rente-num { font-size: 18pt !important; }
+  .rente-lbl { font-size: 7pt !important; }
+  .rente-note { font-size: 7pt !important; }
+  .rente-disclaimer { font-size: 7pt !important; }
+
+  /* ── Geen actie blok ── */
+  .geen-actie-head {
+    background: #2a1818 !important;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+    padding: 9pt 12pt !important;
+  }
+  .geen-actie-grid { background: #F7F5F2 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .geen-actie-cell { padding: 8pt 10pt !important; }
+  .geen-actie-val { font-size: 14pt !important; }
+  .geen-actie-lbl { font-size: 7pt !important; }
+  .geen-actie-sub { font-size: 7pt !important; }
+  .geen-actie-foot { font-size: 7.5pt !important; padding: 7pt 12pt !important; }
+  .geen-actie-eyebrow { font-size: 7pt !important; }
+  .geen-actie-title { font-size: 10pt !important; }
+  .geen-actie-icon { width: 22pt !important; height: 22pt !important; }
+
+  /* ── Vervolgstappen ── */
+  .vervolg-item { padding: 5pt 0 !important; gap: 10pt !important; }
+  .vervolg-num {
+    width: 20pt !important; height: 20pt !important; font-size: 9pt !important;
+    background: #E26836 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+  }
+  .vervolg-title { font-size: 8.5pt !important; font-weight: 700 !important; }
+  .vervolg-desc { font-size: 7.5pt !important; line-height: 1.45 !important; }
+
+  /* ── Sectie headers strakker ── */
+  .rpt-section-head {
+    font-size: 7.5pt !important; letter-spacing: 1.2pt !important;
+    border-bottom: 1.5pt solid #1B597B !important;
+    padding-bottom: 3pt !important; margin: 10pt 0 6pt !important;
+    color: #1B597B !important;
+  }
+
+  /* ── mb-pf footer — premium bar ── */
+  .mb-pf-bar {
+    min-height: 13mm !important;
+    padding: 5pt 14mm !important;
+    background: linear-gradient(90deg, #0d3348 0%, #134460 50%, #1B597B 100%) !important;
+  }
+  .mb-pf-accent { height: 2.5pt !important; background: linear-gradient(90deg, #E26836, #f09060) !important; }
+  .mb-pf-name { font-size: 8pt !important; letter-spacing: 0.3pt !important; }
+  .mb-pf-sub { font-size: 6pt !important; }
+  .mb-pf-mid { font-size: 6pt !important; max-width: 220pt !important; }
+  .mb-pf-email { font-size: 7.5pt !important; }
+  .mb-pf-url { font-size: 6pt !important; }
+  .mb-pf-logo { width: 18pt !important; height: 18pt !important; }
 }
 </style>
 </head>
@@ -4039,7 +4301,7 @@ select.finput {
         Definitieve bedragen volgen na inspectie en offertes.
       </div>
       <div class="mb-pf-right">
-        <span class="mb-pf-email">info@mbadviesgroep.nl</span>
+        <span class="mb-pf-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="422b2c242d022f202326342b273125302d27326c2c2e">[email&#160;protected]</a></span>
         <span class="mb-pf-url">mbadviesgroep.nl</span>
       </div>
     </div>
@@ -4049,7 +4311,7 @@ select.finput {
   <div class="disclaimer">Indicatieve analyse op basis van kengetallen. Geen officieel energieadvies.</div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // =============================================================================
 //  VERCEL BACKEND KOPPELING
 // =============================================================================
@@ -5907,28 +6169,6 @@ function renderVervolgSection(r) {
   el.innerHTML = secHead('Aanbevolen vervolgstappen') + `<div class="vervolg-list">${html}</div>`;
 }
 
-function renderAdviseurSection() {
-  const el = document.getElementById('adviseurSection');
-  if (!el) return;
-  el.innerHTML = `
-    <div style="margin-top:8px;">
-      <div class="adviseur-card">
-        <div class="adviseur-avatar">
-          <img src="${LOGO_IMG}" alt="MB Adviesgroep">
-        </div>
-        <div class="adviseur-info">
-          <span class="adviseur-label">Uw adviseur</span>
-          <div class="adviseur-naam">MB Adviesgroep</div>
-          <div class="adviseur-functie">Verduurzamings- &amp; vastgoedadvies</div>
-        </div>
-        <div class="adviseur-contact">
-          <a href="https://mbadviesgroep.nl" target="_blank">mbadviesgroep.nl</a>
-          <a href="mailto:info@mbadviesgroep.nl">info@mbadviesgroep.nl</a>
-        </div>
-      </div>
-    </div>`;
-}
-
 // =============================================================================
 //  NIEUWE MODULES — "Wat als u niets doet" / Maandlasten / Scenario / TOC / AI
 // =============================================================================
@@ -6418,20 +6658,31 @@ function renderAdviseurSection() {
   const el = document.getElementById('adviseurSection');
   if (!el) return;
   el.innerHTML = `
-    <div style="margin-top:8px;">
-      <div class="adviseur-card">
-        <div class="adviseur-avatar">
-          <img src="${LOGO_IMG}" alt="MB Adviesgroep">
+    <div class="adviseur-sluiting">
+      <div class="adviseur-sluiting-left">
+        <div class="adviseur-sluiting-logo-wrap">
+          <img src="${LOGO_IMG}" alt="MB Adviesgroep" class="adviseur-sluiting-logo">
         </div>
-        <div class="adviseur-info">
-          <span class="adviseur-label">Uw adviseur</span>
-          <div class="adviseur-naam">MB Adviesgroep</div>
-          <div class="adviseur-functie">Verduurzamings- &amp; vastgoedadvies</div>
+        <div class="adviseur-sluiting-brand">
+          <div class="adviseur-sluiting-naam">MB Adviesgroep</div>
+          <div class="adviseur-sluiting-functie">Verduurzamings- &amp; vastgoedadvies</div>
         </div>
-        <div class="adviseur-contact">
-          <a href="https://mbadviesgroep.nl" target="_blank">mbadviesgroep.nl</a>
-          <a href="mailto:info@mbadviesgroep.nl">info@mbadviesgroep.nl</a>
-        </div>
+      </div>
+      <div class="adviseur-sluiting-sep"></div>
+      <div class="adviseur-sluiting-mid">
+        <div class="adviseur-sluiting-cta-kop">Klaar voor de volgende stap?</div>
+        <div class="adviseur-sluiting-cta-sub">Plan een vrijblijvend adviesgesprek en wij begeleiden u van A tot Z — van subsidieaanvraag tot oplevering.</div>
+      </div>
+      <div class="adviseur-sluiting-sep"></div>
+      <div class="adviseur-sluiting-contact">
+        <a class="adviseur-sluiting-link" href="https://mbadviesgroep.nl" target="_blank">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3c-2.5 2.5-4 6-4 9s1.5 6.5 4 9M12 3c2.5 2.5 4 6 4 9s-1.5 6.5-4 9M3 12h18"/></svg>
+          mbadviesgroep.nl
+        </a>
+        <a class="adviseur-sluiting-link" href="mailto:info@mbadviesgroep.nl">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 8l10 7 10-7"/></svg>
+          info@mbadviesgroep.nl
+        </a>
       </div>
     </div>`;
 }
