@@ -4978,6 +4978,41 @@ select.finput {
 }
 
 </style>
+<style>
+/* FINAL PRINT FIX v8 - header safe + slimmer page flow */
+@media print {
+  @page { size: A4 portrait !important; margin: 24mm 12mm 18mm 12mm !important; }
+  @page :first { margin: 0 !important; }
+  html, body { width: auto !important; height: auto !important; overflow: visible !important; background: #fff !important; }
+  .mb-ph { display:block!important; position:fixed!important; top:0!important; left:0!important; right:0!important; height:14mm!important; z-index:9999!important; transform:none!important; }
+  .mb-ph-bar { height:12mm!important; padding:0 12mm!important; background:linear-gradient(90deg,#0d2233 0%,#134460 55%,#1B597B 100%)!important; display:flex!important; align-items:center!important; justify-content:space-between!important; box-sizing:border-box!important; }
+  .mb-ph-accent { height:2mm!important; background:#E26836!important; }
+  .mb-pf-bar { min-height:12mm!important; padding:4pt 12mm!important; }
+  #measuresSection,#nettoSection,#subsidiesSection,#phasesSection,#aandachtSection,#vervolgSection,#adviseurSection,#bronSection { padding-top:0!important; margin-top:0!important; }
+  #measuresSection { page-break-before:always!important; break-before:page!important; }
+  #nettoSection { page-break-before:always!important; break-before:page!important; }
+  #subsidiesSection,#phasesSection,#aandachtSection,#vervolgSection,#adviseurSection,#bronSection { page-break-before:auto!important; break-before:auto!important; }
+  .sub-list,.phases-grid,.vervolg-list,.rapport-einde-block { page-break-inside:auto!important; break-inside:auto!important; }
+  .sub-list-item,.phase-block,.vervolg-item,.adviseur-sluiting,.aandacht-table tr,.netto-table tr,.rt tr { page-break-inside:avoid!important; break-inside:avoid!important; }
+  .sub-list-item { padding:7pt 8pt!important; margin-bottom:5pt!important; }
+  .sub-list-name { font-size:8.4pt!important; line-height:1.25!important; }
+  .sub-list-type,.sub-list-voordeel,.sub-list-step,.sub-list-alert,.sub-list-combine { line-height:1.32!important; }
+  #phasesSection { margin-bottom:6mm!important; }
+  #aandachtSection { margin-top:3mm!important; margin-bottom:4mm!important; }
+  #vervolgSection { margin-top:3mm!important; }
+  #vervolgSection .vervolg-item { padding:7pt 0!important; }
+  .adviseur-sluiting { margin-top:6mm!important; }
+  .netto-table { margin-bottom:6pt!important; }
+  .netto-fill-card { display:grid!important; grid-template-columns:1fr 1fr 1fr!important; gap:7pt!important; margin:8pt 0 0!important; page-break-inside:avoid!important; break-inside:avoid!important; }
+  .netto-fill-item { border:0.5pt solid #DDE6EC!important; border-top:2pt solid #1B597B!important; background:#F7FAFC!important; padding:8pt 9pt!important; min-height:38pt!important; -webkit-print-color-adjust:exact!important; print-color-adjust:exact!important; }
+  .netto-fill-title { font-family:'IBM Plex Sans',sans-serif!important; font-size:6.7pt!important; font-weight:700!important; letter-spacing:1pt!important; text-transform:uppercase!important; color:#1B597B!important; margin-bottom:4pt!important; }
+  .netto-fill-text { font-family:'IBM Plex Sans',sans-serif!important; font-size:7.4pt!important; line-height:1.45!important; color:#3A3A3A!important; }
+  .rt thead,.netto-table thead,.aandacht-table thead { page-break-after:avoid!important; break-after:avoid!important; }
+  .sec-head,.rpt-section-head { margin-top:8pt!important; margin-bottom:6pt!important; }
+  #measuresSection > .sec-head:first-child,#nettoSection > .sec-head:first-child,#subsidiesSection > .sec-head:first-child,#phasesSection > .sec-head:first-child { margin-top:0!important; }
+}
+</style>
+
 </head>
 <body>
 
@@ -6066,7 +6101,12 @@ function renderReport(r) {
       <tbody id="nettoTbody">
         <tr id="nettoBrutoRij"><td>Bruto investering</td><td id="nettoBrutoVal">${fmtEuro(initBruto)}</td></tr>
       </tbody>
-    </table>`;
+    </table>
+    <div class="netto-fill-card">
+      <div class="netto-fill-item"><div class="netto-fill-title">Interpretatie</div><div class="netto-fill-text">Fiscale regelingen verlagen niet de factuur, maar leveren voordeel op via de aangifte.</div></div>
+      <div class="netto-fill-item"><div class="netto-fill-title">Voor uitvoering</div><div class="netto-fill-text">Controleer per maatregel vooraf de actuele RVO-voorwaarden en meldtermijnen.</div></div>
+      <div class="netto-fill-item"><div class="netto-fill-title">Advies</div><div class="netto-fill-text">Vraag offertes uitgesplitst per maatregel op, zodat subsidie en aftrek correct verwerkt kunnen worden.</div></div>
+    </div>`;
   document.getElementById('nettoSection').innerHTML = nettoHtml;
 
   // Subsidies — combineer AI-output met subsidie database
