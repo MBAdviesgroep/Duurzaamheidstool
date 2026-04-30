@@ -4981,7 +4981,7 @@ select.finput {
 <style>
 /* FINAL PRINT FIX v8 - header safe + slimmer page flow */
 @media print {
-  @page { size: A4 portrait !important; margin: 24mm 12mm 18mm 12mm !important; }
+  @page { size: A4 portrait !important; margin: 30mm 12mm 18mm 12mm !important; }
   @page :first { margin: 0 !important; }
   html, body { width: auto !important; height: auto !important; overflow: visible !important; background: #fff !important; }
   .mb-ph { display:block!important; position:fixed!important; top:0!important; left:0!important; right:0!important; height:14mm!important; z-index:9999!important; transform:none!important; }
@@ -4990,15 +4990,22 @@ select.finput {
   .mb-pf-bar { min-height:12mm!important; padding:4pt 12mm!important; }
   .rpt-hdr { margin-bottom:10pt!important; }
   #measuresSection,#nettoSection,#subsidiesSection,#phasesSection,#aandachtSection,#vervolgSection,#adviseurSection,#bronSection { padding-top:0!important; margin-top:0!important; }
-  #measuresSection { page-break-before:always!important; break-before:page!important; padding-top:6mm!important; }
-  #nettoSection { page-break-before:always!important; break-before:page!important; padding-top:6mm!important; }
-  #subsidiesSection,#phasesSection,#aandachtSection,#vervolgSection,#adviseurSection,#bronSection { page-break-before:auto!important; break-before:auto!important; }
+  #measuresSection { page-break-before:always!important; break-before:page!important; padding-top:4mm!important; }
+  #nettoSection { page-break-before:always!important; break-before:page!important; padding-top:4mm!important; }
+  #subsidiesSection { page-break-before:always!important; break-before:page!important; padding-top:4mm!important; }
+  #phasesSection,#aandachtSection,#vervolgSection,#adviseurSection,#bronSection { page-break-before:auto!important; break-before:auto!important; }
   .sub-list,.phases-grid,.vervolg-list,.rapport-einde-block { page-break-inside:auto!important; break-inside:auto!important; }
   .sub-list-item,.phase-block,.vervolg-item,.adviseur-sluiting,.aandacht-table tr,.netto-table tr,.rt tr { page-break-inside:avoid!important; break-inside:avoid!important; }
-  .sub-list-item { padding:7pt 8pt!important; margin-bottom:5pt!important; }
-  .sub-list-name { font-size:8.4pt!important; line-height:1.25!important; }
-  .sub-list-type,.sub-list-voordeel,.sub-list-step,.sub-list-alert,.sub-list-combine { line-height:1.32!important; }
-  #phasesSection { margin-bottom:6mm!important; }
+  /* Subsidies compacter zodat de pagina niet te druk wordt */
+  #subsidiesSection .sub-list { display:grid!important; grid-template-columns:1fr 1fr!important; column-gap:6pt!important; row-gap:5pt!important; }
+  .sub-list-item { padding:5pt 6pt!important; margin-bottom:0!important; }
+  .sub-list-name { font-size:7.4pt!important; line-height:1.2!important; margin-bottom:1.5pt!important; }
+  .sub-code-badge { font-size:5.5pt!important; padding:1pt 3pt!important; margin-right:2pt!important; }
+  .sub-list-type,.sub-list-voordeel,.sub-list-step,.sub-list-alert,.sub-list-combine { font-size:6pt!important; line-height:1.25!important; margin-bottom:1.5pt!important; }
+  .sub-list-steps { gap:1pt!important; margin-top:2pt!important; }
+  .sls-n { min-width:10pt!important; width:10pt!important; height:10pt!important; font-size:5pt!important; }
+  .sub-list-url { display:none!important; }
+  #phasesSection { margin-bottom:5mm!important; }
   #aandachtSection { margin-top:3mm!important; margin-bottom:4mm!important; }
   #vervolgSection { margin-top:3mm!important; }
   #vervolgSection .vervolg-item { padding:7pt 0!important; }
