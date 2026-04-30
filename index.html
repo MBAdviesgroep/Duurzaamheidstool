@@ -1507,30 +1507,29 @@ select.finput {
   .totals-block { grid-template-columns: 1fr; gap: 12px; }
   .rpt-footer { flex-direction: column; gap: 12px; padding: 16px 24px; text-align: center; }
 }
+/* Verberg de running header en footer op het scherm — alleen zichtbaar in print */
+.mb-ph, .mb-pf { display: none; }
 
 @media print {
 
-  /* ═══════════════════════════════════════════════════════
-     PRINT SYSTEM v24 — CLEAN CONSOLIDATED
-     Aanpak: één blok, geen conflicten, premium consulting look
-     Marges zorgen voor ruimte boven de running header (13mm)
-     en onder de running footer (15mm).
-  ═══════════════════════════════════════════════════════ */
+  /* ═══════════════════════════════════════════════════════════════════
+     PRINT SYSTEM v24 — ENKEL GECONSOLIDEERD BLOK
+     Alle vorige @media print blokken (lines 1510-5013) vervangen.
+     Rest van het bestand is 100% intact.
+     
+     LAYOUT: A4 met vaste running header (13mm) en footer (15mm).
+     Marges: top 26mm (header 13mm + vrije ruimte 13mm),
+             bottom 22mm (footer 15mm + vrije ruimte 7mm).
+  ═══════════════════════════════════════════════════════════════════ */
 
-  /* ── @page setup ──────────────────────────────────────────── */
+  /* ── @page ─────────────────────────────────────────────────────── */
   @page {
     size: A4 portrait;
-    /* top 26mm = 13mm header + 13mm veilige witruimte
-       bottom 22mm = 15mm footer + 7mm veilige witruimte */
     margin: 26mm 14mm 22mm 14mm;
   }
+  @page :first { margin: 0; }
 
-  /* Cover page: full-bleed, geen marges */
-  @page :first {
-    margin: 0;
-  }
-
-  /* ── Global reset voor print ──────────────────────────────── */
+  /* ── Global reset ───────────────────────────────────────────────── */
   *, *::before, *::after {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
@@ -1539,273 +1538,106 @@ select.finput {
 
   html, body {
     background: #ffffff !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    font-size: 9.2pt !important;
-    line-height: 1.38 !important;
-    font-family: 'IBM Plex Sans', sans-serif !important;
-    overflow: visible !important;
-    color: #141414 !important;
-    transform: none !important;
-    filter: none !important;
+    margin: 0 !important; padding: 0 !important;
+    font-size: 9.2pt !important; line-height: 1.38 !important;
+    overflow: visible !important; color: #141414 !important;
+    transform: none !important; filter: none !important;
   }
 
-  /* ── Schermruis verbergen ─────────────────────────────────── */
-  .trust-bar,
-  .hdr,
-  .loading-state,
-  .disclaimer,
-  .action-row,
-  .form-error,
-  .rpt-footer,
-  .toc-rail,
-  .ai-fab,
-  .ai-panel,
-  .measures-toolbar,
-  .live-totals-bar,
-  .wachten-banner,
-  .scroll-hint,
-  .ml-controls,
-  .ml-fin-invoer,
-  .chart-explainer,
-  .chart-tog-group,
-  #chartSliderWrap,
-  .bron-card,
-  .sub-url,
-  .ml-empty,
-  .maandlasten-block.is-empty,
-  .m-check,
-  button,
-  input[type="range"],
-  [data-print-hide] {
-    display: none !important;
-  }
-
-  /* Checkboxkolom header ook weg */
+  /* ── Schermruis verbergen ───────────────────────────────────────── */
+  .trust-bar, .hdr, .loading-state, .disclaimer, .action-row, .form-error,
+  .rpt-footer, .toc-rail, .ai-fab, .ai-panel, .measures-toolbar,
+  .wachten-banner, .scroll-hint, .ml-controls, .ml-fin-invoer,
+  .chart-explainer, .chart-tog-group, #chartSliderWrap, .bron-card,
+  .sub-url, .ml-empty, .maandlasten-block.is-empty, .m-check,
+  button, input[type="range"], [data-print-hide] { display: none !important; }
   .rt th:first-child { display: none !important; }
-  .rt td.m-check { display: none !important; }
+  .rt td.m-check    { display: none !important; }
 
-  /* ── Wrapper reset ────────────────────────────────────────── */
-  .page-wrap {
-    padding: 0 !important;
-    margin: 0 !important;
-    max-width: 100% !important;
-    background: #ffffff !important;
-    box-shadow: none !important;
-    overflow: visible !important;
-  }
+  /* ── Wrapper reset ──────────────────────────────────────────────── */
+  .page-wrap { padding: 0 !important; margin: 0 !important; max-width: 100% !important; background: #ffffff !important; box-shadow: none !important; overflow: visible !important; }
+  .card { background: #ffffff !important; box-shadow: none !important; border: none !important; border-radius: 0 !important; padding: 0 !important; margin: 0 !important; overflow: visible !important; }
 
-  .card {
-    background: #ffffff !important;
-    box-shadow: none !important;
-    border: none !important;
-    border-radius: 0 !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    overflow: visible !important;
-  }
+  /* ── Rapport zichtbaar ──────────────────────────────────────────── */
+  .result { display: block !important; opacity: 1 !important; transform: none !important; animation: none !important; }
+  .result .body { display: block !important; padding: 0 0 8mm 0 !important; margin: 0 !important; transform: none !important; filter: none !important; overflow: visible !important; }
 
-  /* ── Rapport zichtbaar ────────────────────────────────────── */
-  .result {
-    display: block !important;
-    opacity: 1 !important;
-    transform: none !important;
-    animation: none !important;
-  }
-
-  .result .body {
-    display: block !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    padding-bottom: 6mm !important;
-    transform: none !important;
-    filter: none !important;
-    overflow: visible !important;
-  }
-
-  /* ── Alle inhoud: volle breedte, geen transforms ────────────── */
+  /* Alle sectie-elementen: volle breedte, geen transforms */
   .result .body > *:not(.print-cover-page):not(.mb-ph):not(.mb-pf),
   #rptHdr, #kpiPanel, #labelVisSection, #introSection,
   #geenActieSection, #measuresSection, #scenarioSection,
   #maatregelenChartSection, #chartSection, #nettoSection,
   #maandlastenSection, #subsidiesSection, #phasesSection,
   #aandachtSection, #vervolgSection, #adviseurSection,
-  #bronSection, .rapport-einde-block, .memo-page {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    box-sizing: border-box !important;
-    transform: none !important;
+  #bronSection, .rapport-einde-block {
+    width: 100% !important; max-width: 100% !important;
+    margin-left: 0 !important; margin-right: 0 !important;
+    box-sizing: border-box !important; transform: none !important;
     overflow: visible !important;
   }
 
-  /* ── RUNNING HEADER (vast bovenaan elke pagina) ──────────── */
+  /* Voorkom dat transforms op parents de fixed header/footer breken */
+  body, html, .page-wrap, .card, .result, .body, .result .body {
+    transform: none !important; filter: none !important; will-change: auto !important;
+  }
+
+  /* ── RUNNING HEADER ─────────────────────────────────────────────── */
   .mb-ph {
-    display: block !important;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    z-index: 9998 !important;
-    transform: none !important;
+    display: block !important; position: fixed !important;
+    top: 0 !important; left: 0 !important; right: 0 !important;
+    z-index: 9998 !important; transform: none !important;
   }
-
   .mb-ph-bar {
-    height: 13mm !important;
-    min-height: 13mm !important;
-    padding: 0 14mm !important;
+    height: 13mm !important; min-height: 13mm !important;
+    padding: 0 14mm !important; box-sizing: border-box !important; width: 100% !important;
     background: linear-gradient(90deg, #0d2233 0%, #134460 55%, #1B597B 100%) !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    gap: 12pt !important;
-    box-sizing: border-box !important;
-    width: 100% !important;
+    display: flex !important; align-items: center !important; justify-content: space-between !important; gap: 12pt !important;
   }
+  .mb-ph-accent { height: 2pt !important; background: linear-gradient(90deg, #E26836, #f09060) !important; }
+  .mb-ph-left   { display: flex !important; align-items: center !important; gap: 6pt !important; flex-shrink: 0 !important; }
+  .mb-ph-logo   { width: 17pt !important; height: 17pt !important; border-radius: 50% !important; background: rgba(255,255,255,0.9) !important; object-fit: contain !important; padding: 1pt !important; flex-shrink: 0 !important; }
+  .mb-ph-brand  { display: flex !important; flex-direction: column !important; gap: 0.5pt !important; }
+  .mb-ph-name   { font-size: 7.5pt !important; font-weight: 700 !important; color: #ffffff !important; line-height: 1.1 !important; }
+  .mb-ph-sub    { font-size: 5.5pt !important; color: rgba(255,255,255,0.5) !important; line-height: 1.1 !important; }
+  .mb-ph-center { flex: 1 !important; text-align: center !important; font-size: 7.5pt !important; font-weight: 500 !important; color: rgba(255,255,255,0.65) !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; }
+  .mb-ph-right  { font-size: 6.5pt !important; color: rgba(255,255,255,0.35) !important; flex-shrink: 0 !important; letter-spacing: 0.5pt !important; text-transform: uppercase !important; }
 
-  .mb-ph-accent {
-    height: 2pt !important;
-    background: linear-gradient(90deg, #E26836, #f09060) !important;
-  }
-
-  .mb-ph-left {
-    display: flex !important;
-    align-items: center !important;
-    gap: 6pt !important;
-    flex-shrink: 0 !important;
-  }
-
-  .mb-ph-logo {
-    width: 17pt !important;
-    height: 17pt !important;
-    border-radius: 50% !important;
-    background: rgba(255,255,255,0.9) !important;
-    object-fit: contain !important;
-    padding: 1pt !important;
-    flex-shrink: 0 !important;
-  }
-
-  .mb-ph-brand {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 0.5pt !important;
-  }
-
-  .mb-ph-name {
-    font-size: 7.5pt !important;
-    font-weight: 700 !important;
-    color: #ffffff !important;
-    line-height: 1.1 !important;
-  }
-
-  .mb-ph-sub {
-    font-size: 5.5pt !important;
-    color: rgba(255,255,255,0.5) !important;
-    line-height: 1.1 !important;
-  }
-
-  .mb-ph-center {
-    flex: 1 !important;
-    text-align: center !important;
-    font-size: 7.5pt !important;
-    font-weight: 500 !important;
-    color: rgba(255,255,255,0.65) !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-  }
-
-  .mb-ph-right {
-    font-size: 6.5pt !important;
-    color: rgba(255,255,255,0.35) !important;
-    flex-shrink: 0 !important;
-    letter-spacing: 0.5pt !important;
-    text-transform: uppercase !important;
-  }
-
-  /* ── RUNNING FOOTER (vast onderaan elke pagina) ─────────── */
+  /* ── RUNNING FOOTER ─────────────────────────────────────────────── */
   .mb-pf {
-    display: block !important;
-    position: fixed !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    z-index: 9999 !important;
-    transform: none !important;
-    width: 100% !important;
+    display: block !important; position: fixed !important;
+    left: 0 !important; right: 0 !important; bottom: 0 !important;
+    z-index: 9999 !important; transform: none !important; width: 100% !important;
   }
-
   .mb-pf-bar {
     background: linear-gradient(90deg, #0d3348 0%, #134460 50%, #1B597B 100%) !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    padding: 4pt 14mm !important;
-    min-height: 15mm !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-    position: relative !important;
-    margin: 0 !important;
+    display: flex !important; align-items: center !important; justify-content: space-between !important;
+    padding: 4pt 14mm !important; min-height: 15mm !important;
+    width: 100% !important; box-sizing: border-box !important; position: relative !important; margin: 0 !important;
   }
+  .mb-pf-accent { position: absolute !important; top: 0 !important; left: 0 !important; right: 0 !important; height: 2pt !important; background: linear-gradient(90deg, #E26836, #f09060) !important; }
+  .mb-pf-left   { display: flex !important; align-items: center !important; gap: 7pt !important; flex: 0 0 auto !important; }
+  .mb-pf-mid    { display: block !important; flex: 1 1 auto !important; text-align: center !important; padding: 0 12pt !important; font-size: 5.5pt !important; color: rgba(255,255,255,0.5) !important; line-height: 1.4 !important; }
+  .mb-pf-right  { display: flex !important; flex-direction: column !important; align-items: flex-end !important; gap: 1pt !important; flex: 0 0 auto !important; }
+  .mb-pf-brand  { display: flex !important; flex-direction: column !important; gap: 1pt !important; }
+  .mb-pf-logo   { width: 16pt !important; height: 16pt !important; border-radius: 50% !important; background: #ffffff !important; padding: 1pt !important; flex-shrink: 0 !important; object-fit: contain !important; }
+  .mb-pf-name   { font-size: 7.5pt !important; font-weight: 700 !important; color: #ffffff !important; line-height: 1.2 !important; }
+  .mb-pf-sub    { font-size: 5.5pt !important; color: rgba(255,255,255,0.55) !important; line-height: 1.2 !important; }
+  .mb-pf-email  { font-size: 6.5pt !important; font-weight: 500 !important; color: rgba(255,255,255,0.85) !important; }
+  .mb-pf-url    { font-size: 6pt !important; color: rgba(255,255,255,0.5) !important; }
 
-  .mb-pf-accent {
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    height: 2pt !important;
-    background: linear-gradient(90deg, #E26836, #f09060) !important;
-  }
-
-  .mb-pf-left { display: flex !important; align-items: center !important; gap: 7pt !important; flex: 0 0 auto !important; }
-  .mb-pf-mid  { display: block !important; flex: 1 1 auto !important; text-align: center !important; padding: 0 12pt !important; font-size: 5.5pt !important; color: rgba(255,255,255,0.5) !important; line-height: 1.4 !important; }
-  .mb-pf-right { display: flex !important; flex-direction: column !important; align-items: flex-end !important; gap: 1pt !important; flex: 0 0 auto !important; }
-  .mb-pf-brand { display: flex !important; flex-direction: column !important; gap: 1pt !important; }
-  .mb-pf-logo  { width: 16pt !important; height: 16pt !important; border-radius: 50% !important; background: #ffffff !important; padding: 1pt !important; flex-shrink: 0 !important; object-fit: contain !important; }
-  .mb-pf-name  { font-size: 7.5pt !important; font-weight: 700 !important; color: #ffffff !important; line-height: 1.2 !important; }
-  .mb-pf-sub   { font-size: 5.5pt !important; color: rgba(255,255,255,0.55) !important; line-height: 1.2 !important; }
-  .mb-pf-email { font-size: 6.5pt !important; font-weight: 500 !important; color: rgba(255,255,255,0.85) !important; }
-  .mb-pf-url   { font-size: 6pt !important; color: rgba(255,255,255,0.5) !important; }
-
-  /* ── COVER PAGE ────────────────────────────────────────────── */
+  /* ── COVER PAGE ─────────────────────────────────────────────────── */
   .print-cover-page {
-    width: 210mm !important;
-    height: 297mm !important;
-    min-height: 297mm !important;
-    max-height: 297mm !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow: hidden !important;
-    page-break-after: always !important;
-    break-after: page !important;
-    position: relative !important;
-    z-index: 99999 !important;
-    background: #0d1f2d !important;
+    width: 210mm !important; height: 297mm !important; min-height: 297mm !important; max-height: 297mm !important;
+    margin: 0 !important; padding: 0 !important; overflow: hidden !important;
+    page-break-after: always !important; break-after: page !important;
+    position: relative !important; z-index: 99999 !important; background: #0d1f2d !important;
   }
-
-  .pc-wrap {
-    position: relative !important;
-    width: 100% !important;
-    height: 297mm !important;
-    display: flex !important;
-    flex-direction: column !important;
-    background: #0d1f2d !important;
-    overflow: hidden !important;
-  }
-
+  .pc-wrap { position: relative !important; width: 100% !important; height: 297mm !important; display: flex !important; flex-direction: column !important; background: #0d1f2d !important; overflow: hidden !important; }
   .pc-hero { position: absolute !important; inset: 0 !important; width: 100% !important; height: 100% !important; z-index: 0 !important; }
   .pc-hero-img { width: 100% !important; height: 100% !important; object-fit: cover !important; object-position: center 40% !important; display: block !important; opacity: 0.55 !important; }
   .pc-hero-empty { background: #0d1f2d !important; }
-  .pc-hero-grid {
-    position: absolute !important; inset: 0 !important;
-    background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px) !important;
-    background-size: 20pt 20pt !important;
-  }
-  .pc-hero-gradient {
-    position: absolute !important; inset: 0 !important;
-    background: linear-gradient(180deg, rgba(13,31,45,0.85) 0%, rgba(13,31,45,0.2) 35%, rgba(13,31,45,0.2) 55%, rgba(13,31,45,0.92) 100%) !important;
-  }
+  .pc-hero-grid { position: absolute !important; inset: 0 !important; background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px) !important; background-size: 20pt 20pt !important; }
+  .pc-hero-gradient { position: absolute !important; inset: 0 !important; background: linear-gradient(180deg, rgba(13,31,45,0.85) 0%, rgba(13,31,45,0.2) 35%, rgba(13,31,45,0.2) 55%, rgba(13,31,45,0.92) 100%) !important; }
   .pc-overlay { position: absolute !important; inset: 0 !important; z-index: 2 !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; }
   .pc-top-bar { display: flex !important; align-items: center !important; justify-content: space-between !important; padding: 18pt 24pt 16pt !important; border-bottom: 0.5pt solid rgba(255,255,255,0.1) !important; }
   .pc-logo-row { display: flex !important; align-items: center !important; gap: 10pt !important; }
@@ -1826,414 +1658,206 @@ select.finput {
   .pc-label-arrow { display: flex !important; align-items: center !important; opacity: 0.6 !important; }
   .pc-label-desc { font-size: 8pt !important; color: rgba(255,255,255,0.5) !important; font-weight: 500 !important; letter-spacing: 0.5pt !important; margin-left: 4pt !important; }
   .pc-bottom-bar { display: flex !important; align-items: center !important; justify-content: space-between !important; padding: 8pt 24pt !important; border-top: 0.5pt solid rgba(255,255,255,0.1) !important; background: rgba(0,0,0,0.25) !important; }
-  .pc-bottom-left { font-size: 7pt !important; color: rgba(255,255,255,0.35) !important; letter-spacing: 0.3pt !important; }
+  .pc-bottom-left  { font-size: 7pt !important; color: rgba(255,255,255,0.35) !important; letter-spacing: 0.3pt !important; }
   .pc-bottom-right { font-size: 7pt !important; color: rgba(255,255,255,0.45) !important; font-weight: 500 !important; }
 
-  /* ── RAPPORT HEADER (blauwe titelbalk, pagina 2) ────────── */
+  /* ── RAPPORT HEADER (blauwe titelbalk pagina 2) ─────────────────── */
   .rpt-hdr {
     background: linear-gradient(135deg, #0d3348 0%, #134460 55%, #1B597B 100%) !important;
-    padding: 14pt 16pt 12pt !important;
-    border-radius: 0 !important;
+    padding: 14pt 16pt 12pt !important; border-radius: 0 !important;
     margin: 0 0 8pt 0 !important;
-    page-break-after: avoid !important;
-    break-after: avoid !important;
-    overflow: hidden !important;
-    position: relative !important;
+    page-break-after: avoid !important; break-after: avoid !important;
+    overflow: hidden !important; position: relative !important;
   }
-
   .rpt-hdr::before { display: none !important; }
-  .rpt-hdr::after { background: #E26836 !important; height: 3pt !important; }
-  .rpt-hdr-top { display: flex !important; justify-content: space-between !important; align-items: flex-start !important; margin-bottom: 6pt !important; }
-  .rpt-logo img { filter: none !important; background: white !important; border-radius: 50% !important; width: 22pt !important; height: 22pt !important; object-fit: contain !important; padding: 1.5pt !important; }
+  .rpt-hdr::after  { background: #E26836 !important; height: 3pt !important; }
+  .rpt-hdr-top     { display: flex !important; justify-content: space-between !important; align-items: flex-start !important; margin-bottom: 6pt !important; }
+  .rpt-logo img    { filter: none !important; background: white !important; border-radius: 50% !important; width: 22pt !important; height: 22pt !important; object-fit: contain !important; padding: 1.5pt !important; }
   .rpt-logo-name, .rpt-logo-sub { color: white !important; }
-  .rpt-date { color: rgba(255,255,255,0.7) !important; font-size: 7.5pt !important; }
-  .rpt-pretitle { color: rgba(255,255,255,0.6) !important; font-size: 7.5pt !important; letter-spacing: 1.5pt !important; }
-  .rpt-title { color: white !important; font-size: 18pt !important; font-weight: 600 !important; line-height: 1.08 !important; }
-  .rpt-address { color: rgba(255,255,255,0.75) !important; font-size: 8.5pt !important; line-height: 1.35 !important; }
+  .rpt-date        { color: rgba(255,255,255,0.7) !important; font-size: 7.5pt !important; }
+  .rpt-pretitle    { color: rgba(255,255,255,0.6) !important; font-size: 7.5pt !important; letter-spacing: 1.5pt !important; }
+  .rpt-title       { color: white !important; font-size: 18pt !important; font-weight: 600 !important; line-height: 1.08 !important; }
+  .rpt-address     { color: rgba(255,255,255,0.75) !important; font-size: 8.5pt !important; line-height: 1.35 !important; }
+  .label-track     { margin-top: 8pt !important; padding: 6pt 10pt !important; background: rgba(255,255,255,0.12) !important; border-radius: 5pt !important; display: flex !important; align-items: center !important; gap: 8pt !important; }
+  .label-box       { padding: 4pt 10pt !important; font-size: 13pt !important; }
+  .label-caption   { color: rgba(255,255,255,0.7) !important; font-size: 8pt !important; }
+  .label-arrow     { color: rgba(255,255,255,0.8) !important; font-size: 15pt !important; }
 
-  /* Label track in hdr */
-  .label-track { margin-top: 8pt !important; padding: 6pt 10pt !important; background: rgba(255,255,255,0.12) !important; border-radius: 5pt !important; display: flex !important; align-items: center !important; gap: 8pt !important; }
-  .label-box { padding: 4pt 10pt !important; font-size: 13pt !important; }
-  .label-caption { color: rgba(255,255,255,0.7) !important; font-size: 8pt !important; }
-  .label-arrow { color: rgba(255,255,255,0.8) !important; font-size: 15pt !important; }
-
-  /* ── SECTIE HEADERS ─────────────────────────────────────── */
-  .sec-head,
-  .rpt-section-head {
-    display: flex !important;
-    align-items: center !important;
-    gap: 8pt !important;
-    margin: 10pt 0 6pt !important;
-    padding: 0 !important;
-    border: none !important;
-    background: none !important;
-    page-break-after: avoid !important;
-    break-after: avoid !important;
+  /* ── SECTIE HEADERS ─────────────────────────────────────────────── */
+  .sec-head, .rpt-section-head {
+    display: flex !important; align-items: center !important; gap: 8pt !important;
+    margin: 10pt 0 6pt !important; padding: 0 !important; border: none !important; background: none !important;
+    page-break-after: avoid !important; break-after: avoid !important;
   }
-
   .sec-label {
-    font-size: 6.8pt !important;
-    font-weight: 700 !important;
-    letter-spacing: 1.6pt !important;
-    text-transform: uppercase !important;
-    color: #1B597B !important;
-    white-space: nowrap !important;
-    border-left: 2.5pt solid #E26836 !important;
-    padding-left: 6pt !important;
-    font-family: 'IBM Plex Sans', sans-serif !important;
+    font-size: 6.8pt !important; font-weight: 700 !important; letter-spacing: 1.6pt !important;
+    text-transform: uppercase !important; color: #1B597B !important; white-space: nowrap !important;
+    border-left: 2.5pt solid #E26836 !important; padding-left: 6pt !important;
   }
+  .sec-line { flex: 1 !important; height: 0.5pt !important; background: #D9D6D2 !important; }
 
-  .sec-line {
-    flex: 1 !important;
-    height: 0.5pt !important;
-    background: #D9D6D2 !important;
-  }
+  /* Secties die altijd boven aan een pagina starten: topruimte */
+  #measuresSection, #nettoSection, #subsidiesSection, #phasesSection { padding-top: 4mm !important; }
+  #measuresSection > .sec-head:first-child, #measuresSection > .rpt-section-head:first-child,
+  #nettoSection > .sec-head:first-child,    #nettoSection > .rpt-section-head:first-child,
+  #subsidiesSection > .sec-head:first-child,#subsidiesSection > .rpt-section-head:first-child,
+  #phasesSection > .sec-head:first-child,   #phasesSection > .rpt-section-head:first-child { margin-top: 0 !important; }
 
-  /* Secties die altijd boven aan een pagina starten: veilige topruimte */
-  #measuresSection,
-  #nettoSection,
-  #subsidiesSection,
-  #phasesSection {
-    padding-top: 4mm !important;
-  }
-
-  /* Direct eerste sectiekop na page-break: geen dubbele marge */
-  #measuresSection > .sec-head:first-child,
-  #measuresSection > .rpt-section-head:first-child,
-  #nettoSection > .sec-head:first-child,
-  #nettoSection > .rpt-section-head:first-child,
-  #subsidiesSection > .sec-head:first-child,
-  #subsidiesSection > .rpt-section-head:first-child,
-  #phasesSection > .sec-head:first-child,
-  #phasesSection > .rpt-section-head:first-child {
-    margin-top: 0 !important;
-  }
-
-  /* ── INTRO TEKST ────────────────────────────────────────── */
+  /* ── INTRO TEKST ────────────────────────────────────────────────── */
   .intro-text {
-    font-size: 8.5pt !important;
-    line-height: 1.6 !important;
-    padding: 9pt 12pt !important;
-    margin-bottom: 8pt !important;
-    background: #F4F8FB !important;
-    border-left: 2.5pt solid #1B597B !important;
-    border-radius: 0 !important;
-    border-top: none !important;
-    border-right: none !important;
-    border-bottom: none !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
+    font-size: 8.5pt !important; line-height: 1.6 !important; padding: 9pt 12pt !important; margin-bottom: 8pt !important;
+    background: #F4F8FB !important; border-left: 2.5pt solid #1B597B !important;
+    border-radius: 0 !important; border-top: none !important; border-right: none !important; border-bottom: none !important;
+    page-break-inside: avoid !important; break-inside: avoid !important;
   }
 
-  /* ── KPI PANEL ──────────────────────────────────────────── */
+  /* ── KPI PANEL ──────────────────────────────────────────────────── */
   .kpi-panel {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr 1fr !important;
-    border: 1pt solid #E3DDD8 !important;
-    border-top: none !important;
-    overflow: visible !important;
-    margin-bottom: 9pt !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-    background: #ffffff !important;
-    border-radius: 0 !important;
+    display: grid !important; grid-template-columns: 1fr 1fr 1fr !important;
+    border: 1pt solid #E3DDD8 !important; border-top: none !important;
+    overflow: visible !important; margin-bottom: 9pt !important;
+    page-break-inside: avoid !important; break-inside: avoid !important;
+    background: #ffffff !important; border-radius: 0 !important;
   }
-
-  .kpi-cell {
-    padding: 10pt 12pt !important;
-    background: #ffffff !important;
-    border-right: 1pt solid #E3DDD8 !important;
-    border-top: 3pt solid #E3DDD8 !important;
-  }
-
-  .kpi-c1 { border-top-color: #1B597B !important; }
-  .kpi-c2 { border-top-color: #E26836 !important; }
-  .kpi-c3 { border-top-color: #2A7A50 !important; }
+  .kpi-cell        { padding: 10pt 12pt !important; background: #ffffff !important; border-right: 1pt solid #E3DDD8 !important; border-top: 3pt solid #E3DDD8 !important; }
+  .kpi-c1          { border-top-color: #1B597B !important; }
+  .kpi-c2          { border-top-color: #E26836 !important; }
+  .kpi-c3          { border-top-color: #2A7A50 !important; }
   .kpi-cell:last-child { border-right: none !important; }
   .kpi-cell::before { display: none !important; }
-
-  .kpi-lbl { font-size: 6.5pt !important; letter-spacing: 1.2pt !important; color: #8B8B8B !important; margin-bottom: 6pt !important; font-weight: 600 !important; text-transform: uppercase !important; display: block !important; }
-  .kpi-num { font-size: 19pt !important; font-weight: 700 !important; line-height: 1 !important; color: #141414 !important; }
+  .kpi-lbl         { font-size: 6.5pt !important; letter-spacing: 1.2pt !important; color: #8B8B8B !important; margin-bottom: 6pt !important; font-weight: 600 !important; text-transform: uppercase !important; display: block !important; }
+  .kpi-num         { font-size: 19pt !important; font-weight: 700 !important; line-height: 1 !important; color: #141414 !important; }
   .kpi-c1 .kpi-num { color: #1B597B !important; }
   .kpi-c2 .kpi-num, .kpi-c2 .warn { color: #E26836 !important; }
   .kpi-c3 .kpi-num, .kpi-c3 .good { color: #2A7A50 !important; }
-  .kpi-sub { font-size: 7pt !important; color: #A0A0A0 !important; margin-top: 4pt !important; line-height: 1.4 !important; }
-
-  .kpi-edit-input { display: none !important; }
-  .kpi-edit-hint { display: none !important; }
-  .kpi-print-val { display: inline !important; font-size: 19pt !important; font-weight: 700 !important; color: #1B597B !important; font-family: 'IBM Plex Sans', sans-serif !important; }
+  .kpi-sub         { font-size: 7pt !important; color: #A0A0A0 !important; margin-top: 4pt !important; line-height: 1.4 !important; }
+  .kpi-edit-input  { display: none !important; }
+  .kpi-edit-hint   { display: none !important; }
+  .kpi-print-val   { display: inline !important; font-size: 19pt !important; font-weight: 700 !important; color: #1B597B !important; font-family: 'IBM Plex Sans', sans-serif !important; }
   .kpi-edit-prefix { font-size: 17pt !important; font-weight: 700 !important; color: #1B597B !important; }
-  .kpi-edit-wrap { display: flex !important; align-items: baseline !important; gap: 2pt !important; }
+  .kpi-edit-wrap   { display: flex !important; align-items: baseline !important; gap: 2pt !important; }
 
-  /* ── LABEL VIS CARD ─────────────────────────────────────── */
-  .label-vis-card {
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-  }
-
-  /* ── STERKE/AANDACHT PUNTEN GRID ────────────────────────── */
-  .punten-grid {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 7pt !important;
-    margin-bottom: 9pt !important;
-  }
-
-  .punten-block {
-    padding: 9pt 11pt !important;
-    border-radius: 3pt !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-  }
-
-  .punten-block.sterke {
-    background: #F0F9F4 !important;
-    border: 0.5pt solid #B8D9C6 !important;
-  }
-
-  .punten-block.aandacht {
-    background: #FEF6F1 !important;
-    border: 0.5pt solid #F2C9B4 !important;
-  }
-
+  /* ── PUNTEN GRID ────────────────────────────────────────────────── */
+  .punten-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 7pt !important; margin-bottom: 9pt !important; }
+  .punten-block { padding: 9pt 11pt !important; border-radius: 3pt !important; page-break-inside: avoid !important; break-inside: avoid !important; }
+  .punten-block.sterke  { background: #F0F9F4 !important; border: 0.5pt solid #B8D9C6 !important; }
+  .punten-block.aandacht { background: #FEF6F1 !important; border: 0.5pt solid #F2C9B4 !important; }
   .punten-title { font-size: 7pt !important; letter-spacing: 1.2pt !important; font-weight: 700 !important; }
-  .punten-list li { font-size: 7.8pt !important; padding: 4pt 0 !important; line-height: 1.5 !important; border-bottom-color: rgba(0,0,0,0.06) !important; }
+  .punten-list li { font-size: 7.8pt !important; padding: 4pt 0 !important; line-height: 1.5 !important; }
 
-  /* ── MAATREGELENTABEL ───────────────────────────────────── */
-  #measuresSection {
-    page-break-before: always !important;
-    break-before: page !important;
-  }
-
+  /* ── MAATREGELEN TABEL ──────────────────────────────────────────── */
+  #measuresSection { page-break-before: always !important; break-before: page !important; }
   .rt {
-    width: 100% !important;
-    border-collapse: collapse !important;
-    font-size: 8pt !important;
-    margin-bottom: 7pt !important;
-    table-layout: fixed !important;
-    display: table !important;
+    width: 100% !important; border-collapse: collapse !important; font-size: 8pt !important;
+    margin-bottom: 7pt !important; table-layout: fixed !important; display: table !important;
   }
-
-  .rt thead {
-    border-top: 2pt solid #1B597B !important;
-    border-bottom: 1pt solid #CFD8DC !important;
-    display: table-header-group !important;
-  }
-
+  .rt thead { border-top: 2pt solid #1B597B !important; border-bottom: 1pt solid #CFD8DC !important; display: table-header-group !important; }
   .rt thead tr { background: #F0F4F7 !important; }
-  .rt th {
-    color: #3A3A3A !important;
-    font-size: 6.2pt !important;
-    padding: 5pt 6pt !important;
-    letter-spacing: 0.8pt !important;
-    font-weight: 700 !important;
-    text-align: left !important;
-    background: #F0F4F7 !important;
-    white-space: nowrap !important;
-  }
-
+  .rt th { color: #3A3A3A !important; font-size: 6.2pt !important; padding: 5pt 6pt !important; letter-spacing: 0.8pt !important; font-weight: 700 !important; text-align: left !important; background: #F0F4F7 !important; white-space: nowrap !important; }
   .rt tbody { display: table-row-group !important; border-bottom: 1pt solid #CFD8DC !important; }
-  .rt tr { display: table-row !important; page-break-inside: avoid !important; break-inside: avoid !important; }
+  .rt tr    { display: table-row !important; page-break-inside: avoid !important; break-inside: avoid !important; }
   .rt tbody tr:nth-child(even) td { background: #F9F8F6 !important; }
-  .rt tbody tr:nth-child(odd) td { background: #ffffff !important; }
-  .rt td {
-    display: table-cell !important;
-    padding: 5.5pt 6pt !important;
-    border-bottom: 0.4pt solid #EDE8E3 !important;
-    vertical-align: middle !important;
-    font-size: 7.8pt !important;
-    line-height: 1.3 !important;
-  }
-
+  .rt tbody tr:nth-child(odd)  td { background: #ffffff !important; }
+  .rt td { display: table-cell !important; padding: 5.5pt 6pt !important; border-bottom: 0.4pt solid #EDE8E3 !important; vertical-align: middle !important; font-size: 7.8pt !important; line-height: 1.3 !important; }
   .rt tbody tr:last-child td { border-bottom: none !important; }
-
-  /* Kolombreedte voor maatregelentabel */
   .rt th:nth-child(2), .rt td:nth-child(2) { width: 32% !important; }
   .rt th:nth-child(3), .rt td:nth-child(3) { width: 16% !important; }
   .rt th:nth-child(4), .rt td:nth-child(4) { width: 16% !important; }
   .rt th:nth-child(5), .rt td:nth-child(5) { width: 21% !important; }
   .rt th:nth-child(6), .rt td:nth-child(6) { width: 15% !important; }
-
-  .m-icon { display: none !important; }
-  .m-name { font-size: 8pt !important; font-weight: 600 !important; color: #141414 !important; display: block !important; line-height: 1.3 !important; }
-  .m-sub  { font-size: 6.5pt !important; color: #E26836 !important; font-weight: 600 !important; margin-top: 1pt !important; display: block !important; letter-spacing: 0.3pt !important; }
-  .m-save { color: #2A7A50 !important; font-weight: 700 !important; font-size: 8pt !important; }
+  .m-icon   { display: none !important; }
+  .m-name   { font-size: 8pt !important; font-weight: 600 !important; color: #141414 !important; display: block !important; line-height: 1.3 !important; }
+  .m-sub    { font-size: 6.5pt !important; color: #E26836 !important; font-weight: 600 !important; margin-top: 1pt !important; display: block !important; }
+  .m-save   { color: #2A7A50 !important; font-weight: 700 !important; font-size: 8pt !important; }
   .m-invest { font-size: 7.8pt !important; color: #3A3A3A !important; font-weight: 500 !important; }
-  .m-tvt  { color: #1B597B !important; font-weight: 700 !important; font-size: 8pt !important; }
-  .m-co2  { color: #8B8B8B !important; font-size: 7.5pt !important; }
+  .m-tvt    { color: #1B597B !important; font-weight: 700 !important; font-size: 8pt !important; }
+  .m-co2    { color: #8B8B8B !important; font-size: 7.5pt !important; }
 
-  /* ── LIVE TOTALEN BALK ──────────────────────────────────── */
+  /* ── TOTALS / LIVE TOTALEN ──────────────────────────────────────── */
   .live-totals-bar {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr 1fr !important;
-    background: #F0F4F7 !important;
-    border: 1pt solid #CFD8DC !important;
-    border-top: 2pt solid #1B597B !important;
-    border-radius: 3pt !important;
-    margin-bottom: 8pt !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
+    display: grid !important; grid-template-columns: 1fr 1fr 1fr !important;
+    background: #F0F4F7 !important; border: 1pt solid #CFD8DC !important; border-top: 2pt solid #1B597B !important;
+    border-radius: 3pt !important; margin-bottom: 8pt !important; page-break-inside: avoid !important; break-inside: avoid !important;
   }
-
-  .lt-cell { padding: 8pt 10pt !important; border-right: 0.5pt solid #DDD8D2 !important; }
+  .lt-cell          { padding: 8pt 10pt !important; border-right: 0.5pt solid #DDD8D2 !important; }
   .lt-cell:last-child { border-right: none !important; }
-  .lt-cell::before { display: none !important; }
-  .lt-lbl { font-size: 6.5pt !important; color: #8B8B8B !important; letter-spacing: 1pt !important; margin-bottom: 3pt !important; font-weight: 600 !important; }
-  .lt-val { font-size: 14pt !important; font-weight: 700 !important; color: #141414 !important; }
-  .lt-val.orange { color: #E26836 !important; }
-  .lt-val.green  { color: #2A7A50 !important; }
-  .lt-sub { font-size: 7pt !important; color: #A0A0A0 !important; margin-top: 2pt !important; }
+  .lt-cell::before  { display: none !important; }
+  .lt-lbl           { font-size: 6.5pt !important; color: #8B8B8B !important; letter-spacing: 1pt !important; margin-bottom: 3pt !important; font-weight: 600 !important; }
+  .lt-val           { font-size: 14pt !important; font-weight: 700 !important; color: #141414 !important; }
+  .lt-val.orange    { color: #E26836 !important; }
+  .lt-val.green     { color: #2A7A50 !important; }
+  .lt-sub           { font-size: 7pt !important; color: #A0A0A0 !important; margin-top: 2pt !important; }
 
-  /* ── TOTALS BLOCK ───────────────────────────────────────── */
   .totals-block {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr 1fr !important;
-    gap: 0 !important;
-    margin-bottom: 8pt !important;
-    background: #F0F4F7 !important;
-    border: 1pt solid #CFD8DC !important;
-    border-top: 2pt solid #1B597B !important;
-    border-radius: 3pt !important;
-    overflow: hidden !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
+    display: grid !important; grid-template-columns: 1fr 1fr 1fr !important; gap: 0 !important;
+    margin-bottom: 8pt !important; background: #F0F4F7 !important; border: 1pt solid #CFD8DC !important;
+    border-top: 2pt solid #1B597B !important; border-radius: 3pt !important; overflow: hidden !important;
+    page-break-inside: avoid !important; break-inside: avoid !important;
   }
-
   .totals-block > div { padding: 9pt 12pt !important; background: transparent !important; border-right: 0.5pt solid #DDD8D2 !important; }
   .totals-block > div:last-child { border-right: none !important; }
   .total-label { font-size: 6.5pt !important; color: #8B8B8B !important; letter-spacing: 1pt !important; margin-bottom: 3pt !important; text-transform: uppercase !important; font-weight: 600 !important; }
-  .total-val   { font-size: 15pt !important; font-weight: 700 !important; color: #141414 !important; letter-spacing: -0.3pt !important; }
+  .total-val   { font-size: 15pt !important; font-weight: 700 !important; color: #141414 !important; }
   .total-val.orange { color: #E26836 !important; }
   .total-sub   { font-size: 7pt !important; color: #A0A0A0 !important; margin-top: 2pt !important; }
 
-  /* ── GRAFIEKEN ──────────────────────────────────────────── */
-  #maatregelenChartSection,
-  #chartSection {
-    page-break-before: avoid !important;
-    break-before: avoid !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-    margin-bottom: 8pt !important;
+  /* ── GRAFIEKEN ──────────────────────────────────────────────────── */
+  #maatregelenChartSection, #chartSection {
+    page-break-before: avoid !important; break-before: avoid !important;
+    page-break-inside: avoid !important; break-inside: avoid !important; margin-bottom: 8pt !important;
   }
-
   .chart-section { page-break-inside: avoid !important; break-inside: avoid !important; margin-bottom: 8pt !important; }
-
   .chart-wrap {
-    width: 100% !important;
-    max-width: 100% !important;
-    padding: 9pt 11pt 8pt !important;
-    border: 1pt solid #E3DDD8 !important;
-    border-top: 2pt solid #1B597B !important;
-    border-radius: 3pt !important;
-    background: #ffffff !important;
-    overflow: hidden !important;
-    box-sizing: border-box !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
+    width: 100% !important; max-width: 100% !important; padding: 9pt 11pt 8pt !important;
+    border: 1pt solid #E3DDD8 !important; border-top: 2pt solid #1B597B !important;
+    border-radius: 3pt !important; background: #ffffff !important;
+    overflow: hidden !important; box-sizing: border-box !important;
+    page-break-inside: avoid !important; break-inside: avoid !important;
   }
-
   .chart-canvas-wrap {
-    width: 100% !important;
-    height: 148pt !important;
-    min-height: 148pt !important;
-    max-height: 148pt !important;
-    overflow: hidden !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    box-sizing: border-box !important;
+    width: 100% !important; height: 148pt !important; min-height: 148pt !important; max-height: 148pt !important;
+    overflow: hidden !important; padding: 0 !important; margin: 0 !important; box-sizing: border-box !important;
   }
-
-  .chart-canvas-wrap canvas {
-    width: 100% !important;
-    max-width: 100% !important;
-    height: 148pt !important;
-    max-height: 148pt !important;
-  }
-
-  .chart-print-img {
-    width: 100% !important;
-    max-width: 100% !important;
-    height: auto !important;
-    max-height: 148pt !important;
-    object-fit: contain !important;
-    display: block !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-  }
-
-  /* Voorkom dubbele grafiek */
+  .chart-canvas-wrap canvas    { width: 100% !important; max-width: 100% !important; height: 148pt !important; max-height: 148pt !important; }
+  .chart-print-img             { width: 100% !important; max-width: 100% !important; height: auto !important; max-height: 148pt !important; object-fit: contain !important; display: block !important; page-break-inside: avoid !important; break-inside: avoid !important; }
   .chart-canvas-wrap:has(.chart-print-img) canvas { display: none !important; }
-
-  .chart-legend { margin-top: 5pt !important; display: flex !important; gap: 14pt !important; }
-  .chart-legend-item { font-size: 7pt !important; }
-  .chart-breakeven-badge { font-size: 7pt !important; padding: 3pt 8pt !important; background: #EBF5EF !important; color: #2A7A50 !important; }
+  .chart-legend                { margin-top: 5pt !important; display: flex !important; gap: 14pt !important; }
+  .chart-legend-item           { font-size: 7pt !important; }
+  .chart-breakeven-badge       { font-size: 7pt !important; padding: 3pt 8pt !important; background: #EBF5EF !important; color: #2A7A50 !important; }
   #chartNoteFlat, #chartNoteStijg { display: block !important; font-size: 6.5pt !important; padding-top: 4pt !important; margin-top: 4pt !important; line-height: 1.35 !important; }
-  .chart-tog-group { display: none !important; }
-  .chart-explainer { display: none !important; }
-  #chartSliderWrap { display: none !important; }
   #chartKpiBe, #chartKpiBesp, #chartKpiRoi { font-size: 13pt !important; }
 
-  /* ── NETTO INVESTERING (pagina 3) ───────────────────────── */
-  #nettoSection {
-    page-break-before: always !important;
-    break-before: page !important;
-  }
-
+  /* ── NETTO INVESTERING (pagina 3) ───────────────────────────────── */
+  #nettoSection { page-break-before: always !important; break-before: page !important; }
   .netto-table {
-    width: 100% !important;
-    font-size: 8.5pt !important;
-    border-collapse: collapse !important;
-    margin-bottom: 9pt !important;
-    table-layout: fixed !important;
+    width: 100% !important; font-size: 8.5pt !important; border-collapse: collapse !important;
+    margin-bottom: 9pt !important; table-layout: fixed !important;
   }
-
-  .netto-table thead { border-top: 2pt solid #1B597B !important; border-bottom: 1pt solid #CFD8DC !important; }
-  .netto-table thead tr { background: #F0F4F7 !important; }
-  .netto-table th { color: #3A3A3A !important; font-size: 6.5pt !important; padding: 5pt 8pt !important; letter-spacing: 1pt !important; font-weight: 700 !important; border-bottom: none !important; background: #F0F4F7 !important; }
+  .netto-table thead            { border-top: 2pt solid #1B597B !important; border-bottom: 1pt solid #CFD8DC !important; }
+  .netto-table thead tr         { background: #F0F4F7 !important; }
+  .netto-table th               { color: #3A3A3A !important; font-size: 6.5pt !important; padding: 5pt 8pt !important; letter-spacing: 1pt !important; font-weight: 700 !important; border-bottom: none !important; background: #F0F4F7 !important; }
   .netto-table tbody tr:nth-child(even) td { background: #F9F8F6 !important; }
-  .netto-table td { padding: 6pt 8pt !important; border-bottom: 0.4pt solid #EDE8E3 !important; font-size: 8.5pt !important; }
-  .netto-table td:last-child { text-align: right !important; font-weight: 600 !important; }
+  .netto-table td               { padding: 6pt 8pt !important; border-bottom: 0.4pt solid #EDE8E3 !important; font-size: 8.5pt !important; }
+  .netto-table td:last-child    { text-align: right !important; font-weight: 600 !important; }
   .netto-table tr:last-child td { background: #EEF4F8 !important; font-weight: 700 !important; color: #1B597B !important; font-size: 9.5pt !important; border-top: 1.5pt solid #1B597B !important; border-bottom: none !important; }
-  .netto-table .sub-row td { color: #2A7A50 !important; }
-  .netto-table tr { page-break-inside: avoid !important; break-inside: avoid !important; }
+  .netto-table .sub-row td      { color: #2A7A50 !important; }
+  .netto-table tr               { page-break-inside: avoid !important; break-inside: avoid !important; }
 
-  /* ── RENTE STRIP ────────────────────────────────────────── */
+  /* ── RENTE STRIP ────────────────────────────────────────────────── */
   .rente-strip {
-    background: #F4F8FB !important;
-    padding: 9pt 14pt !important;
-    margin-bottom: 9pt !important;
-    border-radius: 3pt !important;
-    border: 1pt solid #CFD8DC !important;
-    border-left: 3pt solid #1B597B !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
+    background: #F4F8FB !important; padding: 9pt 14pt !important; margin-bottom: 9pt !important;
+    border-radius: 3pt !important; border: 1pt solid #CFD8DC !important; border-left: 3pt solid #1B597B !important;
+    display: flex !important; align-items: center !important; justify-content: space-between !important;
+    page-break-inside: avoid !important; break-inside: avoid !important;
   }
+  .rente-num        { font-size: 22pt !important; color: #1B597B !important; font-weight: 700 !important; }
+  .rente-lbl        { font-size: 7pt !important; color: #1B597B !important; letter-spacing: 1pt !important; opacity: 0.7 !important; }
+  .rente-note       { font-size: 7.5pt !important; color: #6B6B6B !important; }
+  .rente-disclaimer { font-size: 7pt !important; color: #A0A0A0 !important; font-style: italic !important; text-align: right !important; }
 
-  .rente-num         { font-size: 22pt !important; color: #1B597B !important; font-weight: 700 !important; }
-  .rente-lbl         { font-size: 7pt !important; color: #1B597B !important; letter-spacing: 1pt !important; opacity: 0.7 !important; }
-  .rente-note        { font-size: 7.5pt !important; color: #6B6B6B !important; }
-  .rente-disclaimer  { font-size: 7pt !important; color: #A0A0A0 !important; font-style: italic !important; text-align: right !important; }
-
-  /* ── MAANDLASTEN (direct na netto, zelfde pagina 3) ─────── */
-  #maandlastenSection {
-    page-break-before: avoid !important;
-    break-before: avoid !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-  }
-
-  .maandlasten-block {
-    border: 1pt solid #E3DDD8 !important;
-    margin-bottom: 9pt !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-    border-radius: 3pt !important;
-    overflow: hidden !important;
-  }
-
+  /* ── MAANDLASTEN ────────────────────────────────────────────────── */
+  #maandlastenSection { page-break-before: avoid !important; break-before: avoid !important; page-break-inside: avoid !important; break-inside: avoid !important; }
+  .maandlasten-block  { border: 1pt solid #E3DDD8 !important; margin-bottom: 9pt !important; page-break-inside: avoid !important; break-inside: avoid !important; border-radius: 3pt !important; overflow: hidden !important; }
   .maandlasten-head   { padding: 8pt 12pt !important; }
   .maandlasten-titel  { font-size: 10pt !important; }
   .maandlasten-sub    { font-size: 7.5pt !important; }
@@ -2250,40 +1874,12 @@ select.finput {
   .ml-detail          { margin-top: 7pt !important; padding-top: 6pt !important; font-size: 7.8pt !important; }
   .ml-detail-row      { padding: 1pt 0 !important; }
 
-  /* ── SUBSIDIES (pagina 4+) ──────────────────────────────── */
-  #subsidiesSection {
-    page-break-before: always !important;
-    break-before: page !important;
-  }
-
-  .sub-grid {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 7pt !important;
-    margin-bottom: 0 !important;
-    margin-top: 3pt !important;
-  }
-
-  .sub-list {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    column-gap: 8pt !important;
-    row-gap: 7pt !important;
-  }
-
-  .sub-card-new,
-  .sub-list-item {
-    border: 1pt solid #E3DDD8 !important;
-    border-top: 2.5pt solid #1B597B !important;
-    border-radius: 3pt !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-    overflow: hidden !important;
-    background: #ffffff !important;
-  }
-
-  .sub-list-item { padding: 7pt 8pt !important; }
-
+  /* ── SUBSIDIES (pagina 4) ───────────────────────────────────────── */
+  #subsidiesSection { page-break-before: always !important; break-before: page !important; }
+  .sub-grid  { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 7pt !important; margin-top: 3pt !important; }
+  .sub-list  { display: grid !important; grid-template-columns: 1fr 1fr !important; column-gap: 8pt !important; row-gap: 7pt !important; }
+  .sub-card-new, .sub-list-item { border: 1pt solid #E3DDD8 !important; border-top: 2.5pt solid #1B597B !important; border-radius: 3pt !important; page-break-inside: avoid !important; break-inside: avoid !important; overflow: hidden !important; background: #ffffff !important; }
+  .sub-list-item   { padding: 7pt 8pt !important; }
   .sub-card-header { background: #F4F8FB !important; padding: 7pt 10pt 6pt !important; }
   .sub-badge-new   { font-size: 6.5pt !important; padding: 2pt 7pt !important; background: #1B597B !important; color: white !important; border-radius: 20pt !important; }
   .sub-name-new    { font-size: 8.5pt !important; font-weight: 700 !important; color: #141414 !important; }
@@ -2297,42 +1893,17 @@ select.finput {
   .sub-footer-row  { padding: 5pt 10pt !important; background: #F9F8F6 !important; }
   .sub-combine     { font-size: 7pt !important; padding: 2pt 6pt !important; background: #EBF5EF !important; color: #2A7A50 !important; }
   .sub-nocombine   { font-size: 7pt !important; padding: 2pt 6pt !important; }
-  .sub-url         { display: none !important; }
+  .sub-item        { border: 0.5pt solid #E3DDD8 !important; padding: 8pt 10pt !important; margin-bottom: 6pt !important; border-radius: 3pt !important; page-break-inside: avoid !important; break-inside: avoid !important; }
+  .sub-badge       { background: #1B597B !important; color: white !important; font-size: 7pt !important; padding: 2pt 6pt !important; border-radius: 3pt !important; }
+  .sub-name        { font-size: 9.5pt !important; font-weight: 600 !important; }
+  .sub-desc        { font-size: 8.5pt !important; color: #3A3A3A !important; }
   .sub-list-name   { font-size: 7.9pt !important; line-height: 1.22 !important; }
   .sub-list-type, .sub-list-voordeel, .sub-list-alert, .sub-list-combine, .sub-list-step { font-size: 6.6pt !important; line-height: 1.28 !important; }
 
-  /* Oudere subsidie items */
-  .sub-item { border: 0.5pt solid #E3DDD8 !important; padding: 8pt 10pt !important; margin-bottom: 6pt !important; border-radius: 3pt !important; page-break-inside: avoid !important; break-inside: avoid !important; }
-  .sub-badge { background: #1B597B !important; color: white !important; font-size: 7pt !important; padding: 2pt 6pt !important; border-radius: 3pt !important; }
-  .sub-name  { font-size: 9.5pt !important; font-weight: 600 !important; }
-  .sub-desc  { font-size: 8.5pt !important; color: #3A3A3A !important; }
-  .sub-alert.old { font-size: 8pt !important; background: #FBF0F0 !important; color: #8B2828 !important; border-radius: 3pt !important; padding: 4pt 7pt !important; margin: 5pt 0 !important; }
-  .sub-steps { font-size: 8pt !important; }
-  .sub-steps li { margin-bottom: 2pt !important; }
-  .sub-step-num.old { background: #1B597B !important; color: white !important; width: 14pt !important; height: 14pt !important; font-size: 7pt !important; border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; flex-shrink: 0 !important; }
-
-  /* ── FASES (pagina 5) ───────────────────────────────────── */
-  #phasesSection {
-    page-break-before: always !important;
-    break-before: page !important;
-  }
-
-  .phases-grid {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 7pt !important;
-    margin-bottom: 9pt !important;
-  }
-
-  .phase-block {
-    border: 1pt solid #E3DDD8 !important;
-    border-top: 2pt solid #E26836 !important;
-    border-radius: 3pt !important;
-    overflow: hidden !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-  }
-
+  /* ── FASES (pagina 5) ───────────────────────────────────────────── */
+  #phasesSection { page-break-before: always !important; break-before: page !important; }
+  .phases-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 7pt !important; margin-bottom: 9pt !important; }
+  .phase-block  { border: 1pt solid #E3DDD8 !important; border-top: 2pt solid #E26836 !important; border-radius: 3pt !important; overflow: hidden !important; page-break-inside: avoid !important; break-inside: avoid !important; }
   .phase-header    { padding: 8pt 10pt !important; background: #FEF6F1 !important; border-bottom: 0.5pt solid #E3DDD8 !important; gap: 8pt !important; }
   .phase-num-badge { width: 24pt !important; height: 24pt !important; font-size: 10pt !important; background: #E26836 !important; border-radius: 50% !important; color: white !important; }
   .phase-title     { font-size: 9pt !important; font-weight: 600 !important; color: #141414 !important; }
@@ -2341,38 +1912,19 @@ select.finput {
   .phase-meta      { margin-top: 5pt !important; gap: 4pt !important; }
   .phase-meta-pill { font-size: 7pt !important; padding: 2pt 6pt !important; background: #F4F8FB !important; color: #1B597B !important; border-radius: 20pt !important; }
 
-  /* ── AANDACHTSPUNTEN ────────────────────────────────────── */
-  #aandachtSection {
-    page-break-before: avoid !important;
-    break-before: avoid !important;
-    page-break-inside: auto !important;
-    break-inside: auto !important;
-  }
-
-  .aandacht-table {
-    width: 100% !important;
-    border-collapse: collapse !important;
-    font-size: 8pt !important;
-    margin-bottom: 8pt !important;
-    table-layout: fixed !important;
-  }
-
-  .aandacht-table thead { border-top: 2pt solid #1B597B !important; border-bottom: 1pt solid #CFD8DC !important; }
+  /* ── AANDACHTSPUNTEN ────────────────────────────────────────────── */
+  #aandachtSection { page-break-before: avoid !important; break-before: avoid !important; page-break-inside: auto !important; break-inside: auto !important; }
+  .aandacht-table { width: 100% !important; border-collapse: collapse !important; font-size: 8pt !important; margin-bottom: 8pt !important; table-layout: fixed !important; }
+  .aandacht-table thead    { border-top: 2pt solid #1B597B !important; border-bottom: 1pt solid #CFD8DC !important; }
   .aandacht-table thead tr { background: #F0F4F7 !important; }
-  .aandacht-table th { color: #3A3A3A !important; font-size: 6.5pt !important; padding: 5pt 8pt !important; letter-spacing: 1pt !important; font-weight: 700 !important; background: #F0F4F7 !important; }
-  .aandacht-table td { padding: 6pt 8pt !important; border-bottom: 0.4pt solid #EDE8E3 !important; vertical-align: top !important; font-size: 8pt !important; line-height: 1.4 !important; }
+  .aandacht-table th       { color: #3A3A3A !important; font-size: 6.5pt !important; padding: 5pt 8pt !important; letter-spacing: 1pt !important; font-weight: 700 !important; background: #F0F4F7 !important; }
+  .aandacht-table td       { padding: 6pt 8pt !important; border-bottom: 0.4pt solid #EDE8E3 !important; vertical-align: top !important; font-size: 8pt !important; line-height: 1.4 !important; }
   .aandacht-table td:first-child { font-weight: 600 !important; color: #1B597B !important; width: 28% !important; }
-  .aandacht-table td:first-child { font-size: 8pt !important; }
   .aandacht-table tbody tr:nth-child(even) td { background: #F9F8F6 !important; }
   .aandacht-table tr { page-break-inside: avoid !important; break-inside: avoid !important; }
 
-  /* ── GEEN ACTIE BLOK ────────────────────────────────────── */
-  #geenActieSection, .geen-actie-block {
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-  }
-
-  .geen-actie-block  { margin-bottom: 9pt !important; border: 1pt solid #E3DDD8 !important; border-radius: 3pt !important; overflow: hidden !important; }
+  /* ── GEEN ACTIE BLOK ────────────────────────────────────────────── */
+  .geen-actie-block  { margin-bottom: 9pt !important; border: 1pt solid #E3DDD8 !important; border-radius: 3pt !important; overflow: hidden !important; page-break-inside: avoid !important; break-inside: avoid !important; }
   .geen-actie-head   { background: #2a1818 !important; padding: 10pt 14pt !important; gap: 8pt !important; }
   .geen-actie-icon   { width: 22pt !important; height: 22pt !important; }
   .geen-actie-eyebrow { font-size: 7pt !important; letter-spacing: 1pt !important; }
@@ -2384,152 +1936,57 @@ select.finput {
   .geen-actie-sub    { font-size: 7.5pt !important; }
   .geen-actie-foot   { padding: 8pt 14pt !important; font-size: 8pt !important; }
 
-  /* ── SCENARIO KAARTEN ───────────────────────────────────── */
-  /* Scenario blok niet tonen in print (te complex voor A4),
-     als het toch aanwezig is compacte weergave */
+  /* ── SCENARIO's (verborgen in print — te interactief) ──────────── */
   #scenarioSection, .scenario-block { display: none !important; }
 
-  /* ── VERVOLGSTAPPEN ─────────────────────────────────────── */
-  #vervolgSection {
-    page-break-before: auto !important;
-    break-before: auto !important;
-    page-break-inside: auto !important;
-    break-inside: auto !important;
-    margin-top: 4pt !important;
-    padding-top: 0 !important;
-  }
+  /* ── VERVOLGSTAPPEN ─────────────────────────────────────────────── */
+  #vervolgSection { page-break-before: auto !important; break-before: auto !important; page-break-inside: auto !important; break-inside: auto !important; margin-top: 4pt !important; padding-top: 0 !important; }
+  .vervolg-list   { page-break-inside: auto !important; break-inside: auto !important; margin-bottom: 4pt !important; }
+  .vervolg-item   { page-break-inside: avoid !important; break-inside: avoid !important; padding: 4pt 0 !important; gap: 7pt !important; }
+  .vervolg-num    { width: 16pt !important; height: 16pt !important; font-size: 7.5pt !important; background: #1B597B !important; color: white !important; }
+  .vervolg-title  { font-size: 7.8pt !important; font-weight: 700 !important; line-height: 1.2 !important; margin: 0 0 1pt !important; }
+  .vervolg-desc   { font-size: 7pt !important; color: #6B6B6B !important; line-height: 1.35 !important; margin: 0 !important; }
 
-  .vervolg-list {
-    page-break-inside: auto !important;
-    break-inside: auto !important;
-    margin-bottom: 4pt !important;
-  }
-
-  .vervolg-item {
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-    padding: 4pt 0 !important;
-    gap: 7pt !important;
-  }
-
-  .vervolg-num   { width: 16pt !important; height: 16pt !important; font-size: 7.5pt !important; background: #1B597B !important; color: white !important; }
-  .vervolg-title { font-size: 7.8pt !important; font-weight: 700 !important; line-height: 1.2 !important; margin: 0 0 1pt !important; }
-  .vervolg-desc  { font-size: 7pt !important; color: #6B6B6B !important; line-height: 1.35 !important; margin: 0 !important; }
-
-  /* ── ADVISEUR & AFSLUITING ──────────────────────────────── */
-  .rapport-einde-block {
-    page-break-before: auto !important;
-    break-before: auto !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-    margin-top: 6pt !important;
-    padding-top: 0 !important;
-  }
-
-  #adviseurSection {
-    page-break-before: avoid !important;
-    break-before: avoid !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-  }
-
-  .adviseur-sluiting {
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-    margin-top: 5pt !important;
-    padding: 9pt 11pt !important;
-    border: 1pt solid #E3DDD8 !important;
-    border-left: 3pt solid #1B597B !important;
-    border-radius: 3pt !important;
-    background: linear-gradient(135deg, #0d3348 0%, #134460 55%, #1B597B 100%) !important;
-  }
-
-  .adviseur-card {
-    background: linear-gradient(135deg, #0d3348 0%, #134460 55%, #1B597B 100%) !important;
-    padding: 12pt 16pt !important;
-    border-radius: 4pt !important;
-    margin-top: 8pt !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-  }
-
-  .adviseur-naam     { font-size: 11pt !important; color: white !important; font-weight: 700 !important; }
-  .adviseur-functie  { font-size: 8pt !important; color: rgba(255,255,255,0.6) !important; }
-  .adviseur-label    { font-size: 6.5pt !important; color: rgba(255,255,255,0.45) !important; letter-spacing: 1pt !important; }
-  .adviseur-contact a { font-size: 9pt !important; color: rgba(255,255,255,0.8) !important; }
-  .adviseur-avatar   { width: 36pt !important; height: 36pt !important; background: rgba(255,255,255,0.12) !important; }
-
+  /* ── ADVISEUR & AFSLUITING ──────────────────────────────────────── */
+  .rapport-einde-block { page-break-before: auto !important; break-before: auto !important; page-break-inside: avoid !important; break-inside: avoid !important; margin-top: 6pt !important; }
+  #adviseurSection     { page-break-before: avoid !important; break-before: avoid !important; page-break-inside: avoid !important; break-inside: avoid !important; }
+  #bronSection         { page-break-before: avoid !important; break-before: avoid !important; page-break-inside: avoid !important; break-inside: avoid !important; }
+  .adviseur-card       { background: linear-gradient(135deg, #0d3348 0%, #134460 55%, #1B597B 100%) !important; padding: 12pt 16pt !important; border-radius: 4pt !important; margin-top: 8pt !important; page-break-inside: avoid !important; break-inside: avoid !important; }
+  .adviseur-sluiting   { page-break-inside: avoid !important; break-inside: avoid !important; margin-top: 5pt !important; padding: 9pt 11pt !important; }
+  .adviseur-naam       { font-size: 11pt !important; color: white !important; font-weight: 700 !important; }
+  .adviseur-functie    { font-size: 8pt !important; color: rgba(255,255,255,0.6) !important; }
+  .adviseur-label      { font-size: 6.5pt !important; color: rgba(255,255,255,0.45) !important; letter-spacing: 1pt !important; }
+  .adviseur-contact a  { font-size: 9pt !important; color: rgba(255,255,255,0.8) !important; }
+  .adviseur-avatar     { width: 36pt !important; height: 36pt !important; }
   .adviseur-sluiting-cta-sub { font-size: 7pt !important; line-height: 1.35 !important; }
   .adviseur-sluiting-naam    { font-size: 9.5pt !important; }
-  .adviseur-sluiting-functie,
-  .adviseur-sluiting-link    { font-size: 6.8pt !important; }
+  .adviseur-sluiting-functie, .adviseur-sluiting-link { font-size: 6.8pt !important; }
 
-  /* ── AANNAMES / ASSUMPTIONS ─────────────────────────────── */
-  .assumptions {
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
+  /* ── LABEL VIS CARD + ASSUMPTIONS ──────────────────────────────── */
+  .label-vis-card { page-break-inside: avoid !important; break-inside: avoid !important; }
+  .assumptions    { page-break-inside: avoid !important; break-inside: avoid !important; }
+
+  /* ── TABELLEN ALGEMEEN: SAFE BREEDTE ────────────────────────────── */
+  table, .rt, .netto-table, .aandacht-table {
+    width: 100% !important; max-width: 100% !important;
+    table-layout: fixed !important; box-sizing: border-box !important;
   }
-
-  /* ── ALLE TABELLEN: SAFE BREEDTE ────────────────────────── */
-  table,
-  .rt,
-  .netto-table,
-  .aandacht-table {
-    width: 100% !important;
-    max-width: 100% !important;
-    table-layout: fixed !important;
-    box-sizing: border-box !important;
+  .rt th, .rt td, .netto-table th, .netto-table td, .aandacht-table th, .aandacht-table td {
+    overflow-wrap: anywhere !important; word-break: normal !important;
   }
-
-  .rt th, .rt td,
-  .netto-table th, .netto-table td,
-  .aandacht-table th, .aandacht-table td {
-    overflow-wrap: anywhere !important;
-    word-break: normal !important;
-  }
-
   thead { display: table-header-group !important; }
   tfoot { display: table-footer-group !important; }
   table { page-break-inside: auto !important; }
   tr    { page-break-inside: avoid !important; break-inside: avoid !important; }
+  .rt thead, .netto-table thead, .aandacht-table thead { page-break-after: avoid !important; break-after: avoid !important; }
 
-  .rt thead, .netto-table thead, .aandacht-table thead {
-    page-break-after: avoid !important;
-    break-after: avoid !important;
-  }
+  /* ── IMAGES / SVG / CANVAS ──────────────────────────────────────── */
+  img, canvas, svg { max-width: 100% !important; page-break-inside: avoid !important; break-inside: avoid !important; }
 
-  /* ── IMAGES / SVG / CANVAS ──────────────────────────────── */
-  img, canvas, svg {
-    max-width: 100% !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-  }
-
-  /* ── HEADING PAGE-BREAK LOGICA ──────────────────────────── */
-  h1, h2, h3, h4, h5,
-  .rpt-section-head,
-  .sec-head {
-    page-break-after: avoid !important;
-    break-after: avoid !important;
-  }
-
-  /* ── PREVENT FIXED ELEMENTS FROM BREAKING STACKING ─────── */
-  body, html, .page-wrap, .card, .result, .body, .result .body {
-    transform: none !important;
-    filter: none !important;
-    will-change: auto !important;
-  }
-
-  /* ── BRON SECTIE ────────────────────────────────────────── */
-  #bronSection {
-    page-break-before: avoid !important;
-    break-before: avoid !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-  }
+  /* ── HEADING PAGE-BREAK ─────────────────────────────────────────── */
+  h1, h2, h3, h4, h5, .rpt-section-head, .sec-head { page-break-after: avoid !important; break-after: avoid !important; }
 
 }
-
 </style>
 
 </head>
