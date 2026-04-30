@@ -1256,6 +1256,16 @@ select.finput {
   font-size: 11px; color: rgba(255,255,255,0.55);
   margin-left: 4px; font-family: var(--f-head);
 }
+.label-indicatief-note {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.55);
+  font-family: var(--f-head);
+  font-style: italic;
+}
 
 /* Measures table */
 .rt { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
@@ -2668,6 +2678,20 @@ select.finput {
   font-size: 8.5px; font-family: var(--f-head); font-weight: 600;
   white-space: nowrap; color: var(--ink-4);
 }
+.lv-indicatief-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin-top: 14px;
+  padding: 10px 14px;
+  background: var(--amber-bg);
+  border: 1px solid rgba(138,96,0,0.15);
+  border-radius: var(--r-xs);
+  font-size: 12px;
+  color: var(--amber);
+  font-family: var(--f-head);
+  line-height: 1.5;
+}
 .lsb.is-current .lsb-tag { color: var(--ink-2); }
 .lsb.is-target .lsb-tag { color: var(--green); }
 
@@ -4044,6 +4068,7 @@ select.finput {
 //   "bouwjaar":         string,
 //   "oppervlakte":      string,          // bijv. "246 m²"
 //   "huidig_label":     string,          // "A" t/m "G" of "A+" etc.
+//   "huidig_label_indicatief": boolean,  // true = indicatief/niet geregistreerd in EP-online
 //   "streef_label":     string,
 //   "functie":          string,          // bijv. "Horeca"
 //   "huidige_kosten":   string,          // bijv. "€ 24.554"
@@ -4303,6 +4328,7 @@ Retourneer exact het volgende JSON-schema — verzin niets, extraheer alles uit 
   "bouwjaar": "string",
   "oppervlakte": "string",
   "huidig_label": "string",
+  "huidig_label_indicatief": "boolean (true als het huidige label een indicatief/geschat label is en NIET officieel geregistreerd staat in het EP-online register; false of weglaten als het label wel officieel geregistreerd is)",
   "streef_label": "string",
   "functie": "string",
   "huidige_kosten": "string",
@@ -4686,12 +4712,18 @@ function renderReport(r) {
   // Rapport header
   let labelHtml = '';
   if (r.huidig_label || r.streef_label) {
+    const indicatiefDisclaimer = r.huidig_label_indicatief
+      ? `<div class="label-indicatief-note">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" style="flex-shrink:0;opacity:0.7"><circle cx="8" cy="8" r="6.5"/><path d="M8 7v4M8 5.5v.5"/></svg>
+          Huidig label is indicatief — nog niet geregistreerd in EP-online
+        </div>`
+      : '';
     labelHtml = `<div class="label-track">
       ${r.huidig_label ? `<div class="label-box" style="background:${lbg(r.huidig_label)}">${r.huidig_label}</div>` : ''}
       ${(r.huidig_label && r.streef_label) ? '<div class="label-arrow">&#8594;</div>' : ''}
       ${r.streef_label ? `<div class="label-box" style="background:${lbg(r.streef_label)}">${r.streef_label}</div>` : ''}
       <div class="label-caption">Energieprestatie verbetering</div>
-    </div>`;
+    </div>${indicatiefDisclaimer}`;
   }
   document.getElementById('rptHdr').innerHTML = `
     <div class="rpt-hdr-top">
@@ -5176,7 +5208,7 @@ function updateNettoTabel(brutoBedrag) {
   if (voordelen.length > 0) {
     const sepRij = document.createElement('tr');
     sepRij.className = 'dynamic-row';
-    sepRij.innerHTML = `<td colspan="2" style="padding-top:16px;padding-bottom: 120px;">
+    sepRij.innerHTML = `<td colspan="2" style="padding-top:16px;padding-bottom:8px;">
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
         <span style="font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-4);">Geschat fiscaal voordeel (via aangifte)</span>
         <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--ink-3);">Belastingtarief:
@@ -5635,6 +5667,13 @@ function renderLabelVis(r) {
     </div>`;
   }).join('');
 
+  const indicatiefVisNote = r.huidig_label_indicatief
+    ? `<div class="lv-indicatief-note">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" style="flex-shrink:0"><circle cx="8" cy="8" r="6.5"/><path d="M8 7v4M8 5.5v.5"/></svg>
+        Het huidige energielabel is indicatief en staat nog niet officieel geregistreerd in het EP-online register.
+      </div>`
+    : '';
+
   el.innerHTML = `
     <div class="label-vis-card">
       <div class="label-vis-top">
@@ -5644,6 +5683,7 @@ function renderLabelVis(r) {
       <div class="label-scale-track" style="padding-bottom:${(huidigIdx >= 0 || streefIdx >= 0) ? '26px' : '0'}">
         <div class="label-scale-bars">${barsHtml}</div>
       </div>
+      ${indicatiefVisNote}
     </div>`;
 }
 
