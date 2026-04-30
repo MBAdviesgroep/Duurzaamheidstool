@@ -3954,14 +3954,15 @@ select.finput {
 
   /* ═══════════════════════════════════════════════════════
      COMPLETE PRINT REDESIGN v23-final
-     Doel: écht professioneel A4-rapport
+     Stijl: clean wit consulting-rapport — licht, strak, professioneel
   ═══════════════════════════════════════════════════════ */
 
-  /* ── Override @page margins ── */
-  @page { size: A4 portrait !important; margin: 15mm 14mm 20mm 14mm !important; }
+  /* ── @page ── */
+  @page { size: A4 portrait !important; margin: 15mm 13mm 20mm 13mm !important; }
   @page :first { margin: 0 !important; }
 
-  /* ── Reset layout: volledige breedte gebruiken ── */
+  /* ── Reset layout: volledige breedte ── */
+  html, body { background: white !important; font-size: 9pt !important; }
   .result .body > *:not(.print-cover-page):not(.mb-pf):not(.mb-ph) {
     width: 100% !important; max-width: 100% !important;
     margin-left: 0 !important; margin-right: 0 !important;
@@ -3975,25 +3976,23 @@ select.finput {
     margin-left: 0 !important; margin-right: 0 !important;
     box-sizing: border-box !important; overflow: hidden !important;
   }
+  .result .body { padding-bottom: 20mm !important; padding-top: 0 !important; }
 
-  /* ── Cover staat BOVEN de running header ── */
+  /* ── Cover staat boven running header ── */
   .print-cover-page { position: relative !important; z-index: 99999 !important; }
 
   /* ── Running page header ── */
   .mb-ph {
-    display: block !important;
-    position: fixed !important;
+    display: block !important; position: fixed !important;
     top: 0 !important; left: 0 !important; right: 0 !important;
     z-index: 9998 !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
   }
   .mb-ph-bar {
     background: linear-gradient(90deg, #0d2233 0%, #134460 55%, #1B597B 100%) !important;
     display: flex !important; align-items: center !important;
     justify-content: space-between !important;
-    padding: 0 14mm !important; height: 13mm !important;
-    gap: 14pt !important;
+    padding: 0 13mm !important; height: 13mm !important; gap: 12pt !important;
     -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
   }
   .mb-ph-accent {
@@ -4002,343 +4001,315 @@ select.finput {
     -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
   }
   .mb-ph-left { display: flex !important; align-items: center !important; gap: 6pt !important; flex-shrink: 0 !important; }
-  .mb-ph-logo {
-    width: 18pt !important; height: 18pt !important; border-radius: 50% !important;
-    background: rgba(255,255,255,0.9) !important; object-fit: contain !important;
-    padding: 1pt !important; flex-shrink: 0 !important;
-    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
-  }
+  .mb-ph-logo { width: 17pt !important; height: 17pt !important; border-radius: 50% !important; background: rgba(255,255,255,0.9) !important; object-fit: contain !important; padding: 1pt !important; flex-shrink: 0 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   .mb-ph-brand { display: flex !important; flex-direction: column !important; gap: 0.5pt !important; }
   .mb-ph-name { font-size: 7.5pt !important; font-weight: 700 !important; color: #ffffff !important; line-height: 1.1 !important; font-family: 'IBM Plex Sans', sans-serif !important; }
   .mb-ph-sub { font-size: 5.5pt !important; color: rgba(255,255,255,0.5) !important; line-height: 1.1 !important; font-family: 'IBM Plex Sans', sans-serif !important; }
-  .mb-ph-center {
-    flex: 1 !important; text-align: center !important;
-    font-size: 7.5pt !important; font-weight: 600 !important;
-    color: rgba(255,255,255,0.75) !important; font-family: 'IBM Plex Sans', sans-serif !important;
-    white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important;
-  }
-  .mb-ph-right {
-    font-size: 6.5pt !important; color: rgba(255,255,255,0.35) !important;
-    font-family: 'IBM Plex Sans', sans-serif !important; flex-shrink: 0 !important;
-    letter-spacing: 0.5pt !important; text-transform: uppercase !important;
-  }
+  .mb-ph-center { flex: 1 !important; text-align: center !important; font-size: 7.5pt !important; font-weight: 500 !important; color: rgba(255,255,255,0.65) !important; font-family: 'IBM Plex Sans', sans-serif !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; }
+  .mb-ph-right { font-size: 6.5pt !important; color: rgba(255,255,255,0.35) !important; font-family: 'IBM Plex Sans', sans-serif !important; flex-shrink: 0 !important; letter-spacing: 0.5pt !important; text-transform: uppercase !important; }
 
-  /* ── Sectie headers — elegant met kleur ── */
-  .rpt-section-head, .sec-head {
+  /* ── Rapport header (blauwe titelbalk) ── */
+  .rpt-hdr { border-radius: 0 !important; margin: 0 !important; padding: 14pt 16pt 12pt !important; }
+
+  /* ── Sectie headers ── */
+  .sec-head, .rpt-section-head {
     display: flex !important; align-items: center !important;
-    gap: 8pt !important; margin: 14pt 0 7pt !important; page-break-after: avoid !important; break-after: avoid !important;
+    gap: 7pt !important; margin: 13pt 0 6pt !important;
+    page-break-after: avoid !important; break-after: avoid !important;
+    border: none !important; background: none !important;
+    padding: 0 !important;
   }
-  .rpt-section-head .sec-label, .sec-label {
-    font-size: 7pt !important; font-weight: 700 !important;
+  .sec-label {
+    font-size: 6.5pt !important; font-weight: 700 !important;
     letter-spacing: 1.8pt !important; text-transform: uppercase !important;
     color: #1B597B !important; white-space: nowrap !important;
     font-family: 'IBM Plex Sans', sans-serif !important;
-    padding: 2pt 8pt 2pt 0 !important;
-    border-left: 2.5pt solid #E26836 !important;
-    padding-left: 7pt !important;
+    border-left: 2.5pt solid #E26836 !important; padding-left: 6pt !important;
   }
   .sec-line { height: 0.5pt !important; background: #E3DDD8 !important; flex: 1 !important; }
-  /* Override old single-element section head */
-  .rpt-section-head:not(:has(.sec-label)) {
-    border-left: 2.5pt solid #E26836 !important; padding-left: 7pt !important;
-    font-size: 7pt !important; font-weight: 700 !important;
-    letter-spacing: 1.8pt !important; color: #1B597B !important;
-    border-bottom: none !important; background: none !important;
-  }
-
-  /* ── Rapport header (blauw blok bovenaan rapport) ── */
-  .rpt-hdr {
-    border-radius: 0 !important; margin: 0 !important;
-    padding: 14pt 18pt 12pt !important;
-  }
 
   /* ── Intro tekst ── */
   .intro-text {
     font-size: 8.5pt !important; line-height: 1.65 !important;
-    padding: 9pt 13pt !important; margin-bottom: 10pt !important;
-    background: #EEF4F8 !important; border-left: 3pt solid #1B597B !important;
-    border-radius: 0 4pt 4pt 0 !important; border-top: none !important;
+    padding: 9pt 12pt !important; margin-bottom: 8pt !important;
+    background: #F4F8FB !important; border-left: 2.5pt solid #1B597B !important;
+    border-radius: 0 !important; border-top: none !important;
     border-right: none !important; border-bottom: none !important;
     -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
   }
 
-  /* ── KPI panel — groot en duidelijk ── */
+  /* ── KPI panel — wit, blauwe accenten ── */
   .kpi-panel {
     display: grid !important; grid-template-columns: 1fr 1fr 1fr !important;
-    border: none !important; border-radius: 0 !important; overflow: hidden !important;
-    margin-bottom: 10pt !important; page-break-inside: avoid !important;
-    background: #134460 !important;
+    border: 1pt solid #E3DDD8 !important; border-top: none !important;
+    overflow: visible !important; margin-bottom: 9pt !important;
+    page-break-inside: avoid !important; background: #ffffff !important;
+    border-radius: 0 !important;
     -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
   }
   .kpi-cell {
-    padding: 11pt 14pt !important;
-    background: transparent !important;
-    border-right: 0.5pt solid rgba(255,255,255,0.15) !important;
-    border-top: none !important;
+    padding: 10pt 13pt !important; background: #ffffff !important;
+    border-right: 1pt solid #E3DDD8 !important; border-top: 3pt solid #E3DDD8 !important;
   }
+  .kpi-c1 { border-top-color: #1B597B !important; }
+  .kpi-c2 { border-top-color: #E26836 !important; }
+  .kpi-c3 { border-top-color: #2A7A50 !important; }
   .kpi-cell:last-child { border-right: none !important; }
   .kpi-cell::before { display: none !important; }
-  .kpi-c1 { border-top: 2.5pt solid #5BA8D0 !important; }
-  .kpi-c2 { border-top: 2.5pt solid #E26836 !important; }
-  .kpi-c3 { border-top: 2.5pt solid #4CAF80 !important; }
-  .kpi-lbl { font-size: 6.5pt !important; letter-spacing: 1.2pt !important; color: rgba(255,255,255,0.5) !important; margin-bottom: 5pt !important; font-weight: 600 !important; }
-  .kpi-num { font-size: 20pt !important; font-weight: 700 !important; line-height: 1 !important; color: #ffffff !important; }
-  .kpi-c1 .kpi-num { color: #5BE0FF !important; }
-  .kpi-c2 .kpi-num { color: #F2A07A !important; }
-  .kpi-c3 .kpi-num, .kpi-c3 .good { color: #80DFAA !important; }
-  .kpi-sub { font-size: 7pt !important; color: rgba(255,255,255,0.35) !important; margin-top: 4pt !important; line-height: 1.4 !important; }
+  .kpi-lbl { font-size: 6.5pt !important; letter-spacing: 1.2pt !important; color: #8B8B8B !important; margin-bottom: 6pt !important; font-weight: 600 !important; }
+  .kpi-num { font-size: 20pt !important; font-weight: 700 !important; line-height: 1 !important; color: #141414 !important; }
+  .kpi-c1 .kpi-num { color: #1B597B !important; }
+  .kpi-c2 .kpi-num, .kpi-c2 .warn { color: #E26836 !important; }
+  .kpi-c3 .kpi-num, .kpi-c3 .good { color: #2A7A50 !important; }
+  .kpi-sub { font-size: 7pt !important; color: #A0A0A0 !important; margin-top: 4pt !important; line-height: 1.4 !important; }
   .kpi-edit-input { display: none !important; }
   .kpi-edit-hint { display: none !important; }
-  .kpi-print-val { display: inline !important; font-size: 20pt !important; font-weight: 700 !important; color: #5BE0FF !important; font-family: 'IBM Plex Sans', sans-serif !important; }
-  .kpi-edit-prefix { font-size: 18pt !important; font-weight: 700 !important; color: #5BE0FF !important; }
+  .kpi-print-val { display: inline !important; font-size: 20pt !important; font-weight: 700 !important; color: #1B597B !important; font-family: 'IBM Plex Sans', sans-serif !important; }
+  .kpi-edit-prefix { font-size: 18pt !important; font-weight: 700 !important; color: #1B597B !important; }
   .kpi-edit-wrap { display: flex !important; align-items: baseline !important; gap: 2pt !important; }
 
-  /* ── Punten grid (sterk / aandacht) ── */
-  .punten-grid { grid-template-columns: 1fr 1fr !important; gap: 7pt !important; margin-bottom: 10pt !important; }
-  .punten-block { padding: 9pt 11pt !important; border-radius: 4pt !important; page-break-inside: avoid !important; }
-  .punten-block.sterke { background: #EBF5EF !important; border: 0.5pt solid rgba(42,122,80,0.15) !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .punten-block.aandacht { background: #FDF3EE !important; border: 0.5pt solid rgba(226,104,54,0.15) !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  /* ── Punten grid ── */
+  .punten-grid { grid-template-columns: 1fr 1fr !important; gap: 7pt !important; margin-bottom: 9pt !important; }
+  .punten-block { padding: 9pt 11pt !important; border-radius: 3pt !important; page-break-inside: avoid !important; }
+  .punten-block.sterke { background: #F0F9F4 !important; border: 0.5pt solid #B8D9C6 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .punten-block.aandacht { background: #FEF6F1 !important; border: 0.5pt solid #F2C9B4 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   .punten-title { font-size: 7pt !important; letter-spacing: 1.2pt !important; font-weight: 700 !important; }
-  .punten-list li { font-size: 8pt !important; padding: 4pt 0 !important; line-height: 1.5 !important; }
+  .punten-list li { font-size: 8pt !important; padding: 4pt 0 !important; line-height: 1.5 !important; border-bottom-color: rgba(0,0,0,0.06) !important; }
 
   /* ── Maatregelentabel ── */
-  .rt { width: 100% !important; border-collapse: collapse !important; font-size: 8pt !important; margin-bottom: 8pt !important; table-layout: fixed !important; }
-  .rt thead tr { background: #134460 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .rt th { color: rgba(255,255,255,0.85) !important; font-size: 6.5pt !important; padding: 5pt 7pt !important; letter-spacing: 1pt !important; font-weight: 600 !important; text-align: left !important; }
-  .rt th:first-child { padding-left: 10pt !important; }
-  .rt tbody tr:nth-child(even) { background: #F7F5F2 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .rt tbody tr:nth-child(odd) { background: #ffffff !important; }
-  .rt td { padding: 6pt 7pt !important; border-bottom: 0.4pt solid #ECEAE6 !important; vertical-align: middle !important; }
-  .rt td:first-child { padding-left: 10pt !important; }
+  .rt { width: 100% !important; border-collapse: collapse !important; font-size: 8pt !important; margin-bottom: 7pt !important; table-layout: fixed !important; }
+  .rt thead tr { background: #F0F4F7 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .rt thead { border-top: 2pt solid #1B597B !important; border-bottom: 1pt solid #CFD8DC !important; }
+  .rt th { color: #3A3A3A !important; font-size: 6.5pt !important; padding: 5pt 7pt !important; letter-spacing: 1pt !important; font-weight: 700 !important; text-align: left !important; background: #F0F4F7 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .rt th:first-child { padding-left: 9pt !important; }
+  .rt tbody tr:nth-child(even) td { background: #F9F8F6 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .rt tbody tr:nth-child(odd) td { background: #ffffff !important; }
+  .rt td { padding: 6pt 7pt !important; border-bottom: 0.4pt solid #EDE8E3 !important; vertical-align: middle !important; }
+  .rt td:first-child { padding-left: 9pt !important; }
   .rt tbody tr:last-child td { border-bottom: none !important; }
   .m-icon { display: none !important; }
-  .m-name { font-size: 8pt !important; font-weight: 600 !important; color: #141414 !important; display: block !important; }
-  .m-sub { font-size: 6.5pt !important; color: #E26836 !important; font-weight: 600 !important; margin-top: 1pt !important; display: block !important; }
+  .m-name { font-size: 8.5pt !important; font-weight: 600 !important; color: #141414 !important; display: block !important; line-height: 1.3 !important; }
+  .m-sub { font-size: 6.5pt !important; color: #E26836 !important; font-weight: 600 !important; margin-top: 1pt !important; display: block !important; letter-spacing: 0.3pt !important; }
   .m-save { color: #2A7A50 !important; font-weight: 700 !important; font-size: 8.5pt !important; }
-  .m-invest { font-size: 8pt !important; color: #3A3A3A !important; }
+  .m-invest { font-size: 8pt !important; color: #3A3A3A !important; font-weight: 500 !important; }
   .m-tvt { color: #1B597B !important; font-weight: 700 !important; font-size: 8.5pt !important; }
-  .m-co2 { color: #6B6B6B !important; font-size: 7.5pt !important; }
+  .m-co2 { color: #8B8B8B !important; font-size: 7.5pt !important; }
+  .rt tbody { border-bottom: 1pt solid #CFD8DC !important; }
 
   /* ── Live totalen balk ── */
   .live-totals-bar {
     display: grid !important; grid-template-columns: 1fr 1fr 1fr !important;
-    background: #0d2233 !important;
-    border: none !important; border-radius: 4pt !important; margin-bottom: 10pt !important;
+    background: #F0F4F7 !important; border: 1pt solid #CFD8DC !important;
+    border-top: 2pt solid #1B597B !important;
+    border-radius: 3pt !important; margin-bottom: 9pt !important;
     page-break-inside: avoid !important;
     -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
   }
-  .lt-cell { padding: 8pt 11pt !important; border-right: 0.5pt solid rgba(255,255,255,0.1) !important; }
+  .lt-cell { padding: 8pt 11pt !important; border-right: 0.5pt solid #DDD8D2 !important; }
   .lt-cell:last-child { border-right: none !important; }
-  .lt-lbl { font-size: 6.5pt !important; color: rgba(255,255,255,0.5) !important; letter-spacing: 1pt !important; margin-bottom: 4pt !important; }
-  .lt-val { font-size: 13pt !important; font-weight: 700 !important; color: #ffffff !important; }
-  .lt-val.orange { color: #F2A07A !important; }
-  .lt-val.green { color: #80DFAA !important; }
-  .lt-sub { font-size: 7pt !important; color: rgba(255,255,255,0.3) !important; margin-top: 2pt !important; }
+  .lt-cell::before { display: none !important; }
+  .lt-lbl { font-size: 6.5pt !important; color: #8B8B8B !important; letter-spacing: 1pt !important; margin-bottom: 4pt !important; font-weight: 600 !important; }
+  .lt-val { font-size: 14pt !important; font-weight: 700 !important; color: #141414 !important; }
+  .lt-val.orange { color: #E26836 !important; }
+  .lt-val.green { color: #2A7A50 !important; }
+  .lt-sub { font-size: 7pt !important; color: #A0A0A0 !important; margin-top: 2pt !important; }
 
   /* ── Totals block ── */
   .totals-block {
     display: grid !important; grid-template-columns: 1fr 1fr 1fr !important;
-    gap: 0 !important; margin-bottom: 10pt !important;
-    background: #134460 !important; border-radius: 4pt !important; overflow: hidden !important;
+    gap: 0 !important; margin-bottom: 9pt !important;
+    background: #F0F4F7 !important; border: 1pt solid #CFD8DC !important;
+    border-top: 2pt solid #1B597B !important;
+    border-radius: 3pt !important; overflow: hidden !important;
     -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
     page-break-inside: avoid !important;
   }
-  .totals-block > div { padding: 9pt 13pt !important; background: transparent !important; border-right: 0.5pt solid rgba(255,255,255,0.12) !important; }
+  .totals-block > div { padding: 9pt 13pt !important; background: transparent !important; border-right: 0.5pt solid #DDD8D2 !important; }
   .totals-block > div:last-child { border-right: none !important; }
-  .total-label { font-size: 6.5pt !important; color: rgba(255,255,255,0.5) !important; letter-spacing: 1pt !important; margin-bottom: 4pt !important; text-transform: uppercase !important; }
-  .total-val { font-size: 15pt !important; font-weight: 700 !important; color: #ffffff !important; letter-spacing: -0.3pt !important; }
-  .total-val.orange { color: #F2A07A !important; }
-  .total-sub { font-size: 7pt !important; color: rgba(255,255,255,0.35) !important; margin-top: 2pt !important; }
+  .total-label { font-size: 6.5pt !important; color: #8B8B8B !important; letter-spacing: 1pt !important; margin-bottom: 4pt !important; text-transform: uppercase !important; font-weight: 600 !important; }
+  .total-val { font-size: 16pt !important; font-weight: 700 !important; color: #141414 !important; letter-spacing: -0.3pt !important; }
+  .total-val.orange { color: #E26836 !important; }
+  .total-sub { font-size: 7pt !important; color: #A0A0A0 !important; margin-top: 2pt !important; }
 
   /* ── Netto investering ── */
-  .netto-table { width: 100% !important; font-size: 8.5pt !important; border-collapse: collapse !important; margin-bottom: 10pt !important; table-layout: fixed !important; }
-  .netto-table thead tr { background: #1B597B !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .netto-table th { color: #ffffff !important; font-size: 7pt !important; padding: 5pt 8pt !important; letter-spacing: 0.8pt !important; font-weight: 600 !important; border-bottom: none !important; }
-  .netto-table tbody tr:nth-child(even) td { background: #F7F5F2 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .netto-table td { padding: 6pt 8pt !important; border-bottom: 0.4pt solid #ECEAE6 !important; font-size: 8.5pt !important; }
+  .netto-table { width: 100% !important; font-size: 8.5pt !important; border-collapse: collapse !important; margin-bottom: 9pt !important; table-layout: fixed !important; }
+  .netto-table thead { border-top: 2pt solid #1B597B !important; border-bottom: 1pt solid #CFD8DC !important; }
+  .netto-table thead tr { background: #F0F4F7 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .netto-table th { color: #3A3A3A !important; font-size: 6.5pt !important; padding: 5pt 8pt !important; letter-spacing: 1pt !important; font-weight: 700 !important; border-bottom: none !important; background: #F0F4F7 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .netto-table tbody tr:nth-child(even) td { background: #F9F8F6 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .netto-table td { padding: 6pt 8pt !important; border-bottom: 0.4pt solid #EDE8E3 !important; font-size: 8.5pt !important; }
   .netto-table td:last-child { text-align: right !important; font-weight: 600 !important; }
-  .netto-table tr:last-child td { background: #EEF4F8 !important; font-weight: 700 !important; color: #134460 !important; font-size: 9.5pt !important; border-top: 1.5pt solid #1B597B !important; border-bottom: none !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .netto-table tr:last-child td { background: #EEF4F8 !important; font-weight: 700 !important; color: #1B597B !important; font-size: 9.5pt !important; border-top: 1.5pt solid #1B597B !important; border-bottom: none !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   .netto-table .sub-row td { color: #2A7A50 !important; }
 
   /* ── Rente strip ── */
   .rente-strip {
-    background: #EEF4F8 !important; padding: 9pt 14pt !important; margin-bottom: 10pt !important;
-    border-radius: 4pt !important; border: 0.5pt solid #ddeaf2 !important;
+    background: #F4F8FB !important; padding: 9pt 14pt !important; margin-bottom: 9pt !important;
+    border-radius: 3pt !important; border: 1pt solid #CFD8DC !important; border-left: 3pt solid #1B597B !important;
     -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
     display: flex !important; align-items: center !important; justify-content: space-between !important;
     page-break-inside: avoid !important;
   }
-  .rente-num { font-size: 22pt !important; color: #134460 !important; font-weight: 700 !important; }
-  .rente-lbl { font-size: 7pt !important; color: #1B597B !important; letter-spacing: 1pt !important; }
-  .rente-note { font-size: 7.5pt !important; color: #3A3A3A !important; }
-  .rente-disclaimer { font-size: 7pt !important; color: #6B6B6B !important; font-style: italic !important; }
+  .rente-num { font-size: 22pt !important; color: #1B597B !important; font-weight: 700 !important; }
+  .rente-lbl { font-size: 7pt !important; color: #1B597B !important; letter-spacing: 1pt !important; opacity: 0.7 !important; }
+  .rente-note { font-size: 7.5pt !important; color: #6B6B6B !important; }
+  .rente-disclaimer { font-size: 7pt !important; color: #A0A0A0 !important; font-style: italic !important; text-align: right !important; }
 
   /* ── Grafieken ── */
-  .chart-section { page-break-inside: avoid !important; margin-bottom: 10pt !important; }
+  .chart-section { page-break-inside: avoid !important; margin-bottom: 9pt !important; }
   .chart-wrap {
-    padding: 10pt 12pt 8pt !important; border: 0.5pt solid #E3DDD8 !important;
-    border-top: 2pt solid #1B597B !important; border-radius: 4pt !important;
-    background: #ffffff !important; overflow: hidden !important;
+    padding: 10pt 12pt 8pt !important;
+    border: 1pt solid #E3DDD8 !important; border-top: 2pt solid #1B597B !important;
+    border-radius: 3pt !important; background: #ffffff !important;
+    overflow: hidden !important;
     -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
   }
-  .chart-canvas-wrap { height: 160pt !important; min-height: 160pt !important; max-height: 160pt !important; overflow: hidden !important; }
-  .chart-canvas-wrap canvas { height: 160pt !important; max-height: 160pt !important; width: 100% !important; }
-  .chart-print-img { width: 100% !important; max-height: 160pt !important; object-fit: contain !important; display: block !important; }
+  .chart-canvas-wrap { height: 155pt !important; min-height: 155pt !important; max-height: 155pt !important; overflow: hidden !important; }
+  .chart-canvas-wrap canvas { height: 155pt !important; max-height: 155pt !important; width: 100% !important; }
+  .chart-print-img { width: 100% !important; max-height: 155pt !important; object-fit: contain !important; display: block !important; }
   .chart-legend { margin-top: 6pt !important; gap: 16pt !important; }
   .chart-legend-item { font-size: 7.5pt !important; }
-  .chart-breakeven-badge { font-size: 7pt !important; padding: 3pt 9pt !important; }
+  .chart-breakeven-badge { font-size: 7pt !important; padding: 3pt 9pt !important; background: #EBF5EF !important; color: #2A7A50 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .chart-explainer { font-size: 7pt !important; color: #A0A0A0 !important; line-height: 1.5 !important; margin-top: 5pt !important; padding-top: 5pt !important; border-top: 0.4pt solid #EDE8E3 !important; }
 
   /* ── Subsidiekaarten ── */
   .sub-grid { grid-template-columns: 1fr 1fr !important; gap: 7pt !important; margin-bottom: 0 !important; }
   .sub-card-new {
-    border: 0.5pt solid #E3DDD8 !important; border-top: 2.5pt solid #1B597B !important;
-    border-radius: 4pt !important; page-break-inside: avoid !important; break-inside: avoid !important;
-    overflow: hidden !important;
+    border: 1pt solid #E3DDD8 !important; border-top: 2.5pt solid #1B597B !important;
+    border-radius: 3pt !important; page-break-inside: avoid !important; break-inside: avoid !important;
+    overflow: hidden !important; background: #ffffff !important;
   }
-  .sub-card-header { background: #EEF4F8 !important; padding: 7pt 10pt 6pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .sub-badge-new { font-size: 6.5pt !important; padding: 2pt 6pt !important; background: #1B597B !important; color: white !important; border-radius: 20pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .sub-name-new { font-size: 8.5pt !important; font-weight: 700 !important; }
-  .sub-type-new { font-size: 7pt !important; color: #6B6B6B !important; }
+  .sub-card-header { background: #F4F8FB !important; padding: 7pt 10pt 6pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .sub-badge-new { font-size: 6.5pt !important; padding: 2pt 7pt !important; background: #1B597B !important; color: white !important; border-radius: 20pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .sub-name-new { font-size: 8.5pt !important; font-weight: 700 !important; color: #141414 !important; }
+  .sub-type-new { font-size: 7pt !important; color: #8B8B8B !important; }
   .sub-card-body { padding: 7pt 10pt !important; gap: 5pt !important; }
-  .sub-voordeel { font-size: 7.5pt !important; padding: 5pt 8pt !important; background: #EEF4F8 !important; border-left: 2pt solid #1B597B !important; line-height: 1.5 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .sub-toepassing { font-size: 7pt !important; color: #6B6B6B !important; }
-  .sub-steps li { font-size: 7.5pt !important; line-height: 1.5 !important; }
-  .sub-step-num { width: 14pt !important; height: 14pt !important; font-size: 7pt !important; background: #1B597B !important; color: white !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .sub-alert { font-size: 7pt !important; padding: 4pt 8pt !important; border-left: 2pt solid #8B2828 !important; background: #FBF0F0 !important; color: #8B2828 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .sub-footer-row { padding: 5pt 10pt !important; background: #F4F2EF !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .sub-combine, .sub-nocombine { font-size: 7pt !important; padding: 2pt 6pt !important; }
+  .sub-voordeel { font-size: 7.5pt !important; padding: 5pt 8pt !important; background: #F4F8FB !important; border-left: 2pt solid #1B597B !important; line-height: 1.5 !important; color: #1B597B !important; font-weight: 500 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .sub-toepassing { font-size: 7pt !important; color: #8B8B8B !important; line-height: 1.5 !important; }
+  .sub-steps li { font-size: 7.5pt !important; line-height: 1.5 !important; color: #3A3A3A !important; }
+  .sub-step-num { width: 13pt !important; height: 13pt !important; font-size: 7pt !important; background: #1B597B !important; color: white !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .sub-alert { font-size: 7pt !important; padding: 4pt 8pt !important; border-left: 2pt solid #C0392B !important; background: #FDF5F5 !important; color: #8B2828 !important; line-height: 1.5 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .sub-footer-row { padding: 5pt 10pt !important; background: #F9F8F6 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .sub-combine { font-size: 7pt !important; padding: 2pt 6pt !important; background: #EBF5EF !important; color: #2A7A50 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .sub-nocombine { font-size: 7pt !important; padding: 2pt 6pt !important; }
   .sub-url { display: none !important; }
 
   /* ── Fases ── */
-  .phases-grid { grid-template-columns: 1fr 1fr !important; gap: 7pt !important; margin-bottom: 10pt !important; }
-  .phase-block { border: 0.5pt solid #E3DDD8 !important; border-radius: 4pt !important; overflow: hidden !important; page-break-inside: avoid !important; break-inside: avoid !important; }
-  .phase-header { padding: 8pt 10pt !important; background: #F4F2EF !important; border-bottom: 0.5pt solid #E3DDD8 !important; gap: 8pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .phase-num-badge { width: 26pt !important; height: 26pt !important; font-size: 11pt !important; background: #E26836 !important; border-radius: 50% !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .phase-title { font-size: 9pt !important; font-weight: 600 !important; }
+  .phases-grid { grid-template-columns: 1fr 1fr !important; gap: 7pt !important; margin-bottom: 9pt !important; }
+  .phase-block { border: 1pt solid #E3DDD8 !important; border-top: 2pt solid #E26836 !important; border-radius: 3pt !important; overflow: hidden !important; page-break-inside: avoid !important; break-inside: avoid !important; }
+  .phase-header { padding: 8pt 10pt !important; background: #FEF6F1 !important; border-bottom: 0.5pt solid #E3DDD8 !important; gap: 8pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .phase-num-badge { width: 26pt !important; height: 26pt !important; font-size: 11pt !important; background: #E26836 !important; border-radius: 50% !important; color: white !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .phase-title { font-size: 9pt !important; font-weight: 600 !important; color: #141414 !important; }
   .phase-body { padding: 7pt 10pt !important; }
   .phase-desc { font-size: 8pt !important; color: #3A3A3A !important; line-height: 1.55 !important; }
   .phase-meta { margin-top: 6pt !important; gap: 5pt !important; }
-  .phase-meta-pill { font-size: 7pt !important; padding: 2pt 6pt !important; background: #EEF4F8 !important; color: #1B597B !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; border-radius: 20pt !important; }
+  .phase-meta-pill { font-size: 7pt !important; padding: 2pt 6pt !important; background: #F4F8FB !important; color: #1B597B !important; border-radius: 20pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 
   /* ── Aandachtspunten ── */
-  .aandacht-table { width: 100% !important; border-collapse: collapse !important; font-size: 8pt !important; margin-bottom: 10pt !important; }
-  .aandacht-table thead tr { background: #134460 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .aandacht-table th { color: rgba(255,255,255,0.85) !important; font-size: 6.5pt !important; padding: 5pt 8pt !important; letter-spacing: 1pt !important; }
-  .aandacht-table td { padding: 7pt 8pt !important; border-bottom: 0.4pt solid #ECEAE6 !important; vertical-align: top !important; }
-  .aandacht-table td:first-child { font-weight: 600 !important; color: #1B597B !important; width: 28% !important; }
-  .aandacht-table tbody tr:nth-child(even) td { background: #F7F5F2 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .aandacht-table { width: 100% !important; border-collapse: collapse !important; font-size: 8pt !important; margin-bottom: 9pt !important; table-layout: fixed !important; }
+  .aandacht-table thead { border-top: 2pt solid #1B597B !important; border-bottom: 1pt solid #CFD8DC !important; }
+  .aandacht-table thead tr { background: #F0F4F7 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .aandacht-table th { color: #3A3A3A !important; font-size: 6.5pt !important; padding: 5pt 8pt !important; letter-spacing: 1pt !important; font-weight: 700 !important; background: #F0F4F7 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .aandacht-table td { padding: 7pt 8pt !important; border-bottom: 0.4pt solid #EDE8E3 !important; vertical-align: top !important; }
+  .aandacht-table td:first-child { font-weight: 600 !important; color: #1B597B !important; width: 26% !important; }
+  .aandacht-table tbody tr:nth-child(even) td { background: #F9F8F6 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 
   /* ── Geen actie blok ── */
-  .geen-actie-block { margin-bottom: 10pt !important; }
-  .geen-actie-head { background: #1a0a0a !important; padding: 9pt 13pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .geen-actie-icon { width: 24pt !important; height: 24pt !important; }
+  .geen-actie-block { margin-bottom: 9pt !important; border: 1pt solid #E3DDD8 !important; border-radius: 3pt !important; overflow: hidden !important; }
+  .geen-actie-head {
+    background: #2C1F1F !important; padding: 9pt 13pt !important;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+  }
+  .geen-actie-icon { width: 22pt !important; height: 22pt !important; }
   .geen-actie-eyebrow { font-size: 7pt !important; }
   .geen-actie-title { font-size: 10.5pt !important; }
-  .geen-actie-grid { background: #F9F7F5 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .geen-actie-cell { padding: 9pt 12pt !important; }
-  .geen-actie-lbl { font-size: 7pt !important; }
-  .geen-actie-val { font-size: 15pt !important; color: #8B2828 !important; }
-  .geen-actie-sub { font-size: 7.5pt !important; }
-  .geen-actie-foot { font-size: 8pt !important; padding: 8pt 13pt !important; line-height: 1.55 !important; }
+  .geen-actie-grid { background: #FAFAF8 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .geen-actie-cell { padding: 9pt 12pt !important; border-right: 0.5pt solid #EDE8E3 !important; }
+  .geen-actie-lbl { font-size: 6.5pt !important; color: #8B8B8B !important; font-weight: 600 !important; letter-spacing: 1pt !important; }
+  .geen-actie-val { font-size: 15pt !important; color: #C0392B !important; font-weight: 700 !important; }
+  .geen-actie-sub { font-size: 7.5pt !important; color: #8B8B8B !important; }
+  .geen-actie-foot { font-size: 8pt !important; padding: 8pt 13pt !important; line-height: 1.55 !important; color: #6B6B6B !important; background: #ffffff !important; }
 
   /* ── Vervolgstappen ── */
   .vervolg-list { display: flex !important; flex-direction: column !important; gap: 0 !important; }
-  .vervolg-item { padding: 6pt 0 !important; gap: 10pt !important; border-bottom: 0.4pt solid #ECEAE6 !important; page-break-inside: avoid !important; }
+  .vervolg-item { padding: 7pt 0 !important; gap: 10pt !important; border-bottom: 0.5pt solid #EDE8E3 !important; page-break-inside: avoid !important; display: flex !important; align-items: flex-start !important; }
   .vervolg-item:last-child { border-bottom: none !important; }
-  .vervolg-num { width: 20pt !important; height: 20pt !important; font-size: 9pt !important; background: #E26836 !important; border-radius: 50% !important; flex-shrink: 0 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; display: flex !important; align-items: center !important; justify-content: center !important; color: white !important; font-weight: 700 !important; }
+  .vervolg-num { width: 20pt !important; height: 20pt !important; font-size: 9pt !important; background: #E26836 !important; border-radius: 50% !important; flex-shrink: 0 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; display: flex !important; align-items: center !important; justify-content: center !important; color: white !important; font-weight: 700 !important; margin-top: 1pt !important; }
   .vervolg-title { font-size: 8.5pt !important; font-weight: 700 !important; color: #141414 !important; margin-bottom: 2pt !important; }
-  .vervolg-desc { font-size: 7.5pt !important; color: #6B6B6B !important; line-height: 1.5 !important; }
+  .vervolg-desc { font-size: 7.5pt !important; color: #6B6B6B !important; line-height: 1.55 !important; }
 
-  /* ── Assumptions box ── */
-  .assumptions { background: #FBF4E3 !important; border: 0.5pt solid rgba(138,96,0,0.2) !important; padding: 8pt 11pt !important; margin-bottom: 10pt !important; border-left: 2.5pt solid #E0A020 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .assumptions-text { font-size: 7.5pt !important; }
+  /* ── Assumptions ── */
+  .assumptions { background: #FBF4E3 !important; border: 0.5pt solid rgba(138,96,0,0.18) !important; border-left: 2.5pt solid #E0A020 !important; padding: 8pt 11pt !important; margin-bottom: 9pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .assumptions-text { font-size: 7.5pt !important; color: #7A5800 !important; line-height: 1.55 !important; }
 
   /* ── Notes block ── */
-  .notes-block { background: #EEF4F8 !important; border-left: 3pt solid #1B597B !important; padding: 9pt 13pt !important; font-size: 8pt !important; margin-bottom: 10pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .notes-block { background: #F4F8FB !important; border-left: 2.5pt solid #1B597B !important; padding: 9pt 13pt !important; font-size: 8pt !important; margin-bottom: 9pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 
-  /* ── Adviseur sluiting — clean wit afsluitblok ── */
+  /* ── Adviseur sluiting ── */
   .adviseur-card { display: none !important; }
   .adviseur-sluiting {
     display: flex !important; align-items: center !important; gap: 14pt !important;
-    padding: 13pt 16pt !important; background: #ffffff !important;
-    border: 0.5pt solid #E3DDD8 !important; border-top: 2.5pt solid #1B597B !important;
-    border-radius: 5pt !important; margin-top: 10pt !important; margin-bottom: 6pt !important;
+    padding: 12pt 15pt !important; background: #ffffff !important;
+    border: 1pt solid #E3DDD8 !important; border-top: 2.5pt solid #1B597B !important;
+    border-radius: 3pt !important; margin-top: 10pt !important; margin-bottom: 4pt !important;
     page-break-inside: avoid !important; break-inside: avoid !important;
     -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
   }
-  .adviseur-sluiting-logo-wrap {
-    width: 34pt !important; height: 34pt !important; border-radius: 50% !important;
-    background: #EEF4F8 !important; border: 1pt solid #ddeaf2 !important;
-    display: flex !important; align-items: center !important; justify-content: center !important;
-    flex-shrink: 0 !important; overflow: hidden !important;
-    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
-  }
+  .adviseur-sluiting-logo-wrap { width: 34pt !important; height: 34pt !important; border-radius: 50% !important; background: #F4F8FB !important; border: 1pt solid #CFD8DC !important; display: flex !important; align-items: center !important; justify-content: center !important; flex-shrink: 0 !important; overflow: hidden !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   .adviseur-sluiting-logo { width: 22pt !important; height: 22pt !important; object-fit: contain !important; }
   .adviseur-sluiting-naam { font-size: 10pt !important; font-weight: 700 !important; color: #141414 !important; }
-  .adviseur-sluiting-functie { font-size: 7pt !important; color: #6B6B6B !important; margin-top: 1pt !important; }
-  .adviseur-sluiting-sep { width: 0.5pt !important; height: 32pt !important; background: #E3DDD8 !important; flex-shrink: 0 !important; }
+  .adviseur-sluiting-functie { font-size: 7pt !important; color: #8B8B8B !important; margin-top: 1pt !important; }
+  .adviseur-sluiting-sep { width: 0.5pt !important; height: 30pt !important; background: #E3DDD8 !important; flex-shrink: 0 !important; }
   .adviseur-sluiting-cta-kop { font-size: 9pt !important; font-weight: 700 !important; color: #134460 !important; margin-bottom: 2pt !important; }
   .adviseur-sluiting-cta-sub { font-size: 7.5pt !important; color: #6B6B6B !important; line-height: 1.5 !important; }
+  .adviseur-sluiting-contact { gap: 6pt !important; }
   .adviseur-sluiting-link { font-size: 7.5pt !important; color: #1B597B !important; font-weight: 600 !important; gap: 4pt !important; }
   .adviseur-sluiting-link svg { display: none !important; }
 
   /* ── MB Print Footer ── */
   .mb-pf { display: block !important; position: fixed !important; left: 0 !important; right: 0 !important; bottom: 0 !important; z-index: 9997 !important; }
   .mb-pf-bar {
-    background: linear-gradient(90deg, #0d2233, #134460, #1B597B) !important;
+    background: linear-gradient(90deg, #0d2233 0%, #134460 55%, #1B597B 100%) !important;
     display: flex !important; align-items: center !important; justify-content: space-between !important;
-    padding: 4pt 14mm !important; min-height: 14mm !important; box-sizing: border-box !important; position: relative !important;
+    padding: 4pt 13mm !important; min-height: 13mm !important; box-sizing: border-box !important; position: relative !important;
     -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
   }
   .mb-pf-accent { position: absolute !important; top: 0 !important; left: 0 !important; right: 0 !important; height: 2pt !important; background: linear-gradient(90deg, #E26836, #f09060) !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   .mb-pf-left { display: flex !important; align-items: center !important; gap: 7pt !important; flex: 0 0 auto !important; }
-  .mb-pf-logo { width: 17pt !important; height: 17pt !important; border-radius: 50% !important; background: rgba(255,255,255,0.9) !important; padding: 1pt !important; flex-shrink: 0 !important; object-fit: contain !important; }
+  .mb-pf-logo { width: 16pt !important; height: 16pt !important; border-radius: 50% !important; background: rgba(255,255,255,0.9) !important; padding: 1pt !important; flex-shrink: 0 !important; object-fit: contain !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   .mb-pf-brand { display: flex !important; flex-direction: column !important; gap: 1pt !important; }
-  .mb-pf-name { font-size: 7.5pt !important; font-weight: 700 !important; color: #ffffff !important; line-height: 1.2 !important; letter-spacing: 0.2pt !important; }
+  .mb-pf-name { font-size: 7pt !important; font-weight: 700 !important; color: #ffffff !important; line-height: 1.2 !important; }
   .mb-pf-sub { font-size: 5.5pt !important; color: rgba(255,255,255,0.5) !important; line-height: 1.2 !important; }
   .mb-pf-mid { font-size: 5.5pt !important; color: rgba(255,255,255,0.45) !important; text-align: center !important; flex: 1 1 auto !important; line-height: 1.5 !important; padding: 0 12pt !important; }
   .mb-pf-right { display: flex !important; flex-direction: column !important; align-items: flex-end !important; gap: 1.5pt !important; flex: 0 0 auto !important; }
-  .mb-pf-email { font-size: 7pt !important; color: rgba(255,255,255,0.8) !important; font-weight: 600 !important; }
-  .mb-pf-url { font-size: 6pt !important; color: rgba(255,255,255,0.45) !important; }
+  .mb-pf-email { font-size: 6.5pt !important; color: rgba(255,255,255,0.75) !important; font-weight: 600 !important; }
+  .mb-pf-url { font-size: 6pt !important; color: rgba(255,255,255,0.4) !important; }
 
-  /* ── Padding onderaan content ── */
-  .result .body { padding-bottom: 18mm !important; padding-top: 0 !important; }
-
-  /* ── Bron card verbergen ── */
-  .bron-card { display: none !important; }
-  .rpt-footer { display: none !important; }
-
-  /* ── Maandlasten: verbergen in print ── */
-  #maandlastenSection { display: none !important; }
-  #scenarioSection { display: none !important; }
+  /* ── Label visualisatie ── */
+  .label-track { display: flex !important; align-items: center !important; gap: 8pt !important; margin-top: 10pt !important; padding-top: 8pt !important; border-top: 1pt solid rgba(255,255,255,0.15) !important; }
+  .label-box { width: 36pt !important; height: 28pt !important; font-size: 14pt !important; border-radius: 3pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .label-caption { font-size: 8pt !important; color: rgba(255,255,255,0.6) !important; }
 
   /* ── Tabellen: nooit buiten pagina ── */
-  table, .rt, .netto-table, .aandacht-table {
-    width: 100% !important; max-width: 100% !important;
-    table-layout: fixed !important; box-sizing: border-box !important;
-    overflow-wrap: anywhere !important;
-  }
-  .rt th, .rt td, .netto-table th, .netto-table td,
-  .aandacht-table th, .aandacht-table td { overflow-wrap: anywhere !important; }
+  table, .rt, .netto-table, .aandacht-table { width: 100% !important; max-width: 100% !important; table-layout: fixed !important; box-sizing: border-box !important; }
+  .rt th, .rt td, .netto-table th, .netto-table td, .aandacht-table th, .aandacht-table td { overflow-wrap: anywhere !important; }
 
   /* ── Pagina-indeling ── */
-  h2, h3, .rpt-section-head, .sec-head { page-break-after: avoid !important; break-after: avoid !important; }
-  .phase-block, .sub-card-new, .sc-card, .kpi-panel, .geen-actie-block,
-  .totals-block, .live-totals-bar, .adviseur-sluiting, .rente-strip,
+  h2, h3, .sec-head, .rpt-section-head { page-break-after: avoid !important; break-after: avoid !important; }
+  .phase-block, .sub-card-new, .kpi-panel, .geen-actie-block, .totals-block,
+  .live-totals-bar, .adviseur-sluiting, .rente-strip, .punten-grid,
   .rt tbody tr, .netto-table tr, .aandacht-table tr { page-break-inside: avoid !important; break-inside: avoid !important; }
   img, canvas, svg { page-break-inside: avoid !important; break-inside: avoid !important; max-width: 100% !important; }
 
   /* ── Verberg interactieve UI ── */
-  .action-row, button, .btn-orange, .btn-ghost, .btn-sel,
-  input[type="range"], .ai-fab, .toc-rail, .measures-toolbar,
-  .m-checkbox, .ml-controls, [data-print-hide], .chart-tog-group,
-  .scroll-hint, .kpi-edit-hint, .trust-bar { display: none !important; }
+  .action-row, button, .btn-orange, .btn-ghost, .btn-sel, input[type="range"],
+  .ai-fab, .toc-rail, .measures-toolbar, .m-checkbox, .ml-controls,
+  [data-print-hide], .chart-tog-group, .scroll-hint, .kpi-edit-hint,
+  .trust-bar, .bron-card, .rpt-footer { display: none !important; }
 
-  /* ── Label visualisatie ── */
-  .label-track { display: flex !important; align-items: center !important; gap: 8pt !important; margin-top: 10pt !important; padding: 8pt 0 0 !important; border-top: 0.5pt solid rgba(255,255,255,0.2) !important; }
-  .label-box { width: 36pt !important; height: 28pt !important; font-size: 14pt !important; border-radius: 3pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .label-caption { color: rgba(255,255,255,0.6) !important; font-size: 7.5pt !important; }
-  .label-indicatief-note { font-size: 7pt !important; color: rgba(255,255,255,0.5) !important; margin-top: 4pt !important; }
+  /* ── Verberg zware interactieve secties ── */
+  #maandlastenSection, #scenarioSection { display: none !important; }
+
 }
 </style>
 </head>
