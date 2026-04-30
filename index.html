@@ -4922,6 +4922,61 @@ select.finput {
     font-size: 6.8pt !important;
   }
 }
+
+
+/* LAATSTE HEADER-AFSTAND FIX v7 - normale printpagina's klein stukje omlaag */
+@media print {
+  /* Iets meer echte bovenmarge onder de vaste blauwe header */
+  @page {
+    size: A4 portrait !important;
+    margin: 28mm 13mm 22mm 13mm !important;
+  }
+
+  @page :first {
+    margin: 0 !important;
+  }
+
+  /* Secties die bovenaan een nieuwe pagina starten krijgen extra veilige ruimte.
+     Dit voorkomt dat tabelkoppen/sectietitels tegen of onder de banner vallen. */
+  #measuresSection,
+  #nettoSection,
+  #subsidiesSection,
+  #phasesSection {
+    padding-top: 9mm !important;
+  }
+
+  /* Vervolgstappen mag nog steeds slim aansluiten op pagina 6 als er ruimte is. */
+  #vervolgSection {
+    padding-top: 3mm !important;
+  }
+
+  /* Eerste kop op zo'n pagina niet nog eens te veel marge geven. */
+  #measuresSection > .sec-head:first-child,
+  #measuresSection > .rpt-section-head:first-child,
+  #nettoSection > .sec-head:first-child,
+  #nettoSection > .rpt-section-head:first-child,
+  #subsidiesSection > .sec-head:first-child,
+  #subsidiesSection > .rpt-section-head:first-child,
+  #phasesSection > .sec-head:first-child,
+  #phasesSection > .rpt-section-head:first-child {
+    margin-top: 0 !important;
+  }
+
+  /* Houd de header zelf compact en boven de content. */
+  .mb-ph {
+    height: 13mm !important;
+  }
+
+  .mb-ph-bar {
+    height: 11mm !important;
+    min-height: 11mm !important;
+  }
+
+  .mb-ph-accent {
+    height: 2mm !important;
+  }
+}
+
 </style>
 </head>
 <body>
