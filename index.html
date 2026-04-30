@@ -1507,495 +1507,3511 @@ select.finput {
   .totals-block { grid-template-columns: 1fr; gap: 12px; }
   .rpt-footer { flex-direction: column; gap: 12px; padding: 16px 24px; text-align: center; }
 }
-/* ═══════════════════════════════════════════════════════════════════════
-   PRINT SYSTEM v24 — DEFINITIEF
-   Aanpak: één enkele @media print block, geen schaal-hacks,
-   echte layout spacing, McKinsey/BCG consulting rapport stijl.
-═══════════════════════════════════════════════════════════════════════ */
 @media print {
-
-  /* ── 1. A4 PAGE SETUP ─────────────────────────────────────────────── */
+  /* ── Pagina-setup ── */
   @page {
     size: A4 portrait;
-    margin: 20mm 13mm 20mm 13mm;
+    margin: 14mm 16mm 14mm 16mm;
   }
-  @page :first { margin: 0; }
+  @page :first { margin-top: 0; }
 
-  /* ── 2. GLOBALS ───────────────────────────────────────────────────── */
-  html, body {
-    width: 210mm !important;
-    height: auto !important;
+  /* ── Alles verbergen behalve het rapport ── */
+  .trust-bar,
+  .hdr,
+  .body,
+  .loading-state,
+  .disclaimer,
+  .action-row,
+  .form-error { display: none !important; }
+
+  /* ── Reset ── */
+  *, *::before, *::after { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  html, body { background: white !important; margin: 0; padding: 0; font-size: 10.5pt; overflow: visible !important; }
+  .page-wrap { padding: 0 !important; max-width: 100% !important; background: white !important; overflow: visible !important; }
+  .card { box-shadow: none !important; border-radius: 0 !important; border: none !important; background: white !important; overflow: visible !important; }
+
+  /* ── Rapport zichtbaar ── */
+  .result { display: block !important; opacity: 1 !important; transform: none !important; animation: none !important; }
+  .result .body { display: block !important; padding: 0 !important; }
+
+  /* ── Rapport header — blauwe banner ── */
+  .rpt-hdr {
+    background: #134460 !important;
+    color: white !important;
+    padding: 18pt 22pt 14pt !important;
+    border-radius: 0 !important;
     margin: 0 !important;
+    page-break-after: avoid;
+  }
+  .rpt-hdr::before { display: none !important; }
+  .rpt-hdr::after { background: #E26836 !important; height: 3pt !important; }
+  .rpt-hdr-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6pt; }
+  .rpt-logo img { filter: none !important; background: white !important; border-radius: 50% !important; width: 22pt !important; height: 22pt !important; object-fit: contain !important; padding: 1.5pt !important; }
+  .rpt-logo-name, .rpt-logo-sub { color: white !important; }
+  .rpt-date { color: rgba(255,255,255,0.7) !important; }
+  .rpt-pretitle { color: rgba(255,255,255,0.7) !important; font-size: 8pt !important; letter-spacing: 1.5pt; }
+  .rpt-title { color: white !important; font-size: 20pt !important; font-weight: 600 !important; }
+  .rpt-address { color: rgba(255,255,255,0.75) !important; font-size: 9pt !important; }
+
+  /* ── Label-track ── */
+  .label-track {
+    margin-top: 8pt !important;
+    padding: 7pt 10pt !important;
+    background: rgba(255,255,255,0.12) !important;
+    border-radius: 6pt !important;
+    display: flex;
+    align-items: center;
+    gap: 8pt;
+  }
+  .label-box { padding: 4pt 10pt !important; font-size: 14pt !important; }
+  .label-caption { color: rgba(255,255,255,0.7) !important; font-size: 8.5pt !important; }
+  .label-arrow { color: rgba(255,255,255,0.8) !important; font-size: 16pt !important; }
+
+  /* ── KPI panel ── */
+  .kpi-panel {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr !important;
+    border: 0.5pt solid #E3DDD8 !important;
+    border-top: none !important;
+    margin-bottom: 12pt !important;
+    page-break-inside: avoid;
+  }
+  .kpi-cell {
+    padding: 10pt 14pt !important;
+    border-right: 0.5pt solid #E3DDD8 !important;
+  }
+  .kpi-cell:last-child { border-right: none !important; }
+  /* Kleurbalken bovenaan KPI cellen via border-top ipv ::before (die werkt niet in print) */
+  .kpi-c1 { border-top: 3pt solid #1B597B !important; }
+  .kpi-c2 { border-top: 3pt solid #E26836 !important; }
+  .kpi-c3 { border-top: 3pt solid #2A7A50 !important; }
+  .kpi-cell::before { display: none !important; }
+  /* De inline groene div in CO2-cel verbergen (vervangen door border-top) */
+  .kpi-c3 > div[style*="position:absolute"] { display: none !important; }
+  .kpi-lbl { font-size: 7.5pt !important; color: #6B6B6B !important; }
+  .kpi-num { font-size: 17pt !important; font-weight: 700 !important; }
+  .kpi-sub { font-size: 7.5pt !important; color: #6B6B6B !important; }
+  .kpi-c1 .kpi-num { color: #1B597B !important; }
+  .kpi-c2 .kpi-num { color: #E26836 !important; }
+  .good { color: #2A7A50 !important; }
+
+  /* Input verbergen, print-span tonen */
+  .kpi-edit-input { display: none !important; }
+  .kpi-edit-hint { display: none !important; }
+  .kpi-edit-prefix { font-size: 17pt !important; font-weight: 700 !important; color: #1B597B !important; }
+  .kpi-edit-wrap { display: flex; align-items: baseline; gap: 3px; }
+  .kpi-print-val { display: inline !important; font-size: 17pt !important; font-weight: 700 !important; color: #1B597B !important; font-family: 'IBM Plex Sans', sans-serif !important; letter-spacing: -0.5px !important; }
+
+  /* ── Intro tekst ── */
+  .intro-text { font-size: 9.5pt !important; line-height: 1.6 !important; margin-bottom: 12pt !important; }
+
+  /* ── Sectie headers ── */
+  .rpt-section-head {
+    font-size: 8pt !important;
+    font-weight: 600 !important;
+    letter-spacing: 1pt !important;
+    text-transform: uppercase !important;
+    color: #1B597B !important;
+    border-bottom: 1.5pt solid #1B597B !important;
+    padding-bottom: 4pt !important;
+    margin: 12pt 0 7pt !important;
+    page-break-after: avoid;
+  }
+
+  /* ── Maatregelen tabel — compact, alles op pagina 1 ── */
+  #measuresSection { page-break-inside: avoid !important; break-inside: avoid !important; }
+  .rt { font-size: 7.5pt !important; width: 100% !important; border-collapse: collapse !important; margin-bottom: 6pt !important; }
+  .rt thead tr { border-bottom: 1.5pt solid #1B597B !important; background: white !important; }
+  .rt th { padding: 4pt 5pt !important; font-size: 7pt !important; color: #3A3A3A !important; font-weight: 600 !important; }
+  .rt td { padding: 4pt 5pt !important; border-bottom: 0.4pt solid #E3DDD8 !important; }
+  .rt tbody tr:last-child td { border-bottom: none !important; }
+  .m-save { color: #2A7A50 !important; font-weight: 600 !important; }
+  .m-sub { color: #1B597B !important; font-size: 7pt !important; }
+  .m-name { display: flex; align-items: center; gap: 4pt; }
+  .m-icon { display: none !important; }
+
+  /* ── Totals block ── */
+  .totals-block {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr !important;
+    gap: 8pt !important;
+    margin-bottom: 12pt !important;
+    page-break-inside: avoid;
+  }
+  .totals-block > div { padding: 7pt 10pt !important; background: #F4F2EF !important; border-radius: 4pt !important; }
+  .total-label { font-size: 7pt !important; color: #6B6B6B !important; margin-bottom: 2pt !important; }
+  .total-val { font-size: 13pt !important; font-weight: 700 !important; color: #141414 !important; }
+  .orange { color: #E26836 !important; }
+
+  /* ── Netto investering tabel ── */
+  .netto-table { font-size: 8.5pt !important; width: 100% !important; border-collapse: collapse !important; margin-bottom: 12pt !important; page-break-inside: avoid; }
+  .netto-table th { font-size: 7.5pt !important; color: #3A3A3A !important; padding: 5pt 6pt !important; border-bottom: 1.5pt solid #1B597B !important; }
+  .netto-table td { padding: 5pt 6pt !important; border-bottom: 0.4pt solid #E3DDD8 !important; }
+  .netto-table tr:last-child td { font-weight: 700 !important; font-size: 9.5pt !important; border-top: 1pt solid #1B597B !important; border-bottom: none !important; }
+  .netto-table .sub-row td { color: #2A7A50 !important; }
+
+  /* ── Subsidies ── */
+  .sub-item { border: 0.5pt solid #E3DDD8 !important; padding: 8pt 10pt !important; margin-bottom: 6pt !important; border-radius: 4pt !important; page-break-inside: avoid; }
+  .sub-badge { background: #1B597B !important; color: white !important; font-size: 7pt !important; padding: 2pt 6pt !important; border-radius: 3pt !important; }
+  .sub-name { font-size: 9.5pt !important; font-weight: 600 !important; }
+  .sub-desc { font-size: 8.5pt !important; color: #3A3A3A !important; }
+  .sub-alert { font-size: 8pt !important; background: #FBF0F0 !important; color: #8B2828 !important; border-radius: 3pt !important; padding: 4pt 7pt !important; margin: 5pt 0 !important; }
+  .sub-steps { font-size: 8pt !important; }
+  .sub-steps li { margin-bottom: 2pt !important; }
+  .sub-step-num { background: #1B597B !important; color: white !important; width: 14pt !important; height: 14pt !important; font-size: 7pt !important; border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; flex-shrink: 0 !important; }
+
+  /* ── Fases ── */
+  .phases-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 7pt !important; margin-bottom: 12pt !important; }
+  .phase-block { border: 0.5pt solid #E3DDD8 !important; border-radius: 4pt !important; overflow: hidden !important; page-break-inside: avoid; }
+  .phase-header { padding: 7pt 10pt !important; background: #F4F2EF !important; border-bottom: 0.5pt solid #E3DDD8 !important; gap: 8pt !important; }
+  .phase-num-badge { width: 26pt !important; height: 26pt !important; font-size: 10pt !important; background: #E26836 !important; }
+  .phase-title { font-size: 9pt !important; font-weight: 600 !important; }
+  .phase-body { padding: 7pt 10pt !important; }
+  .phase-desc { font-size: 8pt !important; color: #3A3A3A !important; }
+  .phase-meta-pill { font-size: 7pt !important; padding: 2pt 6pt !important; }
+
+  /* ── Aandachtspunten ── */
+  .aandacht-table { font-size: 8.5pt !important; width: 100% !important; border-collapse: collapse !important; page-break-inside: avoid; }
+  .aandacht-table thead tr { border-bottom: 1.5pt solid #1B597B !important; }
+  .aandacht-table th { font-size: 7.5pt !important; padding: 5pt 6pt !important; color: #1B597B !important; }
+  .aandacht-table td { padding: 6pt 6pt !important; border-bottom: 0.4pt solid #E3DDD8 !important; vertical-align: top !important; }
+  .aandacht-table td:first-child { font-weight: 600 !important; color: #1B597B !important; width: 28% !important; }
+
+  /* ── Scherm footer → verbergen in print ── */
+  .rpt-footer { display: none !important; }
+
+  /* ── MB Print footer ── */
+  .mb-pf {
+    display: block !important;
+    position: fixed !important;
+    bottom: 0mm !important;
+    left: 0mm !important;
+    right: 0mm !important;
+    width: 100% !important;
+    z-index: 9999 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .mb-pf-bar {
+    background: linear-gradient(90deg, #0d3348 0%, #134460 45%, #1B597B 100%) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 5pt 16mm !important;
+    min-height: 14mm !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    position: relative !important;
+  }
+  .mb-pf-accent {
+    position: absolute !important;
+    top: 0 !important; left: 0 !important; right: 0 !important;
+    height: 2.5pt !important;
+    background: linear-gradient(90deg, #E26836, #f09060) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .mb-pf-left { display: flex !important; align-items: center !important; gap: 7pt !important; }
+  .mb-pf-logo { width: 20pt !important; height: 20pt !important; border-radius: 50% !important; background: rgba(255,255,255,0.95) !important; object-fit: contain !important; padding: 1.5pt !important; flex-shrink: 0 !important; }
+  .mb-pf-brand { display: flex !important; flex-direction: column !important; gap: 1pt !important; }
+  .mb-pf-name { font-size: 8pt !important; font-weight: 700 !important; color: #ffffff !important; font-family: 'IBM Plex Sans', sans-serif !important; line-height: 1.2 !important; }
+  .mb-pf-sub { font-size: 6.5pt !important; color: rgba(255,255,255,0.55) !important; font-family: 'IBM Plex Sans', sans-serif !important; line-height: 1.2 !important; }
+  .mb-pf-mid { font-size: 6.5pt !important; color: rgba(255,255,255,0.5) !important; font-family: 'IBM Plex Sans', sans-serif !important; text-align: center !important; line-height: 1.55 !important; }
+  .mb-pf-right { display: flex !important; flex-direction: column !important; align-items: flex-end !important; gap: 2pt !important; }
+  .mb-pf-email { font-size: 7.5pt !important; color: rgba(255,255,255,0.85) !important; font-family: 'IBM Plex Sans', sans-serif !important; font-weight: 500 !important; }
+  .mb-pf-url { font-size: 7pt !important; color: rgba(255,255,255,0.5) !important; font-family: 'IBM Plex Sans', sans-serif !important; }
+
+  /* Ruimte onderaan content zodat de vaste footer NIETS bedekt */
+  .result .body { padding-bottom: 20mm !important; }
+
+  /* Verwijder overflow:hidden van card/page-wrap zodat fixed werkt */
+  .card { overflow: visible !important; }
+  html, body { overflow: visible !important; }
+
+  /* ── Pagina-indeling algemeen ── */
+  h2, .rpt-section-head { page-break-after: avoid; }
+  .sub-item, .phase-block { page-break-inside: avoid; }
+  /* .rt handelt page-break via #measuresSection avoid — geen auto hier */
+  .netto-table, .aandacht-table { page-break-inside: auto; }
+  .rt tr, .netto-table tr, .aandacht-table tr { page-break-inside: avoid; }
+}
+
+/* ── Nieuwe subsidiekaarten ── */
+.sub-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+@media (max-width: 640px) { .sub-grid { grid-template-columns: 1fr; } }
+
+.sub-card-new {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-lg);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: box-shadow var(--t-mid);
+}
+.sub-card-new:hover {
+  box-shadow: var(--shadow-md);
+}
+.sub-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px 12px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--blue-faint);
+}
+.sub-badge-new {
+  background: var(--blue);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: var(--f-head);
+  padding: 4px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.sub-card-titles { flex: 1; min-width: 0; }
+.sub-name-new {
+  font-size: 13.5px;
+  font-weight: 600;
+  font-family: var(--f-head);
+  color: var(--ink);
+  line-height: 1.3;
+}
+.sub-type-new {
+  font-size: 11px;
+  color: var(--ink-4);
+  font-family: var(--f-head);
+  margin-top: 3px;
+  font-weight: 500;
+}
+.sub-card-body {
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+.sub-voordeel {
+  font-size: 13px;
+  color: var(--blue-deep);
+  line-height: 1.55;
+  padding: 10px 12px;
+  background: var(--blue-faint);
+  border-radius: var(--r-sm);
+  border-left: 3px solid var(--blue);
+  font-weight: 500;
+}
+.sub-toepassing {
+  font-size: 11px;
+  color: var(--ink-4);
+  font-family: var(--f-head);
+  line-height: 1.5;
+}
+.sub-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 11.5px;
+  color: var(--red);
+  background: var(--red-bg);
+  border-radius: var(--r-sm);
+  padding: 8px 12px;
+  line-height: 1.5;
+  border-left: 3px solid var(--red);
+  font-weight: 500;
+}
+.sub-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.sub-steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--ink-2);
+  line-height: 1.5;
+}
+.sub-step-num {
+  background: var(--blue);
+  color: white;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.sub-footer-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 18px 14px;
+  border-top: 1px solid var(--rule);
+  background: var(--page);
+}
+.sub-combine {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--green);
+  font-family: var(--f-head);
+  font-weight: 600;
+  background: var(--green-bg);
+  padding: 3px 8px;
+  border-radius: 20px;
+}
+.sub-nocombine {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--amber);
+  font-family: var(--f-head);
+  font-weight: 600;
+  background: var(--amber-bg);
+  padding: 3px 8px;
+  border-radius: 20px;
+}
+.sub-url {
+  margin-left: auto;
+  font-size: 11.5px;
+  color: var(--blue);
+  font-family: var(--f-head);
+  text-decoration: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.sub-url:hover { text-decoration: underline; }
+
+/* Print aanpassing voor nieuwe subsidiekaarten */
+@media print {
+  .sub-grid { grid-template-columns: 1fr 1fr !important; gap: 7pt !important; }
+  .sub-card-new { border-top: 2pt solid #1B597B !important; padding: 8pt 10pt !important; gap: 5pt !important; page-break-inside: avoid; }
+  .sub-badge-new { font-size: 7pt !important; padding: 2pt 6pt !important; }
+  .sub-name-new { font-size: 8.5pt !important; }
+  .sub-type-new { font-size: 7pt !important; }
+  .sub-voordeel { font-size: 8pt !important; padding: 5pt 7pt !important; }
+  .sub-toepassing { font-size: 7pt !important; }
+  .sub-alert { font-size: 7.5pt !important; padding: 4pt 7pt !important; }
+  .sub-steps li { font-size: 7.5pt !important; }
+  .sub-footer-row { padding-top: 4pt !important; }
+  .sub-url { display: none !important; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   INTERACTIEVE MAATREGELENSELECTOR
+═══════════════════════════════════════════════════════ */
+.measures-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.measures-toolbar-label {
+  font-size: 10.5px;
+  font-family: var(--f-head);
+  font-weight: 600;
+  color: var(--ink-4);
+  letter-spacing: 0.5px;
+}
+.measures-select-btns { display: flex; gap: 6px; }
+.btn-sel {
+  font-size: 11px;
+  font-family: var(--f-head);
+  font-weight: 600;
+  color: var(--blue);
+  background: var(--blue-faint);
+  border: 1px solid var(--blue-faint2);
+  border-radius: 20px;
+  padding: 4px 12px;
+  cursor: pointer;
+  transition: all var(--t-fast);
+}
+.btn-sel:hover { background: var(--blue-faint2); }
+
+.rt td.m-check { width: 36px; padding-left: 0; padding-right: 0; }
+.m-checkbox {
+  width: 18px; height: 18px;
+  border: 1.5px solid var(--ink-5);
+  border-radius: 4px;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background: var(--surface);
+  position: relative;
+  transition: all var(--t-fast);
+  flex-shrink: 0;
+  display: block;
+}
+.m-checkbox:checked {
+  background: var(--blue);
+  border-color: var(--blue);
+}
+.m-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px; top: 1px;
+  width: 6px; height: 10px;
+  border: 2px solid white;
+  border-top: none; border-left: none;
+  transform: rotate(40deg);
+}
+.rt tbody tr.row-unchecked td { opacity: 0.38; }
+.rt tbody tr.row-unchecked td.m-check { opacity: 1; }
+
+/* Live totalen balk */
+.live-totals-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border: 1.5px solid var(--blue-faint2);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  margin-bottom: 28px;
+  background: var(--surface);
+  transition: all var(--t-mid);
+}
+.lt-cell {
+  padding: 16px 18px 14px;
+  position: relative;
+  border-right: 1px solid var(--rule);
+}
+.lt-cell:last-child { border-right: none; }
+.lt-cell::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2.5px;
+}
+.lt-cell.c-blue::before { background: var(--blue); }
+.lt-cell.c-orange::before { background: var(--orange); }
+.lt-cell.c-green::before { background: var(--green); }
+.lt-lbl {
+  font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--ink-4); font-family: var(--f-head); font-weight: 600;
+  margin-bottom: 7px; display: block;
+}
+.lt-val {
+  font-size: 22px; font-weight: 700; font-family: var(--f-head);
+  color: var(--blue); line-height: 1; letter-spacing: -0.5px;
+  transition: all 0.3s ease;
+}
+.lt-val.orange { color: var(--orange); }
+.lt-val.green { color: var(--green); }
+.lt-sub { font-size: 10.5px; color: var(--ink-4); margin-top: 5px; }
+
+/* ═══════════════════════════════════════════════════════
+   BESPARINGSGRAFIEK
+═══════════════════════════════════════════════════════ */
+.chart-section {
+  margin-bottom: 28px;
+}
+.chart-wrap {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-md);
+  padding: 24px 24px 20px;
+  box-shadow: var(--shadow-sm);
+}
+.chart-canvas-wrap {
+  position: relative;
+  height: 240px;
+}
+.chart-legend {
+  display: flex; gap: 20px; flex-wrap: wrap;
+  margin-top: 14px;
+}
+.chart-legend-item {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 11.5px; color: var(--ink-3);
+  font-family: var(--f-head); font-weight: 500;
+}
+.chart-legend-dot {
+  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+}
+.chart-breakeven-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--green-bg); color: var(--green);
+  font-size: 11px; font-weight: 700; font-family: var(--f-head);
+  letter-spacing: 0.3px; padding: 5px 12px; border-radius: 20px;
+  margin-left: auto;
+}
+
+
+@media (max-width: 640px) {
+  .live-totals-bar { grid-template-columns: 1fr; }
+  .lt-cell { border-right: none; border-bottom: 1px solid var(--rule); }
+}
+
+/* ═══════════════════════════════════════════════════════
+   STICKY INHOUDSOPGAVE
+═══════════════════════════════════════════════════════ */
+.toc-rail {
+  position: fixed;
+  top: 50%;
+  right: 24px;
+  transform: translateY(-50%);
+  z-index: 50;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-md);
+  padding: 10px 6px;
+  box-shadow: var(--shadow-md);
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+  font-family: var(--f-head);
+  max-width: 220px;
+}
+.toc-rail.on { display: flex; }
+.toc-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 12px;
+  font-size: 11.5px;
+  color: var(--ink-3);
+  text-decoration: none;
+  border-radius: var(--r-xs);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--t-fast);
+  white-space: nowrap;
+}
+.toc-link:hover { background: var(--blue-faint); color: var(--blue); }
+.toc-link.active { background: var(--blue-faint); color: var(--blue-deep); font-weight: 600; }
+.toc-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--ink-5); flex-shrink: 0;
+  transition: all var(--t-fast);
+}
+.toc-link.active .toc-dot { background: var(--orange); transform: scale(0.93); }
+@media (max-width: 1280px) { .toc-rail { display: none !important; } }
+
+/* ═══════════════════════════════════════════════════════
+   "WAT ALS U NIETS DOET?" BLOK
+═══════════════════════════════════════════════════════ */
+.geen-actie-block {
+  margin: 0 0 28px;
+  border: 1px solid var(--rule);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  overflow: hidden;
+  page-break-inside: avoid;
+}
+.geen-actie-head {
+  background: linear-gradient(135deg, #2a1818 0%, #4a2222 100%);
+  color: white;
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.geen-actie-icon {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.geen-actie-eyebrow {
+  font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+  opacity: 0.65; font-weight: 600; margin-bottom: 2px;
+}
+.geen-actie-title {
+  font-size: 16px; font-weight: 600; font-family: var(--f-head);
+  letter-spacing: -0.2px;
+}
+.geen-actie-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background: var(--page);
+}
+.geen-actie-cell {
+  padding: 18px 20px;
+  border-right: 1px solid var(--rule);
+  display: flex; flex-direction: column; gap: 4px;
+}
+.geen-actie-cell:last-child { border-right: none; }
+.geen-actie-lbl {
+  font-size: 9.5px; letter-spacing: 1.3px; text-transform: uppercase;
+  color: var(--ink-4); font-weight: 600; font-family: var(--f-head);
+}
+.geen-actie-val {
+  font-size: 22px; font-weight: 700; font-family: var(--f-head);
+  color: var(--red); letter-spacing: -0.5px; line-height: 1.1;
+}
+.geen-actie-sub { font-size: 11px; color: var(--ink-3); line-height: 1.4; }
+.geen-actie-foot {
+  padding: 14px 24px;
+  font-size: 12px;
+  color: var(--ink-3);
+  line-height: 1.55;
+  background: var(--surface);
+  border-top: 1px solid var(--rule);
+}
+.geen-actie-foot strong { color: var(--ink); font-weight: 600; }
+@media (max-width: 720px) {
+  .geen-actie-grid { grid-template-columns: 1fr; }
+  .geen-actie-cell { border-right: none; border-bottom: 1px solid var(--rule); }
+}
+
+/* ═══════════════════════════════════════════════════════
+   MAANDLASTEN-VERGELIJKER
+═══════════════════════════════════════════════════════ */
+.maandlasten-block {
+  margin: 0 0 28px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  page-break-inside: avoid;
+}
+.maandlasten-head {
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--rule);
+  display: flex; align-items: baseline; justify-content: space-between;
+  flex-wrap: wrap; gap: 8px;
+}
+.maandlasten-titel {
+  font-size: 14px; font-weight: 600; font-family: var(--f-head);
+  color: var(--ink); letter-spacing: -0.1px;
+}
+.maandlasten-sub { font-size: 11px; color: var(--ink-4); }
+.maandlasten-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0;
+}
+.ml-col {
+  padding: 22px 22px 24px;
+  border-right: 1px solid var(--rule);
+  position: relative;
+  display: flex; flex-direction: column;
+}
+.ml-col:last-child { border-right: none; }
+.ml-col.is-now { background: var(--page); }
+.ml-col.is-direct { background: var(--surface); }
+.ml-col.is-fin { background: var(--blue-faint); }
+.ml-eyebrow {
+  font-size: 10px; letter-spacing: 1.3px; text-transform: uppercase;
+  font-weight: 600; font-family: var(--f-head);
+  margin-bottom: 4px;
+}
+.ml-eyebrow.is-now { color: var(--ink-4); }
+.ml-eyebrow.is-direct { color: var(--green); }
+.ml-eyebrow.is-fin { color: var(--blue); }
+.ml-titel {
+  font-size: 13px; font-weight: 600; font-family: var(--f-head);
+  color: var(--ink-2); margin-bottom: 14px;
+}
+.ml-bedrag {
+  font-size: 30px; font-weight: 700; font-family: var(--f-head);
+  letter-spacing: -1px; line-height: 1; color: var(--ink);
+}
+.ml-bedrag.is-direct { color: var(--green); }
+.ml-bedrag.is-fin { color: var(--blue-deep); }
+.ml-eenheid { font-size: 13px; color: var(--ink-4); margin-left: 4px; font-weight: 500; }
+.ml-detail {
+  margin-top: 14px;
+  font-size: 11px; color: var(--ink-3); line-height: 1.55;
+  border-top: 1px dashed var(--rule); padding-top: 12px;
+}
+.ml-detail-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 3px 0;
+}
+.ml-detail-row .lbl { color: var(--ink-4); }
+.ml-detail-row .val { color: var(--ink-2); font-weight: 500; }
+.ml-controls {
+  padding: 14px 22px;
+  background: var(--page-2);
+  border-top: 1px solid var(--rule);
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 18px;
+  align-items: center;
+}
+.ml-control { display: flex; flex-direction: column; gap: 4px; }
+.ml-control-lbl {
+  font-size: 10px; letter-spacing: 0.8px; text-transform: uppercase;
+  color: var(--ink-4); font-weight: 600; font-family: var(--f-head);
+  display: flex; justify-content: space-between;
+}
+.ml-control-lbl .v { color: var(--blue-deep); font-weight: 700; }
+.ml-control input[type="range"] {
+  -webkit-appearance: none; appearance: none;
+  width: 100%; height: 4px; background: var(--ink-5);
+  border-radius: 4px; outline: none;
+}
+.ml-control input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--blue); cursor: pointer;
+  border: 2px solid white; box-shadow: 0 1px 4px rgba(0,0,0,.2);
+}
+.ml-control input[type="range"]::-moz-range-thumb {
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--blue); cursor: pointer;
+  border: 2px solid white;
+}
+@media (max-width: 720px) {
+  .maandlasten-grid, .ml-controls { grid-template-columns: 1fr; }
+  .ml-col { border-right: none; border-bottom: 1px solid var(--rule); }
+}
+.ml-empty {
+  display: none;
+  padding: 24px 26px;
+  font-size: 13px; color: var(--ink-3); line-height: 1.55;
+  text-align: left;
+  border-bottom: 1px dashed var(--rule);
+  background: repeating-linear-gradient(135deg, var(--page) 0 8px, var(--page-2) 8px 16px);
+}
+
+/* Financieringsbedrag direct invoer */
+.ml-fin-invoer {
+  padding: 12px 22px 14px;
+  background: var(--blue-faint);
+  border-top: 1px solid var(--blue-faint2);
+  border-bottom: 1px solid var(--blue-faint2);
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+}
+.ml-fin-invoer-lbl {
+  font-size: 10px; letter-spacing: 0.8px; text-transform: uppercase;
+  color: var(--blue-deep); font-weight: 700; font-family: var(--f-head);
+  white-space: nowrap; flex-shrink: 0;
+}
+.ml-fin-invoer-wrap { display: flex; align-items: center; gap: 10px; flex: 1; flex-wrap: wrap; }
+.ml-fin-input-box {
+  display: flex; align-items: center;
+  background: white; border: 1.5px solid var(--blue-faint2);
+  border-radius: var(--r-sm); overflow: hidden;
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+.ml-fin-input-box:focus-within { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(27,89,123,0.10); }
+.ml-fin-prefix {
+  padding: 0 10px; font-size: 13px; font-weight: 600; color: var(--blue-deep);
+  background: var(--blue-faint); height: 36px; display: flex; align-items: center;
+  border-right: 1.5px solid var(--blue-faint2); font-family: var(--f-head);
+}
+.ml-fin-number {
+  border: none; outline: none; width: 110px; height: 36px; padding: 0 10px;
+  font-size: 14px; font-weight: 600; font-family: var(--f-head);
+  color: var(--ink); background: transparent; -moz-appearance: textfield;
+}
+.ml-fin-number::-webkit-outer-spin-button,
+.ml-fin-number::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.ml-fin-hint {
+  font-size: 11px; color: var(--ink-4); font-family: var(--f-head);
+  font-style: italic; flex: 1; min-width: 160px;
+}
+.ml-fin-hint strong { color: var(--blue-deep); font-style: normal; font-weight: 700; }
+.ml-fin-pct-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--blue); color: white; font-size: 10.5px; font-weight: 700;
+  font-family: var(--f-head); padding: 3px 9px; border-radius: 20px;
+  letter-spacing: 0.3px; white-space: nowrap;
+}
+.ml-empty strong { color: var(--ink); font-weight: 600; display: block; margin-bottom: 4px; font-family: var(--f-head); }
+.maandlasten-block.is-empty .maandlasten-head,
+.maandlasten-block.is-empty .maandlasten-grid,
+.maandlasten-block.is-empty .ml-fin-invoer,
+.maandlasten-block.is-empty .ml-controls { display: none; }
+.maandlasten-block.is-empty .ml-empty { display: block; }
+
+/* ═══════════════════════════════════════════════════════
+   SCENARIO-SLIDER
+═══════════════════════════════════════════════════════ */
+.chart-tog-group {
+  display: flex;
+  background: var(--page);
+  border-radius: 999px;
+  padding: 3px;
+  gap: 2px;
+}
+.chart-tog {
+  font-family: var(--f-head); font-size: 11.5px; font-weight: 600;
+  padding: 5px 14px; border: none; background: transparent;
+  color: var(--ink-3); cursor: pointer; border-radius: 999px;
+  transition: all var(--t-fast); white-space: nowrap;
+}
+.chart-tog-active {
+  background: var(--blue-deep); color: white;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+}
+.chart-tog:hover:not(.chart-tog-active) { color: var(--blue); }
+.sc-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 16px;
+  align-items: stretch;
+}
+@media (max-width: 680px) { .sc-grid { grid-template-columns: 1fr; } }
+
+.sc-card {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s cubic-bezier(0.16,1,0.3,1), box-shadow 0.2s ease;
+}
+.sc-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 36px rgba(0,0,0,0.09), 0 2px 6px rgba(0,0,0,0.04);
+}
+.sc-card.sc-active {
+  border: 1.5px solid var(--blue-deep);
+  box-shadow: 0 8px 32px rgba(27,89,123,0.13);
+}
+
+.sc-accent { height: 3px; flex-shrink: 0; }
+.sc-accent-quick    { background: var(--green); }
+.sc-accent-budget   { background: var(--blue-deep); }
+.sc-accent-volledig { background: var(--orange); }
+
+/* HEAD */
+.sc-card-head { padding: 18px 18px 14px; border-bottom: 1px solid var(--rule); }
+.sc-label {
+  font-size: 8.5px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--ink-4);
+  font-family: var(--f-head); margin-bottom: 7px; display: block;
+}
+.sc-name {
+  font-size: 18px; font-weight: 700; color: var(--ink);
+  margin: 0 0 3px; font-family: var(--f-head);
+  letter-spacing: -0.4px; line-height: 1.2;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.sc-desc { font-size: 11px; color: var(--ink-4); margin: 0; }
+
+/* BODY */
+.sc-body { padding: 16px 18px 14px; flex: 1; display: flex; flex-direction: column; gap: 14px; }
+
+/* Stats — 4 items in 2×2, vaste breedte zodat niets overloopt */
+.sc-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 12px;
+}
+.sc-stat-lbl {
+  font-size: 8px; font-weight: 700; letter-spacing: 1.2px;
+  text-transform: uppercase; color: var(--ink-4);
+  font-family: var(--f-head); margin-bottom: 3px; display: block;
+}
+.sc-stat-val {
+  font-size: 15px; font-weight: 700; font-family: var(--f-head);
+  letter-spacing: -0.3px; color: var(--ink); line-height: 1;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.sc-stat-val.green  { color: var(--green); }
+.sc-stat-val.orange { color: var(--orange); }
+.sc-stat-val.blue   { color: var(--blue-deep); }
+
+.sc-divider { height: 1px; background: var(--rule); flex-shrink: 0; }
+
+/* Maatregelen */
+.sc-measures { display: flex; flex-direction: column; gap: 5px; flex: 1; }
+.sc-m {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; color: var(--ink-2); font-family: var(--f-head); font-weight: 500;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.sc-m.off { opacity: 0.2; font-weight: 400; }
+.sc-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.sc-dot.on  { background: var(--green); }
+.sc-dot.off { background: var(--ink-5); }
+
+/* FOOTER */
+.sc-footer {
+  padding: 16px 18px 18px;
+  background: var(--blue-faint);
+  border-top: 1px solid var(--rule);
+  flex-shrink: 0;
+}
+.sc-card.sc-active .sc-footer { background: var(--blue-faint2); }
+
+.sc-maand-lbl {
+  font-size: 8px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--blue); opacity: 0.65;
+  font-family: var(--f-head); margin-bottom: 6px; display: block;
+}
+.sc-maand-val {
+  font-size: 32px; font-weight: 700; font-family: var(--f-head);
+  letter-spacing: -1.5px; color: var(--blue-deep); line-height: 1;
+}
+.sc-maand-eenheid { font-size: 14px; font-weight: 500; letter-spacing: 0; }
+.sc-maand-sub { font-size: 10px; color: var(--ink-4); margin-top: 5px; line-height: 1.4; }
+
+.sc-bar-wrap { margin-top: 12px; }
+.sc-bar-lbl {
+  display: flex; justify-content: space-between;
+  font-size: 9px; font-weight: 600; color: var(--ink-4);
+  font-family: var(--f-head); margin-bottom: 5px;
+}
+.sc-bar-track { height: 3px; background: rgba(27,89,123,0.10); border-radius: 3px; overflow: hidden; }
+.sc-bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
+
+.scenario-block { margin: 0 0 28px; }
+.scenario-tab { display: none; }
+.ssum-cell { display: flex; flex-direction: column; gap: 2px; }
+.ssum-lbl { font-size: 9.5px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--ink-4); font-weight: 600; font-family: var(--f-head); }
+.ssum-val { font-size: 17px; font-weight: 700; font-family: var(--f-head); letter-spacing: -0.4px; color: var(--ink); }
+.ssum-val.green { color: var(--green); }
+.ssum-val.orange { color: var(--orange); }
+.ssum-val.blue { color: var(--blue-deep); }
+.ssum-sub { font-size: 10.5px; color: var(--ink-4); }
+
+/* ═══════════════════════════════════════════════════════
+   AI-CHAT BUBBLE
+═══════════════════════════════════════════════════════ */
+.ai-fab {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: var(--blue-deep);
+  color: white;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--shadow-lg);
+  cursor: pointer; z-index: 60;
+  border: none;
+  transition: transform var(--t-fast), box-shadow var(--t-fast);
+}
+.ai-fab:hover { transform: translateY(-2px); box-shadow: var(--shadow-xl); }
+.ai-fab.hidden { display: none; }
+.ai-fab-pulse {
+  position: absolute; inset: -4px;
+  border-radius: 50%;
+  border: 2px solid var(--blue);
+  opacity: 0.4;
+  animation: aiPulse 2.4s ease-out infinite;
+  pointer-events: none;
+}
+@keyframes aiPulse {
+  0% { transform: scale(0.93); opacity: 0.5; }
+  100% { transform: scale(0.93); opacity: 0; }
+}
+.ai-panel {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  width: 380px; max-width: calc(100vw - 32px);
+  height: 540px; max-height: calc(100vh - 48px);
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-xl);
+  display: none;
+  flex-direction: column;
+  z-index: 70;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+}
+.ai-panel.on { display: flex; }
+.ai-panel-head {
+  background: var(--blue-deep);
+  color: white;
+  padding: 14px 18px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.ai-panel-head-l { display: flex; align-items: center; gap: 10px; }
+.ai-panel-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--orange);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-family: var(--f-head); color: white;
+  font-size: 13px;
+}
+.ai-panel-name { font-size: 13px; font-weight: 600; font-family: var(--f-head); }
+.ai-panel-status { font-size: 10.5px; opacity: 0.7; display: flex; align-items: center; gap: 5px; }
+.ai-panel-status::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: #4ade80;
+}
+.ai-panel-close {
+  background: rgba(255,255,255,0.12); border: none; color: white;
+  width: 28px; height: 28px; border-radius: 50%; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.ai-panel-close:hover { background: rgba(255,255,255,0.22); }
+.ai-msgs {
+  flex: 1; overflow-y: auto;
+  padding: 16px;
+  display: flex; flex-direction: column; gap: 12px;
+  background: var(--page);
+}
+.ai-msg {
+  display: flex; gap: 8px; max-width: 86%;
+  font-size: 13px; line-height: 1.5;
+}
+.ai-msg.user { align-self: flex-end; flex-direction: row-reverse; }
+.ai-msg-bubble {
+  padding: 10px 13px;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  color: var(--ink-2);
+  white-space: pre-wrap;
+}
+.ai-msg.user .ai-msg-bubble {
+  background: var(--blue-deep); color: white; border-color: var(--blue-deep);
+  border-bottom-right-radius: 4px;
+}
+.ai-msg.ai .ai-msg-bubble { border-bottom-left-radius: 4px; }
+.ai-msg.ai .ai-msg-bubble.thinking::after {
+  content: '...'; display: inline-block; animation: aidot 1.2s infinite;
+}
+@keyframes aidot {
+  0%,20% { content: '.'; } 40% { content: '..'; } 60%,100% { content: '...'; }
+}
+.ai-suggestions {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  padding: 10px 16px; border-top: 1px solid var(--rule);
+  background: var(--surface);
+}
+.ai-sugg {
+  font-family: var(--f-head); font-size: 11px;
+  background: var(--blue-faint); color: var(--blue-deep);
+  border: 1px solid var(--blue-faint2); border-radius: 999px;
+  padding: 5px 11px; cursor: pointer;
+  transition: all var(--t-fast);
+}
+.ai-sugg:hover { background: var(--blue-faint2); }
+.ai-input-row {
+  display: flex; gap: 8px; padding: 12px 14px;
+  border-top: 1px solid var(--rule);
+  background: var(--surface);
+}
+.ai-input {
+  flex: 1; border: 1px solid var(--rule);
+  border-radius: 999px; padding: 9px 14px;
+  font-family: var(--f-body); font-size: 13px;
+  outline: none; background: var(--page);
+}
+.ai-input:focus { border-color: var(--blue); background: var(--surface); }
+.ai-send {
+  background: var(--blue-deep); color: white; border: none;
+  width: 38px; height: 38px; border-radius: 50%; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.ai-send:disabled { opacity: 0.4; cursor: not-allowed; }
+.ai-send:hover:not(:disabled) { background: var(--blue); }
+
+/* ═══════════════════════════════════════════════════════
+   ENERGIELABEL VISUALISATIE — verfijnd
+═══════════════════════════════════════════════════════ */
+.label-vis-section { margin-bottom: 28px; }
+.label-vis-card {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-md);
+  padding: 20px 24px 26px;
+  box-shadow: var(--shadow-sm);
+}
+.label-vis-top {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px; flex-wrap: wrap; gap: 8px;
+}
+.label-vis-eyebrow {
+  font-size: 10px; font-family: var(--f-head); font-weight: 700;
+  letter-spacing: 1.8px; text-transform: uppercase; color: var(--ink-4);
+}
+.label-vis-journey {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; font-family: var(--f-head); font-weight: 500; color: var(--ink-3);
+}
+.lvj-box {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 34px; height: 26px; border-radius: 5px;
+  font-size: 12px; font-weight: 700; color: white;
+  font-family: var(--f-head); padding: 0 7px;
+}
+.lvj-arrow { color: var(--ink-5); font-size: 14px; }
+.label-scale-track { position: relative; padding-bottom: 120px; }
+.label-scale-bars { display: flex; gap: 2px; height: 28px; }
+.lsb {
+  flex: 1; border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--f-head); font-weight: 700; font-size: 10px; color: white;
+  position: relative;
+}
+.lsb.is-current {
+  outline: 2px solid var(--ink-2); outline-offset: 2px; z-index: 2;
+}
+.lsb.is-target {
+  outline: 2px solid var(--green); outline-offset: 2px; z-index: 2;
+}
+.lsb.is-between { opacity: 0.85; }
+.lsb.is-outside { opacity: 0.2; }
+.lsb-tag {
+  position: absolute; bottom: -18px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 8.5px; font-family: var(--f-head); font-weight: 600;
+  white-space: nowrap; color: var(--ink-4);
+}
+.lv-indicatief-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin-top: 14px;
+  padding: 10px 14px;
+  background: var(--amber-bg);
+  border: 1px solid rgba(138,96,0,0.15);
+  border-radius: var(--r-xs);
+  font-size: 12px;
+  color: var(--amber);
+  font-family: var(--f-head);
+  line-height: 1.5;
+}
+.lsb.is-current .lsb-tag { color: var(--ink-2); }
+.lsb.is-target .lsb-tag { color: var(--green); }
+
+/* ═══════════════════════════════════════════════════════
+   WACHTEN BANNER
+═══════════════════════════════════════════════════════ */
+.wachten-banner {
+  display: flex; align-items: center; gap: 16px;
+  padding: 14px 20px;
+  background: var(--orange-faint);
+  border: 1px solid rgba(226,104,54,0.15);
+  border-left: 2px solid var(--orange);
+  border-radius: var(--r-md);
+  margin-bottom: 28px;
+}
+.wachten-icon {
+  width: 34px; height: 34px; background: rgba(226,104,54,0.1);
+  border-radius: var(--r-sm);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; color: var(--orange);
+}
+.wachten-text { flex: 1; min-width: 0; }
+.wachten-title {
+  font-size: 12.5px; font-weight: 600; font-family: var(--f-head);
+  color: var(--orange-deep); margin-bottom: 2px;
+}
+.wachten-sub { font-size: 11px; color: var(--ink-3); line-height: 1.5; }
+.wachten-amount {
+  font-size: 22px; font-weight: 700; font-family: var(--f-head);
+  color: var(--orange); letter-spacing: -0.5px; white-space: nowrap; flex-shrink: 0;
+}
+@media (max-width: 640px) {
+  .wachten-banner { flex-wrap: wrap; }
+  .wachten-amount { width: 100%; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   SUBSIDIES — clean lijst
+═══════════════════════════════════════════════════════ */
+.sub-list { margin-bottom: 8px; }
+.sub-list-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0 16px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--rule);
+  align-items: start;
+}
+.sub-list-item:last-child { border-bottom: none; }
+.sub-code-badge {
+  font-size: 9.5px; font-weight: 700; font-family: var(--f-head);
+  letter-spacing: 0.3px; color: var(--blue);
+  background: var(--blue-faint); border: 1px solid var(--blue-faint2);
+  padding: 2px 7px; border-radius: 3px;
+  white-space: nowrap; display: inline-block;
+  margin-right: 8px; vertical-align: middle;
+}
+.sub-list-center {}
+.sub-list-name {
+  font-size: 13px; font-weight: 600; font-family: var(--f-head);
+  color: var(--ink); margin-bottom: 3px; line-height: 1.35;
+}
+.sub-list-type {
+  font-size: 10.5px; color: var(--ink-4); margin-bottom: 8px; font-family: var(--f-head);
+}
+.sub-list-voordeel {
+  font-size: 12.5px; color: var(--ink-2); line-height: 1.65; margin-bottom: 8px;
+}
+.sub-list-alert {
+  font-size: 11.5px; color: var(--amber); background: var(--amber-bg);
+  border-left: 2px solid #E0A020; border-radius: 4px;
+  padding: 5px 10px; margin-bottom: 8px; line-height: 1.5;
+}
+.sub-list-steps { display: flex; flex-direction: column; gap: 4px; }
+.sub-list-step {
+  display: flex; align-items: flex-start; gap: 8px;
+  font-size: 11.5px; color: var(--ink-3); line-height: 1.5;
+}
+.sls-n {
+  min-width: 17px; height: 17px; border-radius: 50%;
+  background: var(--blue-faint2); color: var(--blue);
+  font-size: 9.5px; font-weight: 700; font-family: var(--f-head);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.sub-list-url {
+  font-size: 11px; color: var(--blue); text-decoration: none;
+  font-family: var(--f-head); font-weight: 600; opacity: 0.6;
+  white-space: nowrap; padding-top: 4px; display: block;
+}
+.sub-list-url:hover { opacity: 1; text-decoration: underline; }
+.sub-list-combine {
+  font-size: 10.5px; color: var(--ink-4); margin-top: 7px;
+  font-family: var(--f-head);
+}
+@media (max-width: 640px) {
+  .sub-list-item { grid-template-columns: 1fr; gap: 6px; }
+  .sub-list-url { margin-top: 4px; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   VERVOLGSTAPPEN
+═══════════════════════════════════════════════════════ */
+.vervolg-list { display: flex; flex-direction: column; gap: 0; margin-bottom: 8px; }
+.vervolg-item {
+  display: flex; align-items: flex-start; gap: 16px;
+  padding: 16px 0; border-bottom: 1px solid var(--rule);
+}
+.vervolg-item:last-child { border-bottom: none; }
+.vervolg-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--blue); color: white;
+  font-size: 12px; font-weight: 700; font-family: var(--f-head);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.vervolg-text {}
+.vervolg-title {
+  font-size: 13px; font-weight: 600; font-family: var(--f-head);
+  color: var(--ink); margin-bottom: 3px;
+}
+.vervolg-desc { font-size: 12px; color: var(--ink-3); line-height: 1.6; }
+
+/* ═══════════════════════════════════════════════════════
+   ADVISEUR SECTIE
+═══════════════════════════════════════════════════════ */
+.adviseur-card {
+  background: linear-gradient(135deg, var(--blue-deep) 0%, var(--blue) 100%);
+  border-radius: var(--r-md);
+  padding: 24px 28px;
+  display: flex; align-items: center; gap: 20px;
+  margin-bottom: 8px; position: relative; overflow: hidden;
+}
+.adviseur-card::before {
+  content: ''; position: absolute; bottom: -30px; right: -30px;
+  width: 140px; height: 140px; border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+}
+.adviseur-card::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+  height: 2px; background: linear-gradient(90deg, var(--orange), #f09060);
+}
+.adviseur-avatar {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; overflow: hidden;
+}
+.adviseur-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.adviseur-info { flex: 1; }
+.adviseur-label {
+  font-size: 9px; letter-spacing: 1.8px; text-transform: uppercase;
+  color: rgba(255,255,255,0.45); font-family: var(--f-head); font-weight: 600;
+  margin-bottom: 4px; display: block;
+}
+.adviseur-naam {
+  font-size: 16px; font-weight: 600; color: white;
+  font-family: var(--f-head); margin-bottom: 2px;
+}
+.adviseur-functie { font-size: 12px; color: rgba(255,255,255,0.55); }
+.adviseur-contact { display: flex; flex-direction: column; gap: 6px; text-align: right; }
+.adviseur-contact a {
+  font-size: 12.5px; color: rgba(255,255,255,0.75);
+  text-decoration: none; font-family: var(--f-head); font-weight: 500;
+  transition: color var(--t-fast);
+}
+.adviseur-contact a:hover { color: white; }
+@media (max-width: 640px) {
+  .adviseur-card { flex-direction: column; align-items: flex-start; }
+  .adviseur-contact { text-align: left; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   BRON SECTIE (bank / duurzaamheidstool)
+═══════════════════════════════════════════════════════ */
+.bron-card {
+  margin-top: 20px;
+  margin-bottom: 8px;
+  padding: 14px 18px;
+  background: #FAF8F5;
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--orange);
+  border-radius: var(--r-md);
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.bron-icon {
+  color: var(--orange);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.bron-text { flex: 1; }
+.bron-label {
+  font-family: var(--f-head);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--orange);
+  margin-bottom: 4px;
+}
+.bron-desc {
+  font-size: 12px;
+  color: var(--ink-3);
+  line-height: 1.6;
+}
+.bron-desc strong { color: var(--ink-1); font-weight: 600; }
+
+/* ═══════════════════════════════════════════════════════
+   MAATREGELEN — besparing als groen
+═══════════════════════════════════════════════════════ */
+.m-save { color: var(--green); font-weight: 600; font-family: var(--f-head); }
+
+
+/* Print-only footer — unsichtbar op scherm */
+.mb-pf { display: none; }
+
+/* Print-only page header — unsichtbar op scherm */
+.mb-ph { display: none; }
+
+/* ═══════════════════════════════════════════════════════
+   ADVISEUR SLUITING (premium closing block)
+═══════════════════════════════════════════════════════ */
+.adviseur-sluiting {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 28px 32px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--blue);
+  border-radius: var(--r-lg);
+  margin-top: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.adviseur-sluiting-left {
+  display: flex; align-items: center; gap: 14px; flex-shrink: 0;
+}
+.adviseur-sluiting-logo-wrap {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: var(--blue-faint); border: 2px solid var(--blue-faint2);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; overflow: hidden;
+}
+.adviseur-sluiting-logo { width: 36px; height: 36px; object-fit: contain; }
+.adviseur-sluiting-naam {
+  font-size: 16px; font-weight: 700; font-family: var(--f-head);
+  color: var(--ink); letter-spacing: -0.2px; line-height: 1.2;
+}
+.adviseur-sluiting-functie {
+  font-size: 11.5px; color: var(--ink-4); font-family: var(--f-head); margin-top: 3px;
+}
+.adviseur-sluiting-sep {
+  width: 1px; height: 48px; background: var(--rule); flex-shrink: 0;
+}
+.adviseur-sluiting-mid { flex: 1; min-width: 160px; }
+.adviseur-sluiting-cta-kop {
+  font-size: 14px; font-weight: 700; font-family: var(--f-head);
+  color: var(--blue-deep); letter-spacing: -0.1px; margin-bottom: 4px;
+}
+.adviseur-sluiting-cta-sub {
+  font-size: 12px; color: var(--ink-3); line-height: 1.6;
+}
+.adviseur-sluiting-contact {
+  display: flex; flex-direction: column; gap: 8px; flex-shrink: 0;
+}
+.adviseur-sluiting-link {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 12.5px; font-weight: 600; font-family: var(--f-head);
+  color: var(--blue); text-decoration: none;
+  transition: color var(--t-fast);
+}
+.adviseur-sluiting-link:hover { color: var(--blue-deep); }
+.adviseur-sluiting-link svg { flex-shrink: 0; opacity: 0.7; }
+@media (max-width: 640px) {
+  .adviseur-sluiting { flex-direction: column; gap: 18px; }
+  .adviseur-sluiting-sep { width: 48px; height: 1px; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   PRINT COVER PAGE
+═══════════════════════════════════════════════════════ */
+.print-cover-page { display: none; }
+
+/* ═══════════════════════════════════════════════════════
+   PRINT OVERRIDES — nieuwe modules
+═══════════════════════════════════════════════════════ */
+@media print {
+  .measures-toolbar, .live-totals-bar,
+  .wachten-banner { display: none !important; }
+
+  /* ── Hide screen-only modules in print ── */
+  .toc-rail, .ai-fab, .ai-panel,
+  .scenario-block, .ml-controls,
+  .ml-fin-invoer, #geenActieSection,
+  #scenarioSection { display: none !important; }
+
+  /* ── Wat als u niets doet — print versie ── */
+  .geen-actie-block { border: 0.5pt solid #E3DDD8 !important; margin-bottom: 12pt !important; page-break-inside: avoid !important; }
+  .geen-actie-head { background: #2a1818 !important; padding: 10pt 14pt !important; gap: 8pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .geen-actie-icon { width: 22pt !important; height: 22pt !important; }
+  .geen-actie-eyebrow { font-size: 7pt !important; letter-spacing: 1pt !important; }
+  .geen-actie-title { font-size: 11pt !important; }
+  .geen-actie-grid { background: #F4F2EF !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .geen-actie-cell { padding: 9pt 12pt !important; border-right: 0.5pt solid #E3DDD8 !important; }
+  .geen-actie-lbl { font-size: 7pt !important; }
+  .geen-actie-val { font-size: 14pt !important; color: #8B2828 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .geen-actie-sub { font-size: 7.5pt !important; }
+  .geen-actie-foot { padding: 8pt 14pt !important; font-size: 8pt !important; }
+
+  /* Scenario kaarten in print — 3 kolommen */
+  #scenarioSection { page-break-inside: avoid !important; break-inside: avoid !important; }
+  .sc-grid { gap: 10pt !important; grid-template-columns: repeat(3, minmax(0,1fr)) !important; }
+  .sc-card { border: 0.5pt solid #E3DDD8 !important; border-radius: 8pt !important; box-shadow: none !important; }
+  .sc-card.sc-active { border: 1.5pt solid #1B597B !important; }
+  .sc-accent { height: 2.5pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .sc-card-head { padding: 10pt 12pt 8pt !important; }
+  .sc-label { font-size: 6.5pt !important; margin-bottom: 4pt !important; }
+  .sc-name { font-size: 11pt !important; }
+  .sc-desc { font-size: 7.5pt !important; }
+  .sc-body { padding: 10pt 12pt 8pt !important; gap: 8pt !important; }
+  .sc-stats { gap: 8pt 10pt !important; }
+  .sc-stat-lbl { font-size: 6.5pt !important; }
+  .sc-stat-val { font-size: 11pt !important; }
+  .sc-m { font-size: 8pt !important; gap: 5pt !important; }
+  .sc-dot { width: 4.5pt !important; height: 4.5pt !important; }
+  .sc-footer { padding: 9pt 12pt 10pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .sc-maand-lbl { font-size: 6.5pt !important; margin-bottom: 4pt !important; }
+  .sc-maand-val { font-size: 20pt !important; }
+  .sc-maand-eenheid { font-size: 9pt !important; }
+  .sc-maand-sub { font-size: 7pt !important; margin-top: 3pt !important; }
+  .sc-bar-wrap { margin-top: 7pt !important; }
+  .sc-bar-lbl { font-size: 7pt !important; margin-bottom: 3pt !important; }
+  .sc-bar-track { height: 2pt !important; }
+  .sc-bar-fill { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  #nettoTable { font-size: 8.5pt !important; margin-bottom: 10pt !important; }
+  #nettoTable td { padding: 4pt 6pt !important; }
+  .netto-totaal-row td { font-size: 10pt !important; }
+
+  /* Maandlasten compact voor print */
+  .maandlasten-block { border: 0.5pt solid #E3DDD8 !important; margin-bottom: 12pt !important; page-break-inside: avoid !important; }
+  .maandlasten-head { padding: 8pt 12pt !important; }
+  .maandlasten-titel { font-size: 10pt !important; }
+  .maandlasten-sub { font-size: 7.5pt !important; }
+  .maandlasten-grid { display: grid !important; grid-template-columns: 1fr 1fr 1fr !important; }
+  .ml-col { padding: 11pt 12pt !important; border-right: 0.5pt solid #E3DDD8 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .ml-col.is-now { background: #F4F2EF !important; }
+  .ml-col.is-fin { background: #EEF4F8 !important; }
+  .ml-eyebrow { font-size: 7pt !important; letter-spacing: 1pt !important; }
+  .ml-titel { font-size: 9pt !important; margin-bottom: 8pt !important; }
+  .ml-bedrag { font-size: 18pt !important; }
+  .ml-bedrag.is-direct { color: #2A7A50 !important; }
+  .ml-bedrag.is-fin { color: #134460 !important; }
+  .ml-eenheid { font-size: 9pt !important; }
+  .ml-detail { margin-top: 8pt !important; padding-top: 7pt !important; font-size: 8pt !important; }
+  .ml-detail-row { padding: 1pt 0 !important; }
+  .ml-empty { display: none !important; }
+  .maandlasten-block.is-empty { display: none !important; }
+  .m-check { display: none !important; }
+  .rt th:first-child { display: none !important; }
+
+  /* ── Page breaks — voorkom afgesneden elementen ── */
+  .sub-list-item { page-break-inside: avoid !important; }
+  .phase-block { page-break-inside: avoid !important; }
+  .vervolg-item { page-break-inside: avoid !important; }
+  .kpi-panel { page-break-inside: avoid !important; }
+  .rpt-section-head { page-break-after: avoid !important; }
+  .punten-block { page-break-inside: avoid !important; }
+  .assumptions { page-break-inside: avoid !important; }
+  .adviseur-card { page-break-inside: avoid !important; }
+  .intro-text { page-break-inside: avoid !important; }
+  .label-vis-card { page-break-inside: avoid !important; }
+  .rente-strip { page-break-inside: avoid !important; }
+  .rt tr { page-break-inside: avoid !important; }
+
+  /* ── Grafieken in print via canvas→img (JS beforeprint) ── */
+  .chart-section, #chartSection { display: block !important; }
+  #maatregelenChartSection { display: block !important; }
+  .chart-canvas-wrap { height: auto !important; min-height: 110pt !important; max-height: 140pt !important; position: relative !important; overflow: visible !important; }
+  .chart-canvas-wrap canvas[data-print-hidden] { display: none !important; }
+  .chart-print-img { width: 100% !important; max-width: 100% !important; display: block !important; height: auto !important; }
+  /* Grafiek: toggle/slider verbergen, aktieve noot WEL tonen */
+  .chart-explainer { display: none !important; }
+  #chartNoteFlat, #chartNoteStijg { display: block !important; font-size: 7pt !important; padding-top: 6pt !important; margin-top: 6pt !important; }
+  .chart-tog-group { display: none !important; }
+  #chartSliderWrap { display: none !important; }
+  #chartKpiBe, #chartKpiBesp, #chartKpiRoi { font-size: 13pt !important; }
+  .chart-wrap { page-break-inside: avoid !important; box-shadow: none !important; border: 0.5pt solid #E3DDD8 !important; padding: 10pt !important; background: white !important; margin-bottom: 0 !important; }
+  .chart-legend { margin-top: 8pt !important; display: flex !important; }
+  .chart-legend-item { font-size: 8pt !important; }
+  .chart-breakeven-badge { font-size: 8pt !important; padding: 3pt 8pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+  /* Maatregelen tabel forceer zichtbaarheid */
+  #measuresSection { display: block !important; }
+  .rt { display: table !important; width: 100% !important; }
+  .rt thead { display: table-header-group !important; }
+  .rt tbody { display: table-row-group !important; }
+  .rt tr { display: table-row !important; opacity: 1 !important; }
+  .rt tr.row-unchecked td { opacity: 1 !important; }
+  .rt td { display: table-cell !important; opacity: 1 !important; }
+  .rt td.m-check, .rt th:first-child { display: none !important; }
+
+  /* ══════════════════════════════════════════════════════
+     PAGINA-INDELING PRINT
+     Pagina 1: Header + KPI + intro + label
+     Pagina 2: Maatregelen tabel + Besparing per maatregel + Cumulatieve besparing
+     Pagina 3: Netto investering + Maandlasten
+     Pagina 4+: Subsidies & fiscale regelingen
+  ══════════════════════════════════════════════════════ */
+
+  /* Pagina 2: maatregelen starten altijd op nieuwe pagina, alles bij elkaar */
+  #measuresSection {
+    page-break-before: always !important;
+    break-before: page !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  /* Grafieken direct na maatregelen, geen breuk ertussen */
+  #maatregelenChartSection {
+    page-break-before: avoid !important;
+    break-before: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  #chartSection {
+    page-break-before: avoid !important;
+    break-before: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  #chartSection .chart-wrap { padding: 8pt 10pt !important; overflow: visible !important; }
+  .chart-canvas-wrap canvas { max-height: 140pt !important; }
+  .chart-print-img { max-height: 140pt !important; }
+  #chartNoteFlat, #chartNoteStijg { font-size: 7pt !important; margin-top: 4pt !important; padding-top: 4pt !important; line-height: 1.4 !important; }
+  .chart-legend { margin-top: 5pt !important; }
+  .chart-legend-item { font-size: 7.5pt !important; }
+
+  /* Pagina 3 begint bij netto investering */
+  #nettoSection {
+    page-break-before: always !important;
+    break-before: page !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  /* Maandlasten direct na netto — op zelfde pagina 3 */
+  #maandlastenSection {
+    page-break-before: avoid !important;
+    break-before: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Pagina 4+: subsidies altijd op nieuwe pagina */
+  #subsidiesSection { page-break-before: always !important; break-before: page !important; }
+
+  /* Vervolgstappen + adviseur bij elkaar houden */
+  #vervolgSection   { page-break-before: auto !important; page-break-inside: avoid !important; break-inside: avoid !important; }
+  .vervolg-list     { page-break-inside: avoid !important; break-inside: avoid !important; }
+
+  /* Adviseur + bron + footer: altijd bij elkaar, nooit afbreken */
+  .rapport-einde-block {
+    page-break-before: avoid !important;
+    break-before: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  #adviseurSection  {
+    page-break-before: avoid !important;
+    break-before: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  #bronSection {
+    page-break-before: avoid !important;
+    break-before: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  .rpt-footer {
+    page-break-before: avoid !important;
+    break-before: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Aandachtspunten */
+  #aandachtSection  { page-break-inside: auto !important; }
+
+  /* Cover pagina */
+  @page :first { margin: 0 !important; }
+
+  /* ══════════════════════════════════════════════════════
+     LUXURY COVER PAGE — full-bleed dark magazine style
+  ══════════════════════════════════════════════════════ */
+  .print-cover-page {
+    page-break-after: always !important;
+    break-after: page !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    min-height: 297mm !important;
+    max-height: 297mm !important;
+    overflow: hidden !important;
+    position: relative !important;
+    background: #0d1f2d !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    display: block !important;
     padding: 0 !important;
-    background: #ffffff !important;
-    font-size: 9pt !important;
-    line-height: 1.4 !important;
-    color: #141414 !important;
-    overflow: visible !important;
+    margin: 0 !important;
+  }
+
+  /* Full-bleed wrapper */
+  .pc-wrap {
+    position: relative !important;
+    width: 100% !important;
+    height: 297mm !important;
+    display: flex !important;
+    flex-direction: column !important;
+    background: #0d1f2d !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    overflow: hidden !important;
+  }
+
+  /* Hero photo — takes full background */
+  .pc-hero {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 0 !important;
+  }
+  .pc-hero-img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center 40% !important;
+    display: block !important;
+    opacity: 0.55 !important;
+  }
+  .pc-hero-empty {
+    background: #0d1f2d !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  /* Subtle grid pattern for empty state */
+  .pc-hero-grid {
+    position: absolute !important;
+    inset: 0 !important;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px) !important;
+    background-size: 20pt 20pt !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  /* Gradient overlay — dark at top and bottom, lighter in middle */
+  .pc-hero-gradient {
+    position: absolute !important;
+    inset: 0 !important;
+    background: linear-gradient(
+      180deg,
+      rgba(13,31,45,0.85) 0%,
+      rgba(13,31,45,0.2) 35%,
+      rgba(13,31,45,0.2) 55%,
+      rgba(13,31,45,0.92) 100%
+    ) !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
 
-  /* ── 3. SCHERM-ELEMENTEN VERBERGEN ────────────────────────────────── */
-  .trust-bar, .hdr, .loading-state, .disclaimer, .action-row,
-  .form-error, .rpt-footer, .toc-rail, .ai-fab, .ai-panel,
-  .kpi-edit-input, .kpi-edit-hint, .m-check, .measures-toolbar,
-  .live-totals-bar, .wachten-banner, .chart-explainer,
-  .chart-tog-group, #chartSliderWrap, button,
-  input[type="range"], [data-print-hide] {
+  /* Overlay layer — all text/ui sits here */
+  .pc-overlay {
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 2 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+  }
+
+  /* ── Top bar ── */
+  .pc-top-bar {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 18pt 24pt 16pt !important;
+    border-bottom: 0.5pt solid rgba(255,255,255,0.1) !important;
+  }
+  .pc-logo-row {
+    display: flex !important; align-items: center !important; gap: 10pt !important;
+  }
+  .pc-logo-circle {
+    width: 30pt !important; height: 30pt !important; border-radius: 50% !important;
+    background: rgba(255,255,255,0.12) !important;
+    border: 1pt solid rgba(255,255,255,0.2) !important;
+    display: flex !important; align-items: center !important; justify-content: center !important;
+    overflow: hidden !important; flex-shrink: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .pc-logo-circle img {
+    width: 22pt !important; height: 22pt !important;
+    object-fit: contain !important;
+  }
+  .pc-brand {
+    font-size: 11pt !important; font-weight: 700 !important;
+    color: #ffffff !important; font-family: 'IBM Plex Sans', sans-serif !important;
+    letter-spacing: 0.1pt !important; line-height: 1.2 !important;
+  }
+  .pc-brand-sub {
+    font-size: 7.5pt !important; color: rgba(255,255,255,0.5) !important;
+    font-family: 'IBM Plex Sans', sans-serif !important; line-height: 1.2 !important;
+    font-weight: 400 !important;
+  }
+  .pc-date-chip {
+    font-size: 8pt !important; color: rgba(255,255,255,0.55) !important;
+    font-family: 'IBM Plex Sans', sans-serif !important;
+    background: rgba(255,255,255,0.07) !important;
+    border: 0.5pt solid rgba(255,255,255,0.12) !important;
+    border-radius: 20pt !important; padding: 3pt 9pt !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* ── Main content (bottom area) ── */
+  .pc-content {
+    padding: 0 24pt 20pt !important;
+  }
+  .pc-eyebrow-wrap {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8pt !important;
+    margin-bottom: 10pt !important;
+  }
+  .pc-accent-line {
+    display: inline-block !important;
+    width: 22pt !important; height: 2pt !important;
+    background: #E26836 !important;
+    border-radius: 2pt !important;
+    flex-shrink: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .pc-eyebrow {
+    font-size: 7.5pt !important; font-weight: 700 !important;
+    letter-spacing: 3pt !important; text-transform: uppercase !important;
+    color: #E26836 !important; font-family: 'IBM Plex Sans', sans-serif !important;
+  }
+  .pc-pand-title {
+    font-size: 38pt !important; font-weight: 700 !important;
+    color: #ffffff !important; font-family: 'IBM Plex Serif', serif !important;
+    letter-spacing: -0.8pt !important; line-height: 1.05 !important;
+    margin-bottom: 8pt !important;
+    text-shadow: 0 2pt 12pt rgba(0,0,0,0.4) !important;
+  }
+  .pc-pand-address {
+    font-size: 10.5pt !important; color: rgba(255,255,255,0.65) !important;
+    font-weight: 300 !important; font-family: 'IBM Plex Sans', sans-serif !important;
+    letter-spacing: 0.1pt !important; line-height: 1.4 !important;
+    margin-bottom: 16pt !important;
+  }
+
+  /* Label track */
+  .pc-label-track {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10pt !important;
+    margin-top: 4pt !important;
+  }
+  .pc-label-box {
+    width: 34pt !important; height: 26pt !important;
+    border-radius: 3pt !important;
+    display: flex !important; align-items: center !important; justify-content: center !important;
+    font-size: 14pt !important; font-weight: 800 !important;
+    color: #ffffff !important; font-family: 'IBM Plex Sans', sans-serif !important;
+    letter-spacing: -0.3pt !important;
+    box-shadow: 0 2pt 8pt rgba(0,0,0,0.3) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .pc-label-target {
+    box-shadow: 0 0 0 2pt rgba(255,255,255,0.25), 0 2pt 8pt rgba(0,0,0,0.3) !important;
+  }
+  .pc-label-arrow { display: flex !important; align-items: center !important; opacity: 0.6 !important; }
+  .pc-label-desc {
+    font-size: 8pt !important; color: rgba(255,255,255,0.5) !important;
+    font-family: 'IBM Plex Sans', sans-serif !important;
+    font-weight: 500 !important; letter-spacing: 0.5pt !important;
+    margin-left: 4pt !important;
+  }
+
+  /* ── Bottom bar ── */
+  .pc-bottom-bar {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 8pt 24pt !important;
+    border-top: 0.5pt solid rgba(255,255,255,0.1) !important;
+    background: rgba(0,0,0,0.25) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .pc-bottom-left {
+    font-size: 7pt !important; color: rgba(255,255,255,0.35) !important;
+    font-family: 'IBM Plex Sans', sans-serif !important;
+    letter-spacing: 0.3pt !important;
+  }
+  .pc-bottom-right {
+    font-size: 7pt !important; color: rgba(255,255,255,0.45) !important;
+    font-family: 'IBM Plex Sans', sans-serif !important;
+    font-weight: 500 !important;
+  }
+
+  /* Vervolgstappen + adviseur in print */
+  .vervolg-item { padding: 6pt 0 !important; }
+  .vervolg-num { width: 18pt !important; height: 18pt !important; font-size: 8pt !important; background: #1B597B !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .vervolg-title { font-size: 8.5pt !important; font-weight: 700 !important; }
+  .vervolg-desc { font-size: 7.5pt !important; color: #6B6B6B !important; line-height: 1.45 !important; }
+  .adviseur-card {
+    background: linear-gradient(135deg, #0d3348 0%, #134460 55%, #1B597B 100%) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    padding: 13pt 18pt !important;
+    border-radius: 5pt !important;
+    margin-top: 10pt !important;
+    page-break-inside: avoid;
+  }
+  .adviseur-naam { font-size: 12pt !important; color: white !important; font-weight: 700 !important; }
+  .adviseur-functie { font-size: 8.5pt !important; color: rgba(255,255,255,0.6) !important; }
+  .adviseur-label { font-size: 6.5pt !important; color: rgba(255,255,255,0.45) !important; letter-spacing: 1pt !important; }
+  .adviseur-contact a { font-size: 9pt !important; color: rgba(255,255,255,0.8) !important; }
+  .adviseur-avatar { width: 36pt !important; height: 36pt !important; background: rgba(255,255,255,0.12) !important; }
+
+  /* Bron (bank/duurzaamheidstool) */
+  .bron-card {
+    margin-top: 10pt !important;
+    padding: 7pt 10pt !important;
+    background: #FAF8F5 !important;
+    border: 0.5pt solid #E3DDD8 !important;
+    border-left: 2pt solid #E26836 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    page-break-inside: avoid !important;
+    gap: 8pt !important;
+  }
+  .bron-label { font-size: 6.5pt !important; color: #E26836 !important; }
+  .bron-desc { font-size: 8pt !important; color: #3A3A3A !important; }
+
+  /* Label visualisatie — compact in print */
+  .label-vis-section {
+    margin-bottom: 10pt !important;
+    page-break-inside: avoid;
+  }
+  .label-vis-card {
+    padding: 10pt 14pt 18pt !important;
+    border: 0.5pt solid #E3DDD8 !important;
+    box-shadow: none !important;
+    border-radius: 6pt !important;
+  }
+  .label-vis-top { margin-bottom: 10pt !important; }
+  .label-scale-bars { height: 28pt !important; gap: 2pt !important; }
+  .lsb { border-radius: 4pt !important; font-size: 9pt !important; }
+  .lsb-tag { font-size: 7pt !important; bottom: -16pt !important; }
+  .label-scale-track { padding-bottom: 0 !important; }
+  .lsb-tag { display: none !important; }
+  .lsb.is-current, .lsb.is-target { outline-width: 2pt !important; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PRINT OVERRIDES — PROFESSIONAL PDF LAYOUT (v19)
+   Doel: compacter zonder scherpte op te offeren. We schalen NIET de
+   grafieken; die blijven op natuurlijke afmetingen. Compactheid komt
+   van padding/margin reductie — niet van font-size schalen. Footer
+   blijft op elke pagina. Bron-card wordt verborgen op laatste pagina
+   omdat 'Uw adviseur'-card al alle info bevat.
+═══════════════════════════════════════════════════════════════════════ */
+@media print {
+
+  /* ── A4 met vaste marges; ruimte onderaan voor de footer ── */
+  @page {
+    size: A4 portrait !important;
+    margin: 13mm 14mm 20mm 14mm !important;
+  }
+
+  /* Cover heeft geen marges (full-bleed banner) */
+  @page :first {
+    margin: 0 !important;
+  }
+
+  /* ── Body reset voor print ── */
+  html, body {
+    background: #ffffff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 10pt !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* ── Schermrommel verbergen ── */
+  .trust-bar,
+  .hdr,
+  .loading-state,
+  .disclaimer,
+  .action-row,
+  .form-error,
+  .rpt-footer,
+  /* Bron-card weg in print: 'Uw adviseur' is voldoende afsluiting */
+  .bron-card {
     display: none !important;
   }
 
-  /* ── 4. CONTAINER RESET ───────────────────────────────────────────── */
   .page-wrap {
-    max-width: 100% !important; width: 100% !important;
-    padding: 0 !important; margin: 0 !important;
-    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
   }
+
   .card {
-    background: #ffffff !important; box-shadow: none !important;
-    border: none !important; border-radius: 0 !important;
-    padding: 0 !important; margin: 0 !important; overflow: visible !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
   }
+
   .result {
-    display: block !important; opacity: 1 !important;
-    transform: none !important; animation: none !important;
+    display: block !important;
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
   }
+
   .result .body {
-    display: block !important; padding: 0 !important;
-    margin: 0 !important; transform: none !important;
-  }
-  body, html, .page-wrap, .card, .result, .body, .result .body {
-    transform: none !important; filter: none !important;
-    will-change: auto !important; overflow: visible !important;
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
 
-  /* ── 5. VASTE HEADER ──────────────────────────────────────────────── */
-  .mb-ph {
-    display: block !important; position: fixed !important;
-    top: 0 !important; left: 0 !important; right: 0 !important;
-    height: 13mm !important; z-index: 9999 !important; transform: none !important;
-    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
-  }
-  .mb-ph-bar {
-    height: 11mm !important; min-height: 11mm !important; padding: 0 13mm !important;
-    background: linear-gradient(90deg, #0d2233 0%, #134460 55%, #1B597B 100%) !important;
-    display: flex !important; align-items: center !important;
-    justify-content: space-between !important; box-sizing: border-box !important;
-    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
-  }
-  .mb-ph-accent {
-    height: 2mm !important;
-    background: linear-gradient(90deg, #E26836, #f09060) !important;
-    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
-  }
-  .mb-ph-left  { display: flex !important; align-items: center !important; gap: 6pt !important; }
-  .mb-ph-logo  { width: 17pt !important; height: 17pt !important; border-radius: 50% !important; background: rgba(255,255,255,0.9) !important; object-fit: contain !important; padding: 1pt !important; flex-shrink: 0 !important; }
-  .mb-ph-brand { display: flex !important; flex-direction: column !important; gap: 0.5pt !important; }
-  .mb-ph-name  { font-size: 7.5pt !important; font-weight: 700 !important; color: #ffffff !important; line-height: 1.1 !important; font-family: 'IBM Plex Sans', sans-serif !important; }
-  .mb-ph-sub   { font-size: 5.5pt !important; color: rgba(255,255,255,0.5) !important; line-height: 1.1 !important; font-family: 'IBM Plex Sans', sans-serif !important; }
-  .mb-ph-center { flex: 1 !important; text-align: center !important; font-size: 7.5pt !important; font-weight: 500 !important; color: rgba(255,255,255,0.65) !important; font-family: 'IBM Plex Sans', sans-serif !important; }
-  .mb-ph-right { font-size: 6.5pt !important; color: rgba(255,255,255,0.35) !important; font-family: 'IBM Plex Sans', sans-serif !important; flex-shrink: 0 !important; letter-spacing: 0.5pt !important; text-transform: uppercase !important; }
-
-  /* ── 6. VASTE FOOTER ──────────────────────────────────────────────── */
-  .mb-pf {
-    display: block !important; position: fixed !important;
-    left: 0 !important; right: 0 !important; bottom: 0 !important;
-    height: 12mm !important; z-index: 9999 !important; transform: none !important;
-    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
-  }
-  .mb-pf-bar {
-    background: linear-gradient(90deg, #0d3348 0%, #134460 50%, #1B597B 100%) !important;
-    display: flex !important; align-items: center !important;
-    justify-content: space-between !important; padding: 3pt 13mm !important;
-    min-height: 12mm !important; width: 100% !important; box-sizing: border-box !important;
-    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
-  }
-  .mb-pf-accent { height: 1.5pt !important; background: linear-gradient(90deg, #E26836, #f09060) !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .mb-pf-left   { display: flex !important; align-items: center !important; gap: 6pt !important; flex: 0 0 auto !important; }
-  .mb-pf-mid    { flex: 1 1 auto !important; text-align: center !important; font-size: 5.5pt !important; color: rgba(255,255,255,0.5) !important; line-height: 1.4 !important; padding: 0 10pt !important; }
-  .mb-pf-right  { display: flex !important; flex-direction: column !important; align-items: flex-end !important; gap: 1pt !important; flex: 0 0 auto !important; }
-  .mb-pf-logo   { width: 14pt !important; height: 14pt !important; border-radius: 50% !important; background: #fff !important; padding: 1pt !important; flex-shrink: 0 !important; }
-  .mb-pf-brand  { display: flex !important; flex-direction: column !important; gap: 1pt !important; }
-  .mb-pf-name   { font-size: 6.5pt !important; font-weight: 700 !important; color: #fff !important; }
-  .mb-pf-sub    { font-size: 5pt !important; color: rgba(255,255,255,0.55) !important; }
-  .mb-pf-email  { font-size: 6pt !important; color: rgba(255,255,255,0.85) !important; }
-  .mb-pf-url    { font-size: 5.5pt !important; color: rgba(255,255,255,0.5) !important; }
-
-  /* ── 7. COVER PAGE ────────────────────────────────────────────────── */
-  .print-cover-page {
-    display: block !important; page-break-after: always !important; break-after: page !important;
-    width: 210mm !important; height: 297mm !important; min-height: 297mm !important;
-    max-height: 297mm !important; overflow: hidden !important; position: relative !important;
-    background: #0d1f2d !important; z-index: 99999 !important; margin: 0 !important; padding: 0 !important;
-    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
-  }
-  .pc-wrap { position: relative !important; width: 100% !important; height: 297mm !important; display: flex !important; flex-direction: column !important; background: #0d1f2d !important; overflow: hidden !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .pc-hero { position: absolute !important; inset: 0 !important; width: 100% !important; height: 100% !important; z-index: 0 !important; }
-  .pc-hero-img { width: 100% !important; height: 100% !important; object-fit: cover !important; object-position: center 40% !important; display: block !important; opacity: 0.55 !important; }
-  .pc-hero-empty { background: #0d1f2d !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .pc-hero-grid { position: absolute !important; inset: 0 !important; background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px) !important; background-size: 20pt 20pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .pc-hero-gradient { position: absolute !important; inset: 0 !important; background: linear-gradient(180deg, rgba(13,31,45,0.85) 0%, rgba(13,31,45,0.2) 35%, rgba(13,31,45,0.2) 55%, rgba(13,31,45,0.92) 100%) !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .pc-overlay { position: absolute !important; inset: 0 !important; z-index: 2 !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; }
-  .pc-top-bar { display: flex !important; align-items: center !important; justify-content: space-between !important; padding: 18pt 24pt 16pt !important; border-bottom: 0.5pt solid rgba(255,255,255,0.1) !important; }
-  .pc-logo-row { display: flex !important; align-items: center !important; gap: 10pt !important; }
-  .pc-logo-circle { width: 30pt !important; height: 30pt !important; border-radius: 50% !important; background: rgba(255,255,255,0.12) !important; border: 1pt solid rgba(255,255,255,0.2) !important; display: flex !important; align-items: center !important; justify-content: center !important; overflow: hidden !important; flex-shrink: 0 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .pc-logo-circle img { width: 22pt !important; height: 22pt !important; object-fit: contain !important; }
-  .pc-brand { font-size: 11pt !important; font-weight: 700 !important; color: #fff !important; font-family: 'IBM Plex Sans', sans-serif !important; }
-  .pc-brand-sub { font-size: 7.5pt !important; color: rgba(255,255,255,0.5) !important; font-family: 'IBM Plex Sans', sans-serif !important; font-weight: 400 !important; }
-  .pc-date-chip { font-size: 8pt !important; color: rgba(255,255,255,0.55) !important; font-family: 'IBM Plex Sans', sans-serif !important; background: rgba(255,255,255,0.07) !important; border: 0.5pt solid rgba(255,255,255,0.12) !important; border-radius: 20pt !important; padding: 3pt 9pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .pc-content { padding: 0 24pt 20pt !important; }
-  .pc-eyebrow-wrap { display: flex !important; align-items: center !important; gap: 8pt !important; margin-bottom: 10pt !important; }
-  .pc-accent-line { display: inline-block !important; width: 22pt !important; height: 2pt !important; background: #E26836 !important; border-radius: 2pt !important; flex-shrink: 0 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .pc-eyebrow { font-size: 7.5pt !important; font-weight: 700 !important; letter-spacing: 3pt !important; text-transform: uppercase !important; color: #E26836 !important; font-family: 'IBM Plex Sans', sans-serif !important; }
-  .pc-pand-title { font-size: 38pt !important; font-weight: 700 !important; color: #fff !important; font-family: 'IBM Plex Serif', serif !important; letter-spacing: -0.8pt !important; line-height: 1.05 !important; margin-bottom: 8pt !important; text-shadow: 0 2pt 12pt rgba(0,0,0,0.4) !important; }
-  .pc-pand-address { font-size: 10.5pt !important; color: rgba(255,255,255,0.65) !important; font-weight: 300 !important; font-family: 'IBM Plex Sans', sans-serif !important; margin-bottom: 16pt !important; line-height: 1.4 !important; }
-  .pc-label-track { display: flex !important; align-items: center !important; gap: 10pt !important; }
-  .pc-label-box { width: 34pt !important; height: 26pt !important; border-radius: 3pt !important; display: flex !important; align-items: center !important; justify-content: center !important; font-size: 14pt !important; font-weight: 800 !important; color: #fff !important; font-family: 'IBM Plex Sans', sans-serif !important; box-shadow: 0 2pt 8pt rgba(0,0,0,0.3) !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .pc-label-target { box-shadow: 0 0 0 2pt rgba(255,255,255,0.25), 0 2pt 8pt rgba(0,0,0,0.3) !important; }
-  .pc-label-arrow { display: flex !important; align-items: center !important; opacity: 0.6 !important; }
-  .pc-label-desc { font-size: 8pt !important; color: rgba(255,255,255,0.5) !important; font-family: 'IBM Plex Sans', sans-serif !important; font-weight: 500 !important; letter-spacing: 0.5pt !important; margin-left: 4pt !important; }
-  .pc-bottom-bar { display: flex !important; align-items: center !important; justify-content: space-between !important; padding: 8pt 24pt !important; border-top: 0.5pt solid rgba(255,255,255,0.1) !important; background: rgba(0,0,0,0.25) !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .pc-bottom-left { font-size: 7pt !important; color: rgba(255,255,255,0.35) !important; font-family: 'IBM Plex Sans', sans-serif !important; letter-spacing: 0.3pt !important; }
-  .pc-bottom-right { font-size: 7pt !important; color: rgba(255,255,255,0.45) !important; font-family: 'IBM Plex Sans', sans-serif !important; font-weight: 500 !important; }
-
-  /* ── 8. RAPPORT HEADER ────────────────────────────────────────────── */
-  .rpt-hdr {
-    border-radius: 0 !important; margin: 0 0 10pt !important;
-    padding: 12pt 15pt 11pt !important;
-    page-break-inside: avoid !important; break-inside: avoid !important;
-    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
-  }
-  .rpt-title    { font-size: 18pt !important; line-height: 1.08 !important; }
-  .rpt-address  { font-size: 8.2pt !important; line-height: 1.35 !important; }
-  .rpt-pretitle { font-size: 6.5pt !important; letter-spacing: 1.4pt !important; }
-  .label-track  { margin-top: 6pt !important; padding: 4pt 7pt !important; }
-  .label-box    { width: 28pt !important; height: 21pt !important; font-size: 12pt !important; }
-
-  /* ── 9. SECTION HEADERS ───────────────────────────────────────────── */
-  .sec-head, .rpt-section-head {
-    display: flex !important; align-items: center !important;
-    gap: 7pt !important; margin: 10pt 0 6pt !important;
-    padding: 0 !important; border: none !important; background: none !important;
-    page-break-after: avoid !important; break-after: avoid !important;
-  }
-  .sec-label {
-    font-size: 6.5pt !important; font-weight: 700 !important;
-    letter-spacing: 1.6pt !important; text-transform: uppercase !important;
-    color: #1B597B !important; white-space: nowrap !important;
-    font-family: 'IBM Plex Sans', sans-serif !important;
-    border-left: 2.5pt solid #E26836 !important; padding-left: 6pt !important;
-  }
-  .sec-line { height: 0.5pt !important; background: #D9D6D2 !important; flex: 1 !important; }
-
-  /* ── 10. KPI PANEL ────────────────────────────────────────────────── */
-  .kpi-panel {
-    display: grid !important; grid-template-columns: 1fr 1fr 1fr !important;
-    gap: 0 !important; border: 0.8pt solid #D8DDE0 !important;
-    border-top: 2pt solid #1B597B !important; border-radius: 0 !important;
-    overflow: hidden !important; margin: 0 0 10pt !important;
-    page-break-inside: avoid !important; break-inside: avoid !important;
-    background: #F5F8FA !important;
-    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
-  }
-  .kpi-cell { padding: 9pt 11pt !important; background: transparent !important; border-right: 0.5pt solid #D8DDE0 !important; }
-  .kpi-cell::before { display: none !important; }
-  .kpi-cell:last-child { border-right: none !important; }
-  .kpi-c1 { border-top: 2.5pt solid #1B597B !important; }
-  .kpi-c2 { border-top: 2.5pt solid #E26836 !important; }
-  .kpi-c3 { border-top: 2.5pt solid #2A7A50 !important; }
-  .kpi-lbl { font-size: 6pt !important; letter-spacing: 1pt !important; color: #888 !important; margin-bottom: 4pt !important; font-weight: 600 !important; }
-  .kpi-num, .kpi-print-val { font-size: 17pt !important; font-weight: 700 !important; line-height: 1 !important; }
-  .kpi-c1 .kpi-num, .kpi-c1 .kpi-print-val { color: #1B597B !important; }
-  .kpi-c2 .kpi-num, .kpi-c2 .warn { color: #E26836 !important; }
-  .kpi-c3 .kpi-num, .kpi-c3 .good { color: #2A7A50 !important; }
-  .kpi-edit-prefix { font-size: 15pt !important; font-weight: 700 !important; color: #1B597B !important; }
-  .kpi-edit-wrap { display: flex !important; align-items: baseline !important; gap: 2pt !important; }
-  .kpi-print-val { display: inline !important; }
-  .kpi-sub { font-size: 6.5pt !important; color: #A0A0A0 !important; margin-top: 3pt !important; line-height: 1.35 !important; }
-
-  /* ── 11. INTRO TEKST ──────────────────────────────────────────────── */
-  .intro-text {
-    font-size: 8.2pt !important; line-height: 1.55 !important;
-    padding: 8pt 11pt !important; margin-bottom: 9pt !important;
-    background: #F4F8FB !important; border-left: 2.5pt solid #1B597B !important;
-    border-top: none !important; border-right: none !important; border-bottom: none !important;
-    border-radius: 0 !important;
-    page-break-inside: avoid !important; break-inside: avoid !important;
-    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+  /* ── COMPACTERE SPACING (geen font-size shrink, geen image-resize) ── */
+  /* Section headers compacter qua margin */
+  .rpt-section-head {
+    margin-top: 10pt !important;
+    margin-bottom: 5pt !important;
   }
 
-  /* ── 12. LABEL VISUALISATIE ────────────────────────────────────────── */
-  .label-vis-section { margin-bottom: 9pt !important; page-break-inside: avoid !important; break-inside: avoid !important; }
-  .label-vis-card { padding: 9pt 12pt 14pt !important; border: 0.5pt solid #E3DDD8 !important; box-shadow: none !important; border-radius: 4pt !important; }
-  .label-vis-top { margin-bottom: 9pt !important; }
-  .label-scale-bars { height: 26pt !important; gap: 2pt !important; }
-  .lsb { border-radius: 3pt !important; font-size: 8.5pt !important; }
-  .lsb-tag { display: none !important; }
-  .lsb.is-current, .lsb.is-target { outline-width: 2pt !important; }
+  /* KPI panel iets compacter */
+  .kpi-panel { margin: 6pt 0 !important; }
+  .kpi-cell  { padding: 9pt 11pt !important; }
 
-  /* ── 13. MAATREGELEN TABEL ────────────────────────────────────────── */
-  #measuresSection { page-break-before: always !important; break-before: page !important; }
+  /* Tabellen iets compacter qua padding (font-size NIET aanpassen — dat verandert niet aan scherpte) */
+  .rt th, .rt td,
+  .netto-table th, .netto-table td,
+  .aandacht-table th, .aandacht-table td {
+    padding: 6pt 9pt !important;
+  }
 
-  .rt {
-    display: table !important; width: 100% !important; max-width: 100% !important;
-    table-layout: fixed !important; border-collapse: collapse !important; margin: 0 0 8pt !important;
-  }
-  .rt thead { display: table-header-group !important; }
-  .rt tbody { display: table-row-group !important; }
-  .rt tr { display: table-row !important; opacity: 1 !important; page-break-inside: avoid !important; break-inside: avoid !important; }
-  .rt td { display: table-cell !important; opacity: 1 !important; }
-  .rt tr.row-unchecked td { opacity: 1 !important; }
-
-  .rt th, .rt td {
-    padding: 5pt 6pt !important; font-size: 7.5pt !important;
-    line-height: 1.3 !important; overflow-wrap: anywhere !important; vertical-align: top !important;
-  }
-  .rt th {
-    font-size: 6pt !important; letter-spacing: 0.7pt !important;
-    background: #F0F4F7 !important; color: #243844 !important;
-    border-top: 1.5pt solid #1B597B !important; border-bottom: 0.7pt solid #CBD5DB !important;
-    white-space: nowrap !important; page-break-after: avoid !important; break-after: avoid !important;
-    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
-  }
-  .rt tbody tr:nth-child(even) td { background: #FAFAF8 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .rt td.m-check, .rt th:first-child { display: none !important; }
-  .rt th:nth-child(1), .rt td:nth-child(1) { width: 30% !important; }
-  .rt th:nth-child(2), .rt td:nth-child(2) { width: 17% !important; }
-  .rt th:nth-child(3), .rt td:nth-child(3) { width: 17% !important; }
-  .rt th:nth-child(4), .rt td:nth-child(4) { width: 23% !important; }
-  .rt th:nth-child(5), .rt td:nth-child(5) { width: 13% !important; }
-  .m-name  { font-size: 7.7pt !important; line-height: 1.2 !important; }
-  .m-save, .m-tvt { font-size: 7.5pt !important; }
-  .m-invest, .m-co2 { font-size: 7pt !important; }
-  .m-icon  { display: none !important; }
-  .m-save  { color: #2A7A50 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-
-  /* ── 14. GRAFIEKEN ────────────────────────────────────────────────── */
-  #maatregelenChartSection, #chartSection {
-    page-break-before: avoid !important; break-before: avoid !important;
-    display: block !important; margin: 0 0 9pt !important;
-    page-break-inside: avoid !important; break-inside: avoid !important; overflow: visible !important;
-  }
-  .chart-section { display: block !important; }
-  .chart-wrap {
-    width: 100% !important; max-width: 100% !important; padding: 8pt 10pt !important;
-    border: 0.7pt solid #D8DDE0 !important; border-top: 1.5pt solid #1B597B !important;
-    border-radius: 0 !important; box-shadow: none !important; overflow: hidden !important;
-    box-sizing: border-box !important; page-break-inside: avoid !important;
-    break-inside: avoid !important; margin-bottom: 0 !important; background: white !important;
-    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
-  }
+  /* Grafiek-wrappers minder padding */
   .chart-canvas-wrap {
-    width: 100% !important; height: 140pt !important; min-height: 140pt !important;
-    max-height: 140pt !important; padding: 0 !important; margin: 0 !important;
-    overflow: hidden !important; box-sizing: border-box !important;
+    margin: 4pt 0 !important;
+    padding: 6pt !important;
   }
-  .chart-canvas-wrap canvas { width: 100% !important; max-width: 100% !important; height: 140pt !important; max-height: 140pt !important; }
+
+  /* CHART-PRINT-IMG: GEEN max-height, GEEN forced sizing — natuurlijke
+     resolutie is de beste resolutie. Width 100% is OK want we genereren
+     de image al op hoge DPR. */
   .chart-print-img {
-    width: 100% !important; max-width: 100% !important; height: auto !important;
-    max-height: 140pt !important; object-fit: contain !important; display: block !important;
-    page-break-inside: avoid !important; break-inside: avoid !important;
+    width: 100% !important;
+    height: auto !important;
+    display: block !important;
+    /* Voorkom dat de image splitst over pagina's */
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
-  .chart-canvas-wrap:has(.chart-print-img) canvas { display: none !important; }
-  .chart-legend { margin-top: 5pt !important; display: flex !important; gap: 10pt !important; }
-  .chart-legend-item { font-size: 6.5pt !important; }
-  .chart-breakeven-badge { font-size: 6.5pt !important; padding: 2pt 6pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  #chartNoteFlat, #chartNoteStijg { display: block !important; font-size: 6.5pt !important; line-height: 1.35 !important; margin-top: 4pt !important; padding-top: 4pt !important; }
-  #chartKpiBe, #chartKpiBesp, #chartKpiRoi { font-size: 12pt !important; }
 
-  /* ── 15. SCENARIO CARDS ───────────────────────────────────────────── */
-  #scenarioSection { page-break-before: avoid !important; break-before: avoid !important; margin-bottom: 8pt !important; }
-  .sc-grid { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 6pt !important; }
-  .sc-card { page-break-inside: avoid !important; break-inside: avoid !important; }
-  .sc-accent { height: 2.5pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .sc-card-head { padding: 9pt 11pt 7pt !important; }
-  .sc-label { font-size: 6.5pt !important; margin-bottom: 4pt !important; }
-  .sc-name { font-size: 10.5pt !important; }
-  .sc-desc { font-size: 7pt !important; }
-  .sc-body { padding: 9pt 11pt 7pt !important; gap: 7pt !important; }
-  .sc-stats { gap: 7pt 9pt !important; }
-  .sc-stat-lbl { font-size: 6.5pt !important; }
-  .sc-stat-val { font-size: 10.5pt !important; }
-  .sc-m { font-size: 7.5pt !important; gap: 5pt !important; }
-  .sc-dot { width: 4.5pt !important; height: 4.5pt !important; }
-  .sc-footer { padding: 8pt 11pt 9pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .sc-maand-lbl { font-size: 6.5pt !important; margin-bottom: 3pt !important; }
-  .sc-maand-val { font-size: 18pt !important; }
-  .sc-maand-eenheid { font-size: 8.5pt !important; }
-  .sc-maand-sub { font-size: 6.5pt !important; margin-top: 2pt !important; }
-  .sc-bar-wrap { margin-top: 6pt !important; }
-  .sc-bar-lbl { font-size: 6.5pt !important; margin-bottom: 2pt !important; }
-  .sc-bar-track { height: 2pt !important; }
-  .sc-bar-fill { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-
-  /* ── 16. NETTO INVESTERING ────────────────────────────────────────── */
-  #nettoSection { page-break-before: always !important; break-before: page !important; }
-
-  #nettoTable, .netto-table {
-    width: 100% !important; max-width: 100% !important;
-    table-layout: fixed !important; border-collapse: collapse !important; margin: 0 0 8pt !important;
+  /* Subsidie cards iets compacter */
+  .sub-item {
+    padding: 9pt 11pt !important;
+    margin-bottom: 6pt !important;
   }
-  .netto-table th, .netto-table td, #nettoTable th, #nettoTable td {
-    padding: 4.5pt 6pt !important; font-size: 7.8pt !important;
-    line-height: 1.3 !important; overflow-wrap: anywhere !important; vertical-align: top !important;
-  }
-  .netto-table th, #nettoTable th {
-    font-size: 6pt !important; background: #F0F4F7 !important; color: #243844 !important;
-    border-top: 1.5pt solid #1B597B !important; border-bottom: 0.7pt solid #CBD5DB !important;
-    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
-  }
-  .netto-table tr, #nettoTable tr { page-break-inside: avoid !important; break-inside: avoid !important; }
-  .netto-table td:last-child, #nettoTable td:last-child { text-align: right !important; }
-  .netto-totaal-row td { font-size: 9pt !important; font-weight: 700 !important; }
 
-  .netto-fill-card {
-    display: grid !important; grid-template-columns: 1fr 1fr 1fr !important;
-    gap: 7pt !important; margin: 8pt 0 0 !important;
-    page-break-inside: avoid !important; break-inside: avoid !important;
+  /* Fasen / scenario cards compacter */
+  .phase-block, .sc-card {
+    padding: 9pt 11pt !important;
   }
-  .netto-fill-item {
-    border: 0.5pt solid #DDE6EC !important; border-top: 2pt solid #1B597B !important;
-    background: #F7FAFC !important; padding: 8pt 9pt !important; min-height: 36pt !important;
-    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
-  }
-  .netto-fill-title { font-family: 'IBM Plex Sans', sans-serif !important; font-size: 6.5pt !important; font-weight: 700 !important; letter-spacing: 1pt !important; text-transform: uppercase !important; color: #1B597B !important; margin-bottom: 3pt !important; }
-  .netto-fill-text { font-family: 'IBM Plex Sans', sans-serif !important; font-size: 7.2pt !important; line-height: 1.45 !important; color: #3A3A3A !important; }
 
-  /* ── 17. MAANDLASTEN ──────────────────────────────────────────────── */
-  #maandlastenSection { page-break-before: avoid !important; break-before: avoid !important; margin-top: 8pt !important; }
-  .maandlasten-block { border: 0.5pt solid #E3DDD8 !important; margin-bottom: 8pt !important; page-break-inside: avoid !important; break-inside: avoid !important; }
-  .maandlasten-block.is-empty { display: none !important; }
-  .maandlasten-grid { display: grid !important; grid-template-columns: 1fr 1fr 1fr !important; }
-  .maandlasten-head { padding: 7pt 11pt !important; }
-  .maandlasten-titel { font-size: 9.5pt !important; }
-  .maandlasten-sub { font-size: 7pt !important; }
-  .ml-col { padding: 10pt 11pt !important; border-right: 0.5pt solid #E3DDD8 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .ml-col.is-now { background: #F4F2EF !important; }
-  .ml-col.is-fin { background: #EEF4F8 !important; }
-  .ml-eyebrow { font-size: 6.5pt !important; letter-spacing: 1pt !important; }
-  .ml-titel { font-size: 8.5pt !important; margin-bottom: 7pt !important; }
-  .ml-bedrag { font-size: 17pt !important; }
-  .ml-bedrag.is-direct { color: #2A7A50 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .ml-bedrag.is-fin { color: #134460 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .ml-eenheid { font-size: 8.5pt !important; }
-  .ml-detail { margin-top: 7pt !important; padding-top: 6pt !important; font-size: 7.5pt !important; }
-  .ml-detail-row { padding: 1pt 0 !important; }
-  .ml-empty { display: none !important; }
+  /* Vervolgstappen compacter */
+  .vervolg-item { padding: 5pt 0 !important; }
 
-  /* ── 18. SUBSIDIES ────────────────────────────────────────────────── */
-  #subsidiesSection { page-break-before: always !important; break-before: page !important; overflow: visible !important; }
-  #subsidiesSection .sub-list {
-    display: grid !important; grid-template-columns: 1fr 1fr !important;
-    column-gap: 8pt !important; row-gap: 7pt !important; margin: 0 !important;
-  }
-  .sub-list-item {
-    display: block !important; padding: 7pt 8pt !important;
-    border: 0.6pt solid #D8DDE0 !important; border-top: 1.5pt solid #1B597B !important;
-    background: #fff !important; margin: 0 !important;
-    page-break-inside: avoid !important; break-inside: avoid !important;
-    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
-  }
-  .sub-list-name { font-size: 8pt !important; line-height: 1.2 !important; margin-bottom: 2pt !important; }
-  .sub-code-badge { font-size: 5.8pt !important; padding: 1pt 4pt !important; margin-right: 3pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .sub-list-type, .sub-list-voordeel, .sub-list-alert, .sub-list-combine, .sub-list-step { font-size: 6.5pt !important; line-height: 1.3 !important; margin-bottom: 2pt !important; }
-  .sub-list-steps { gap: 1.5pt !important; margin-top: 2pt !important; }
-  .sls-n { min-width: 11pt !important; width: 11pt !important; height: 11pt !important; font-size: 5.5pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .sub-list-url { display: none !important; }
-  .sub-list-alert { background: #FDF3EE !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-
-  /* ── 19. FASEN ────────────────────────────────────────────────────── */
-  #phasesSection { page-break-before: always !important; break-before: page !important; margin-bottom: 6pt !important; }
-  .phases-grid { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 6pt !important; margin-bottom: 7pt !important; }
-  .phase-block { border: 0.7pt solid #D8DDE0 !important; border-top: 1.5pt solid #E26836 !important; border-radius: 0 !important; overflow: hidden !important; page-break-inside: avoid !important; break-inside: avoid !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .phase-header { padding: 5.5pt 7pt !important; gap: 5pt !important; }
-  .phase-num-badge { width: 20pt !important; height: 20pt !important; }
-  .phase-num-label { font-size: 4.5pt !important; }
-  .phase-num-value { font-size: 9pt !important; }
-  .phase-title { font-size: 7.6pt !important; line-height: 1.2 !important; }
-  .phase-body { padding: 5pt 7pt !important; }
-  .phase-desc { font-size: 7pt !important; line-height: 1.38 !important; }
-  .phase-meta { margin-top: 4pt !important; gap: 3.5pt !important; }
-  .phase-meta-pill { font-size: 6pt !important; padding: 1.5pt 3.5pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-
-  /* ── 20. AANDACHTSPUNTEN ──────────────────────────────────────────── */
-  #aandachtSection { page-break-before: avoid !important; break-before: avoid !important; margin-top: 6pt !important; margin-bottom: 5pt !important; }
-  .aandacht-table { width: 100% !important; max-width: 100% !important; table-layout: fixed !important; border-collapse: collapse !important; margin: 0 0 6pt !important; }
-  .aandacht-table th, .aandacht-table td { padding: 4.5pt 6pt !important; font-size: 7.2pt !important; line-height: 1.3 !important; vertical-align: top !important; overflow-wrap: anywhere !important; }
-  .aandacht-table th { font-size: 6pt !important; letter-spacing: 0.7pt !important; background: #F0F4F7 !important; color: #243844 !important; border-top: 1.5pt solid #1B597B !important; border-bottom: 0.7pt solid #CBD5DB !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .aandacht-table tr { page-break-inside: avoid !important; break-inside: avoid !important; }
-  .aandacht-table th:nth-child(1), .aandacht-table td:nth-child(1) { width: 31% !important; }
-  .aandacht-table th:nth-child(2), .aandacht-table td:nth-child(2) { width: 69% !important; }
-  .aandacht-table td:first-child { white-space: normal !important; }
-
-  /* ── 21. VERVOLGSTAPPEN ───────────────────────────────────────────── */
-  #vervolgSection { page-break-before: always !important; break-before: page !important; margin-top: 0 !important; }
-  .vervolg-list { margin-bottom: 6pt !important; }
-  .vervolg-item { padding: 5.5pt 0 !important; gap: 8pt !important; page-break-inside: avoid !important; break-inside: avoid !important; border-bottom: 0.4pt solid #EEEBE7 !important; }
-  .vervolg-item:last-child { border-bottom: none !important; }
-  .vervolg-num { width: 17pt !important; height: 17pt !important; font-size: 7.5pt !important; background: #1B597B !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .vervolg-title { font-size: 8pt !important; line-height: 1.15 !important; margin-bottom: 1.5pt !important; }
-  .vervolg-desc { font-size: 7pt !important; line-height: 1.35 !important; color: #6B6B6B !important; }
-
-  /* ── 22. ADVISEUR + SLUITBLOK ─────────────────────────────────────── */
-  #adviseurSection, .rapport-einde-block {
-    page-break-before: avoid !important; break-before: avoid !important;
-    page-break-inside: avoid !important; break-inside: avoid !important; margin-top: 8pt !important;
-  }
-  .adviseur-sluiting {
-    padding: 10pt 13pt !important; border-top: 1.5pt solid #1B597B !important;
-    border-radius: 0 !important;
-    page-break-inside: avoid !important; break-inside: avoid !important;
-    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
-  }
-  .adviseur-sluiting-naam { font-size: 10pt !important; }
-  .adviseur-sluiting-functie { font-size: 7pt !important; }
-  .adviseur-sluiting-link { font-size: 7pt !important; }
-  .adviseur-sluiting-cta-kop { font-size: 9pt !important; }
-  .adviseur-sluiting-cta-sub { font-size: 7pt !important; line-height: 1.35 !important; }
+  /* Adviseur card compacter */
   .adviseur-card {
-    background: linear-gradient(135deg, #0d3348 0%, #134460 55%, #1B597B 100%) !important;
-    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
-    padding: 11pt 16pt !important; border-radius: 4pt !important; margin-top: 8pt !important;
-    page-break-inside: avoid !important; break-inside: avoid !important;
+    padding: 14pt 18pt !important;
+    margin-top: 8pt !important;
   }
-  .adviseur-naam { font-size: 11pt !important; color: white !important; font-weight: 700 !important; }
-  .adviseur-functie { font-size: 8pt !important; color: rgba(255,255,255,0.6) !important; }
-  .adviseur-label { font-size: 6pt !important; color: rgba(255,255,255,0.45) !important; letter-spacing: 1pt !important; }
-  .adviseur-contact a { font-size: 9pt !important; color: rgba(255,255,255,0.8) !important; }
-  .adviseur-avatar { width: 34pt !important; height: 34pt !important; background: rgba(255,255,255,0.12) !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .adviseur-avatar { width: 42pt !important; height: 42pt !important; }
 
-  /* ── 23. OVERIGE BLOKKEN ──────────────────────────────────────────── */
-  .punten-grid { gap: 8pt !important; margin-bottom: 9pt !important; }
-  .punten-block { padding: 10pt 11pt !important; page-break-inside: avoid !important; break-inside: avoid !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .punten-list li { font-size: 7.8pt !important; line-height: 1.55 !important; padding: 4pt 0 !important; }
-  .punten-title { font-size: 7pt !important; letter-spacing: 1pt !important; }
+  /* Maandlasten kolommen compacter */
+  .ml-col { padding: 10pt 12pt !important; }
 
-  .rente-strip { padding: 9pt 13pt !important; margin-bottom: 9pt !important; page-break-inside: avoid !important; break-inside: avoid !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .rente-num { font-size: 22pt !important; }
-  .rente-note, .rente-disclaimer { font-size: 7.5pt !important; }
-
-  .bron-card { display: none !important; }
-
-  .geen-actie-grid, .assumptions {
-    page-break-inside: avoid !important; break-inside: avoid !important;
+  /* ── FOOTER: vast onderaan elke A4 ─────────────────────────────────── */
+  .mb-pf {
+    display: block !important;
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    z-index: 9999 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
 
-  /* ── 24. GLOBALE PAGE-BREAK REGELS ───────────────────────────────── */
-  h1, h2, h3, h4, h5, .rpt-section-head, .sec-head {
-    page-break-after: avoid !important; break-after: avoid !important;
+  .mb-pf-bar {
+    background: #134460 !important;
+    background-image: linear-gradient(90deg, #0d3348 0%, #134460 50%, #1B597B 100%) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 4pt 14mm !important;
+    min-height: 12mm !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    position: relative !important;
+    margin: 0 !important;
   }
+
+  .mb-pf-accent {
+    position: absolute !important;
+    top: 0 !important; left: 0 !important; right: 0 !important;
+    height: 2pt !important;
+    background: #E26836 !important;
+    background-image: linear-gradient(90deg, #E26836, #f09060) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .mb-pf-left  { display: flex !important; align-items: center !important; gap: 7pt !important; flex: 0 0 auto !important; }
+  .mb-pf-mid   { display: block !important; flex: 1 1 auto !important; text-align: center !important; padding: 0 12pt !important; line-height: 1.4 !important; }
+  .mb-pf-right { display: flex !important; flex-direction: column !important; align-items: flex-end !important; gap: 1pt !important; flex: 0 0 auto !important; }
+  .mb-pf-brand { display: flex !important; flex-direction: column !important; gap: 1pt !important; }
+
+  .mb-pf-logo  { width: 16pt !important; height: 16pt !important; border-radius: 50% !important; background: #ffffff !important; padding: 1pt !important; flex-shrink: 0 !important; }
+  .mb-pf-name  { font-size: 7.5pt !important; font-weight: 700 !important; color: #ffffff !important; line-height: 1.2 !important; }
+  .mb-pf-sub   { font-size: 5.5pt !important; color: rgba(255,255,255,0.55) !important; line-height: 1.2 !important; }
+  .mb-pf-mid   { font-size: 5.5pt !important; color: rgba(255,255,255,0.5) !important; line-height: 1.4 !important; }
+  .mb-pf-email { font-size: 6.5pt !important; font-weight: 500 !important; color: rgba(255,255,255,0.85) !important; }
+  .mb-pf-url   { font-size: 6pt !important; color: rgba(255,255,255,0.5) !important; }
+
+  /* Voorkom dat parents met transform/filter de fixed footer breken */
+  body, html, .page-wrap, .card, .result, .body, .result .body {
+    transform: none !important;
+    filter: none !important;
+    will-change: auto !important;
+    overflow: visible !important;
+  }
+
+  /* ── Page-break regels ─────────────────────────────────────────────── */
+  h1, h2, h3, h4, h5,
+  .rpt-section-head,
+  .sub-title,
+  .section-title {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+
+  .sub-item,
+  .phase-block,
+  .sc-card,
+  .geen-actie-grid,
+  .kpi-panel,
+  .adviseur-card,
+  .vervolg-item,
+  .ml-col,
+  .rt tr,
+  .netto-table tr,
+  .aandacht-table tr,
+  .chart-canvas-wrap,
+  #adviseurSection {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .print-cover-page {
+    page-break-after: always !important;
+    break-after: page !important;
+  }
+
+  .result .body {
+    padding-bottom: 4mm !important;
+  }
+
+  button,
+  .btn-orange,
+  .btn-ghost,
+  input[type="range"],
+  .slider,
+  .scroll-hint,
+  [data-print-hide] {
+    display: none !important;
+  }
+
   img, canvas, svg {
-    max-width: 100% !important; page-break-inside: avoid !important; break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    max-width: 100% !important;
   }
+
   table { page-break-inside: auto !important; }
   tr    { page-break-inside: avoid !important; page-break-after: auto !important; }
   thead { display: table-header-group !important; }
   tfoot { display: table-footer-group !important; }
 }
-</style>
 
-</head>
+/* ═══════════════════════════════════════════════════════════════════════
+   DEFINITIEVE A4-FIT FIX — NIET DE LAYOUT VERBOUWEN
+   Doel:
+   - volledige rapportinhoud net iets kleiner maken zodat niets buiten A4 valt
+   - grafieken weer normaal leesbaar maken
+   - footer blijft full-width
+   - cover blijft full-bleed
+═══════════════════════════════════════════════════════════════════════ */
+@media print {
+
+  /* Iets ruimere veilige marges op alle normale pagina's */
+  @page {
+    size: A4 portrait !important;
+    margin: 12mm 14mm 19mm 14mm !important;
+  }
+
+  /* Cover blijft volledig A4 zonder marges */
+  @page :first {
+    margin: 0 !important;
+  }
+
+  /* De inhoud van normale rapportpagina's 4% smaller maken en centreren.
+     Niet via transform: dat geeft print-bugs. Gewoon echte layout-breedte. */
+  .result .body > *:not(.print-cover-page):not(.mb-pf) {
+    width: 96% !important;
+    max-width: 96% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Secties die tabellen/grafieken bevatten moeten ook intern netjes binnen die 96% blijven */
+  #measuresSection,
+  #maatregelenChartSection,
+  #chartSection,
+  #nettoSection,
+  #maandlastenSection,
+  #subsidiesSection,
+  #vervolgSection,
+  #aandachtSection,
+  #adviseurSection {
+    width: 96% !important;
+    max-width: 96% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+
+  /* Tabellen mogen nooit buiten de sectie lopen */
+  table,
+  .rt,
+  .netto-table,
+  .aandacht-table {
+    width: 100% !important;
+    max-width: 100% !important;
+    table-layout: fixed !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Lange besparingsteksten netjes laten afbreken i.p.v. buiten A4 duwen */
+  .rt th,
+  .rt td,
+  .netto-table th,
+  .netto-table td,
+  .aandacht-table th,
+  .aandacht-table td {
+    overflow-wrap: anywhere !important;
+    word-break: normal !important;
+  }
+
+  /* Grafieken: weer groter dan de te kleine versie, maar binnen A4 houden */
+  .chart-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 8pt 10pt !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  .chart-canvas-wrap {
+    width: 100% !important;
+    height: 150pt !important;
+    min-height: 150pt !important;
+    max-height: 150pt !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  .chart-canvas-wrap canvas {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 150pt !important;
+    max-height: 150pt !important;
+  }
+
+  .chart-print-img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: 150pt !important;
+    object-fit: contain !important;
+    display: block !important;
+  }
+
+  /* Voorkom dubbele grafiek als zowel canvas als print-image aanwezig is */
+  .chart-canvas-wrap:has(.chart-print-img) canvas {
+    display: none !important;
+  }
+
+  /* De maatregelenpagina niet meer opblazen door dubbele margins */
+  #maatregelenChartSection,
+  #chartSection {
+    margin-top: 6pt !important;
+    margin-bottom: 8pt !important;
+  }
+
+  /* Footer bewust full-width laten; niet meenemen in de 96%-verkleining */
+  .mb-pf,
+  .mb-pf-bar {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   LAATSTE A4-FIT FIX — v21
+   Doel: volledige rapportinhoud nog iets kleiner maken en extra
+   veiligheidsruimte boven de vaste footer houden. Footer blijft full-width.
+═══════════════════════════════════════════════════════════════════════ */
+@media print {
+
+  /* Normale rapportpagina's net iets ruimer onderaan voor de footer */
+  @page {
+    size: A4 portrait !important;
+    margin: 12mm 14mm 22mm 14mm !important;
+  }
+
+  @page :first {
+    margin: 0 !important;
+  }
+
+  /* Hele rapportinhoud iets kleiner en netjes gecentreerd */
+  .result .body > *:not(.print-cover-page):not(.mb-pf) {
+    width: 93% !important;
+    max-width: 93% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  #measuresSection,
+  #maatregelenChartSection,
+  #chartSection,
+  #nettoSection,
+  #maandlastenSection,
+  #subsidiesSection,
+  #vervolgSection,
+  #aandachtSection,
+  #adviseurSection {
+    width: 93% !important;
+    max-width: 93% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+
+  /* Meer ruimte onderaan de content zodat de footer nooit overlapt */
+  .result .body {
+    padding-bottom: 10mm !important;
+  }
+
+  /* Grafieken iets compacter, maar nog goed leesbaar */
+  .chart-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 7pt 9pt !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  .chart-canvas-wrap {
+    width: 100% !important;
+    height: 135pt !important;
+    min-height: 135pt !important;
+    max-height: 135pt !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  .chart-canvas-wrap canvas {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 135pt !important;
+    max-height: 135pt !important;
+  }
+
+  .chart-print-img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: 135pt !important;
+    object-fit: contain !important;
+    display: block !important;
+  }
+
+  #chartNoteFlat,
+  #chartNoteStijg {
+    font-size: 6.5pt !important;
+    line-height: 1.35 !important;
+    margin-top: 3pt !important;
+    padding-top: 3pt !important;
+  }
+
+  .chart-legend {
+    margin-top: 4pt !important;
+  }
+
+  .chart-legend-item {
+    font-size: 7pt !important;
+  }
+
+  /* Footer absoluut niet verkleinen */
+  .mb-pf,
+  .mb-pf-bar {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* ═══════════════════════════════════════════════════════
+     COMPLETE PRINT REDESIGN v23-final
+     Stijl: clean wit consulting-rapport — licht, strak, professioneel
+  ═══════════════════════════════════════════════════════ */
+
+  /* ── @page ── */
+  @page { size: A4 portrait !important; margin: 15mm 13mm 20mm 13mm !important; }
+  @page :first { margin: 0 !important; }
+
+  /* ── Reset layout: volledige breedte ── */
+  html, body { background: white !important; font-size: 9pt !important; }
+  .result .body > *:not(.print-cover-page):not(.mb-pf):not(.mb-ph) {
+    width: 100% !important; max-width: 100% !important;
+    margin-left: 0 !important; margin-right: 0 !important;
+    box-sizing: border-box !important;
+  }
+  #measuresSection, #maatregelenChartSection, #chartSection, #nettoSection,
+  #maandlastenSection, #subsidiesSection, #phasesSection, #aandachtSection,
+  #vervolgSection, #adviseurSection, #bronSection, #geenActieSection,
+  #kpiPanel, #introSection, #scenarioSection {
+    width: 100% !important; max-width: 100% !important;
+    margin-left: 0 !important; margin-right: 0 !important;
+    box-sizing: border-box !important; overflow: hidden !important;
+  }
+  .result .body { padding-bottom: 20mm !important; padding-top: 0 !important; }
+
+  /* ── Cover staat boven running header ── */
+  .print-cover-page { position: relative !important; z-index: 99999 !important; }
+
+  /* ── Running page header ── */
+  .mb-ph {
+    display: block !important; position: fixed !important;
+    top: 0 !important; left: 0 !important; right: 0 !important;
+    z-index: 9998 !important;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+  }
+  .mb-ph-bar {
+    background: linear-gradient(90deg, #0d2233 0%, #134460 55%, #1B597B 100%) !important;
+    display: flex !important; align-items: center !important;
+    justify-content: space-between !important;
+    padding: 0 13mm !important; height: 13mm !important; gap: 12pt !important;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+  }
+  .mb-ph-accent {
+    height: 2pt !important;
+    background: linear-gradient(90deg, #E26836, #f09060) !important;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+  }
+  .mb-ph-left { display: flex !important; align-items: center !important; gap: 6pt !important; flex-shrink: 0 !important; }
+  .mb-ph-logo { width: 17pt !important; height: 17pt !important; border-radius: 50% !important; background: rgba(255,255,255,0.9) !important; object-fit: contain !important; padding: 1pt !important; flex-shrink: 0 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .mb-ph-brand { display: flex !important; flex-direction: column !important; gap: 0.5pt !important; }
+  .mb-ph-name { font-size: 7.5pt !important; font-weight: 700 !important; color: #ffffff !important; line-height: 1.1 !important; font-family: 'IBM Plex Sans', sans-serif !important; }
+  .mb-ph-sub { font-size: 5.5pt !important; color: rgba(255,255,255,0.5) !important; line-height: 1.1 !important; font-family: 'IBM Plex Sans', sans-serif !important; }
+  .mb-ph-center { flex: 1 !important; text-align: center !important; font-size: 7.5pt !important; font-weight: 500 !important; color: rgba(255,255,255,0.65) !important; font-family: 'IBM Plex Sans', sans-serif !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; }
+  .mb-ph-right { font-size: 6.5pt !important; color: rgba(255,255,255,0.35) !important; font-family: 'IBM Plex Sans', sans-serif !important; flex-shrink: 0 !important; letter-spacing: 0.5pt !important; text-transform: uppercase !important; }
+
+  /* ── Rapport header (blauwe titelbalk) ── */
+  .rpt-hdr { border-radius: 0 !important; margin: 0 !important; padding: 14pt 16pt 12pt !important; }
+
+  /* ── Sectie headers ── */
+  .sec-head, .rpt-section-head {
+    display: flex !important; align-items: center !important;
+    gap: 7pt !important; margin: 13pt 0 6pt !important;
+    page-break-after: avoid !important; break-after: avoid !important;
+    border: none !important; background: none !important;
+    padding: 0 !important;
+  }
+  .sec-label {
+    font-size: 6.5pt !important; font-weight: 700 !important;
+    letter-spacing: 1.8pt !important; text-transform: uppercase !important;
+    color: #1B597B !important; white-space: nowrap !important;
+    font-family: 'IBM Plex Sans', sans-serif !important;
+    border-left: 2.5pt solid #E26836 !important; padding-left: 6pt !important;
+  }
+  .sec-line { height: 0.5pt !important; background: #E3DDD8 !important; flex: 1 !important; }
+
+  /* ── Intro tekst ── */
+  .intro-text {
+    font-size: 8.5pt !important; line-height: 1.65 !important;
+    padding: 9pt 12pt !important; margin-bottom: 8pt !important;
+    background: #F4F8FB !important; border-left: 2.5pt solid #1B597B !important;
+    border-radius: 0 !important; border-top: none !important;
+    border-right: none !important; border-bottom: none !important;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+  }
+
+  /* ── KPI panel — wit, blauwe accenten ── */
+  .kpi-panel {
+    display: grid !important; grid-template-columns: 1fr 1fr 1fr !important;
+    border: 1pt solid #E3DDD8 !important; border-top: none !important;
+    overflow: visible !important; margin-bottom: 9pt !important;
+    page-break-inside: avoid !important; background: #ffffff !important;
+    border-radius: 0 !important;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+  }
+  .kpi-cell {
+    padding: 10pt 13pt !important; background: #ffffff !important;
+    border-right: 1pt solid #E3DDD8 !important; border-top: 3pt solid #E3DDD8 !important;
+  }
+  .kpi-c1 { border-top-color: #1B597B !important; }
+  .kpi-c2 { border-top-color: #E26836 !important; }
+  .kpi-c3 { border-top-color: #2A7A50 !important; }
+  .kpi-cell:last-child { border-right: none !important; }
+  .kpi-cell::before { display: none !important; }
+  .kpi-lbl { font-size: 6.5pt !important; letter-spacing: 1.2pt !important; color: #8B8B8B !important; margin-bottom: 6pt !important; font-weight: 600 !important; }
+  .kpi-num { font-size: 20pt !important; font-weight: 700 !important; line-height: 1 !important; color: #141414 !important; }
+  .kpi-c1 .kpi-num { color: #1B597B !important; }
+  .kpi-c2 .kpi-num, .kpi-c2 .warn { color: #E26836 !important; }
+  .kpi-c3 .kpi-num, .kpi-c3 .good { color: #2A7A50 !important; }
+  .kpi-sub { font-size: 7pt !important; color: #A0A0A0 !important; margin-top: 4pt !important; line-height: 1.4 !important; }
+  .kpi-edit-input { display: none !important; }
+  .kpi-edit-hint { display: none !important; }
+  .kpi-print-val { display: inline !important; font-size: 20pt !important; font-weight: 700 !important; color: #1B597B !important; font-family: 'IBM Plex Sans', sans-serif !important; }
+  .kpi-edit-prefix { font-size: 18pt !important; font-weight: 700 !important; color: #1B597B !important; }
+  .kpi-edit-wrap { display: flex !important; align-items: baseline !important; gap: 2pt !important; }
+
+  /* ── Punten grid ── */
+  .punten-grid { grid-template-columns: 1fr 1fr !important; gap: 7pt !important; margin-bottom: 9pt !important; }
+  .punten-block { padding: 9pt 11pt !important; border-radius: 3pt !important; page-break-inside: avoid !important; }
+  .punten-block.sterke { background: #F0F9F4 !important; border: 0.5pt solid #B8D9C6 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .punten-block.aandacht { background: #FEF6F1 !important; border: 0.5pt solid #F2C9B4 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .punten-title { font-size: 7pt !important; letter-spacing: 1.2pt !important; font-weight: 700 !important; }
+  .punten-list li { font-size: 8pt !important; padding: 4pt 0 !important; line-height: 1.5 !important; border-bottom-color: rgba(0,0,0,0.06) !important; }
+
+  /* ── Maatregelentabel ── */
+  .rt { width: 100% !important; border-collapse: collapse !important; font-size: 8pt !important; margin-bottom: 7pt !important; table-layout: fixed !important; }
+  .rt thead tr { background: #F0F4F7 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .rt thead { border-top: 2pt solid #1B597B !important; border-bottom: 1pt solid #CFD8DC !important; }
+  .rt th { color: #3A3A3A !important; font-size: 6.5pt !important; padding: 5pt 7pt !important; letter-spacing: 1pt !important; font-weight: 700 !important; text-align: left !important; background: #F0F4F7 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .rt th:first-child { padding-left: 9pt !important; }
+  .rt tbody tr:nth-child(even) td { background: #F9F8F6 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .rt tbody tr:nth-child(odd) td { background: #ffffff !important; }
+  .rt td { padding: 6pt 7pt !important; border-bottom: 0.4pt solid #EDE8E3 !important; vertical-align: middle !important; }
+  .rt td:first-child { padding-left: 9pt !important; }
+  .rt tbody tr:last-child td { border-bottom: none !important; }
+  .m-icon { display: none !important; }
+  .m-name { font-size: 8.5pt !important; font-weight: 600 !important; color: #141414 !important; display: block !important; line-height: 1.3 !important; }
+  .m-sub { font-size: 6.5pt !important; color: #E26836 !important; font-weight: 600 !important; margin-top: 1pt !important; display: block !important; letter-spacing: 0.3pt !important; }
+  .m-save { color: #2A7A50 !important; font-weight: 700 !important; font-size: 8.5pt !important; }
+  .m-invest { font-size: 8pt !important; color: #3A3A3A !important; font-weight: 500 !important; }
+  .m-tvt { color: #1B597B !important; font-weight: 700 !important; font-size: 8.5pt !important; }
+  .m-co2 { color: #8B8B8B !important; font-size: 7.5pt !important; }
+  .rt tbody { border-bottom: 1pt solid #CFD8DC !important; }
+
+  /* ── Live totalen balk ── */
+  .live-totals-bar {
+    display: grid !important; grid-template-columns: 1fr 1fr 1fr !important;
+    background: #F0F4F7 !important; border: 1pt solid #CFD8DC !important;
+    border-top: 2pt solid #1B597B !important;
+    border-radius: 3pt !important; margin-bottom: 9pt !important;
+    page-break-inside: avoid !important;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+  }
+  .lt-cell { padding: 8pt 11pt !important; border-right: 0.5pt solid #DDD8D2 !important; }
+  .lt-cell:last-child { border-right: none !important; }
+  .lt-cell::before { display: none !important; }
+  .lt-lbl { font-size: 6.5pt !important; color: #8B8B8B !important; letter-spacing: 1pt !important; margin-bottom: 4pt !important; font-weight: 600 !important; }
+  .lt-val { font-size: 14pt !important; font-weight: 700 !important; color: #141414 !important; }
+  .lt-val.orange { color: #E26836 !important; }
+  .lt-val.green { color: #2A7A50 !important; }
+  .lt-sub { font-size: 7pt !important; color: #A0A0A0 !important; margin-top: 2pt !important; }
+
+  /* ── Totals block ── */
+  .totals-block {
+    display: grid !important; grid-template-columns: 1fr 1fr 1fr !important;
+    gap: 0 !important; margin-bottom: 9pt !important;
+    background: #F0F4F7 !important; border: 1pt solid #CFD8DC !important;
+    border-top: 2pt solid #1B597B !important;
+    border-radius: 3pt !important; overflow: hidden !important;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+    page-break-inside: avoid !important;
+  }
+  .totals-block > div { padding: 9pt 13pt !important; background: transparent !important; border-right: 0.5pt solid #DDD8D2 !important; }
+  .totals-block > div:last-child { border-right: none !important; }
+  .total-label { font-size: 6.5pt !important; color: #8B8B8B !important; letter-spacing: 1pt !important; margin-bottom: 4pt !important; text-transform: uppercase !important; font-weight: 600 !important; }
+  .total-val { font-size: 16pt !important; font-weight: 700 !important; color: #141414 !important; letter-spacing: -0.3pt !important; }
+  .total-val.orange { color: #E26836 !important; }
+  .total-sub { font-size: 7pt !important; color: #A0A0A0 !important; margin-top: 2pt !important; }
+
+  /* ── Netto investering ── */
+  .netto-table { width: 100% !important; font-size: 8.5pt !important; border-collapse: collapse !important; margin-bottom: 9pt !important; table-layout: fixed !important; }
+  .netto-table thead { border-top: 2pt solid #1B597B !important; border-bottom: 1pt solid #CFD8DC !important; }
+  .netto-table thead tr { background: #F0F4F7 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .netto-table th { color: #3A3A3A !important; font-size: 6.5pt !important; padding: 5pt 8pt !important; letter-spacing: 1pt !important; font-weight: 700 !important; border-bottom: none !important; background: #F0F4F7 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .netto-table tbody tr:nth-child(even) td { background: #F9F8F6 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .netto-table td { padding: 6pt 8pt !important; border-bottom: 0.4pt solid #EDE8E3 !important; font-size: 8.5pt !important; }
+  .netto-table td:last-child { text-align: right !important; font-weight: 600 !important; }
+  .netto-table tr:last-child td { background: #EEF4F8 !important; font-weight: 700 !important; color: #1B597B !important; font-size: 9.5pt !important; border-top: 1.5pt solid #1B597B !important; border-bottom: none !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .netto-table .sub-row td { color: #2A7A50 !important; }
+
+  /* ── Rente strip ── */
+  .rente-strip {
+    background: #F4F8FB !important; padding: 9pt 14pt !important; margin-bottom: 9pt !important;
+    border-radius: 3pt !important; border: 1pt solid #CFD8DC !important; border-left: 3pt solid #1B597B !important;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+    display: flex !important; align-items: center !important; justify-content: space-between !important;
+    page-break-inside: avoid !important;
+  }
+  .rente-num { font-size: 22pt !important; color: #1B597B !important; font-weight: 700 !important; }
+  .rente-lbl { font-size: 7pt !important; color: #1B597B !important; letter-spacing: 1pt !important; opacity: 0.7 !important; }
+  .rente-note { font-size: 7.5pt !important; color: #6B6B6B !important; }
+  .rente-disclaimer { font-size: 7pt !important; color: #A0A0A0 !important; font-style: italic !important; text-align: right !important; }
+
+  /* ── Grafieken ── */
+  .chart-section { page-break-inside: avoid !important; margin-bottom: 9pt !important; }
+  .chart-wrap {
+    padding: 10pt 12pt 8pt !important;
+    border: 1pt solid #E3DDD8 !important; border-top: 2pt solid #1B597B !important;
+    border-radius: 3pt !important; background: #ffffff !important;
+    overflow: hidden !important;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+  }
+  .chart-canvas-wrap { height: 155pt !important; min-height: 155pt !important; max-height: 155pt !important; overflow: hidden !important; }
+  .chart-canvas-wrap canvas { height: 155pt !important; max-height: 155pt !important; width: 100% !important; }
+  .chart-print-img { width: 100% !important; max-height: 155pt !important; object-fit: contain !important; display: block !important; }
+  .chart-legend { margin-top: 6pt !important; gap: 16pt !important; }
+  .chart-legend-item { font-size: 7.5pt !important; }
+  .chart-breakeven-badge { font-size: 7pt !important; padding: 3pt 9pt !important; background: #EBF5EF !important; color: #2A7A50 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .chart-explainer { font-size: 7pt !important; color: #A0A0A0 !important; line-height: 1.5 !important; margin-top: 5pt !important; padding-top: 5pt !important; border-top: 0.4pt solid #EDE8E3 !important; }
+
+  /* ── Subsidiekaarten ── */
+  .sub-grid { grid-template-columns: 1fr 1fr !important; gap: 7pt !important; margin-bottom: 0 !important; }
+  .sub-card-new {
+    border: 1pt solid #E3DDD8 !important; border-top: 2.5pt solid #1B597B !important;
+    border-radius: 3pt !important; page-break-inside: avoid !important; break-inside: avoid !important;
+    overflow: hidden !important; background: #ffffff !important;
+  }
+  .sub-card-header { background: #F4F8FB !important; padding: 7pt 10pt 6pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .sub-badge-new { font-size: 6.5pt !important; padding: 2pt 7pt !important; background: #1B597B !important; color: white !important; border-radius: 20pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .sub-name-new { font-size: 8.5pt !important; font-weight: 700 !important; color: #141414 !important; }
+  .sub-type-new { font-size: 7pt !important; color: #8B8B8B !important; }
+  .sub-card-body { padding: 7pt 10pt !important; gap: 5pt !important; }
+  .sub-voordeel { font-size: 7.5pt !important; padding: 5pt 8pt !important; background: #F4F8FB !important; border-left: 2pt solid #1B597B !important; line-height: 1.5 !important; color: #1B597B !important; font-weight: 500 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .sub-toepassing { font-size: 7pt !important; color: #8B8B8B !important; line-height: 1.5 !important; }
+  .sub-steps li { font-size: 7.5pt !important; line-height: 1.5 !important; color: #3A3A3A !important; }
+  .sub-step-num { width: 13pt !important; height: 13pt !important; font-size: 7pt !important; background: #1B597B !important; color: white !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .sub-alert { font-size: 7pt !important; padding: 4pt 8pt !important; border-left: 2pt solid #C0392B !important; background: #FDF5F5 !important; color: #8B2828 !important; line-height: 1.5 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .sub-footer-row { padding: 5pt 10pt !important; background: #F9F8F6 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .sub-combine { font-size: 7pt !important; padding: 2pt 6pt !important; background: #EBF5EF !important; color: #2A7A50 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .sub-nocombine { font-size: 7pt !important; padding: 2pt 6pt !important; }
+  .sub-url { display: none !important; }
+
+  /* ── Fases ── */
+  .phases-grid { grid-template-columns: 1fr 1fr !important; gap: 7pt !important; margin-bottom: 9pt !important; }
+  .phase-block { border: 1pt solid #E3DDD8 !important; border-top: 2pt solid #E26836 !important; border-radius: 3pt !important; overflow: hidden !important; page-break-inside: avoid !important; break-inside: avoid !important; }
+  .phase-header { padding: 8pt 10pt !important; background: #FEF6F1 !important; border-bottom: 0.5pt solid #E3DDD8 !important; gap: 8pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .phase-num-badge { width: 26pt !important; height: 26pt !important; font-size: 11pt !important; background: #E26836 !important; border-radius: 50% !important; color: white !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .phase-title { font-size: 9pt !important; font-weight: 600 !important; color: #141414 !important; }
+  .phase-body { padding: 7pt 10pt !important; }
+  .phase-desc { font-size: 8pt !important; color: #3A3A3A !important; line-height: 1.55 !important; }
+  .phase-meta { margin-top: 6pt !important; gap: 5pt !important; }
+  .phase-meta-pill { font-size: 7pt !important; padding: 2pt 6pt !important; background: #F4F8FB !important; color: #1B597B !important; border-radius: 20pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+  /* ── Aandachtspunten ── */
+  .aandacht-table { width: 100% !important; border-collapse: collapse !important; font-size: 8pt !important; margin-bottom: 9pt !important; table-layout: fixed !important; }
+  .aandacht-table thead { border-top: 2pt solid #1B597B !important; border-bottom: 1pt solid #CFD8DC !important; }
+  .aandacht-table thead tr { background: #F0F4F7 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .aandacht-table th { color: #3A3A3A !important; font-size: 6.5pt !important; padding: 5pt 8pt !important; letter-spacing: 1pt !important; font-weight: 700 !important; background: #F0F4F7 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .aandacht-table td { padding: 7pt 8pt !important; border-bottom: 0.4pt solid #EDE8E3 !important; vertical-align: top !important; }
+  .aandacht-table td:first-child { font-weight: 600 !important; color: #1B597B !important; width: 26% !important; }
+  .aandacht-table tbody tr:nth-child(even) td { background: #F9F8F6 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+  /* ── Geen actie blok ── */
+  .geen-actie-block { margin-bottom: 9pt !important; border: 1pt solid #E3DDD8 !important; border-radius: 3pt !important; overflow: hidden !important; }
+  .geen-actie-head {
+    background: #2C1F1F !important; padding: 9pt 13pt !important;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+  }
+  .geen-actie-icon { width: 22pt !important; height: 22pt !important; }
+  .geen-actie-eyebrow { font-size: 7pt !important; }
+  .geen-actie-title { font-size: 10.5pt !important; }
+  .geen-actie-grid { background: #FAFAF8 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .geen-actie-cell { padding: 9pt 12pt !important; border-right: 0.5pt solid #EDE8E3 !important; }
+  .geen-actie-lbl { font-size: 6.5pt !important; color: #8B8B8B !important; font-weight: 600 !important; letter-spacing: 1pt !important; }
+  .geen-actie-val { font-size: 15pt !important; color: #C0392B !important; font-weight: 700 !important; }
+  .geen-actie-sub { font-size: 7.5pt !important; color: #8B8B8B !important; }
+  .geen-actie-foot { font-size: 8pt !important; padding: 8pt 13pt !important; line-height: 1.55 !important; color: #6B6B6B !important; background: #ffffff !important; }
+
+  /* ── Vervolgstappen ── */
+  .vervolg-list { display: flex !important; flex-direction: column !important; gap: 0 !important; }
+  .vervolg-item { padding: 7pt 0 !important; gap: 10pt !important; border-bottom: 0.5pt solid #EDE8E3 !important; page-break-inside: avoid !important; display: flex !important; align-items: flex-start !important; }
+  .vervolg-item:last-child { border-bottom: none !important; }
+  .vervolg-num { width: 20pt !important; height: 20pt !important; font-size: 9pt !important; background: #E26836 !important; border-radius: 50% !important; flex-shrink: 0 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; display: flex !important; align-items: center !important; justify-content: center !important; color: white !important; font-weight: 700 !important; margin-top: 1pt !important; }
+  .vervolg-title { font-size: 8.5pt !important; font-weight: 700 !important; color: #141414 !important; margin-bottom: 2pt !important; }
+  .vervolg-desc { font-size: 7.5pt !important; color: #6B6B6B !important; line-height: 1.55 !important; }
+
+  /* ── Assumptions ── */
+  .assumptions { background: #FBF4E3 !important; border: 0.5pt solid rgba(138,96,0,0.18) !important; border-left: 2.5pt solid #E0A020 !important; padding: 8pt 11pt !important; margin-bottom: 9pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .assumptions-text { font-size: 7.5pt !important; color: #7A5800 !important; line-height: 1.55 !important; }
+
+  /* ── Notes block ── */
+  .notes-block { background: #F4F8FB !important; border-left: 2.5pt solid #1B597B !important; padding: 9pt 13pt !important; font-size: 8pt !important; margin-bottom: 9pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+  /* ── Adviseur sluiting ── */
+  .adviseur-card { display: none !important; }
+  .adviseur-sluiting {
+    display: flex !important; align-items: center !important; gap: 14pt !important;
+    padding: 12pt 15pt !important; background: #ffffff !important;
+    border: 1pt solid #E3DDD8 !important; border-top: 2.5pt solid #1B597B !important;
+    border-radius: 3pt !important; margin-top: 10pt !important; margin-bottom: 4pt !important;
+    page-break-inside: avoid !important; break-inside: avoid !important;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+  }
+  .adviseur-sluiting-logo-wrap { width: 34pt !important; height: 34pt !important; border-radius: 50% !important; background: #F4F8FB !important; border: 1pt solid #CFD8DC !important; display: flex !important; align-items: center !important; justify-content: center !important; flex-shrink: 0 !important; overflow: hidden !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .adviseur-sluiting-logo { width: 22pt !important; height: 22pt !important; object-fit: contain !important; }
+  .adviseur-sluiting-naam { font-size: 10pt !important; font-weight: 700 !important; color: #141414 !important; }
+  .adviseur-sluiting-functie { font-size: 7pt !important; color: #8B8B8B !important; margin-top: 1pt !important; }
+  .adviseur-sluiting-sep { width: 0.5pt !important; height: 30pt !important; background: #E3DDD8 !important; flex-shrink: 0 !important; }
+  .adviseur-sluiting-cta-kop { font-size: 9pt !important; font-weight: 700 !important; color: #134460 !important; margin-bottom: 2pt !important; }
+  .adviseur-sluiting-cta-sub { font-size: 7.5pt !important; color: #6B6B6B !important; line-height: 1.5 !important; }
+  .adviseur-sluiting-contact { gap: 6pt !important; }
+  .adviseur-sluiting-link { font-size: 7.5pt !important; color: #1B597B !important; font-weight: 600 !important; gap: 4pt !important; }
+  .adviseur-sluiting-link svg { display: none !important; }
+
+  /* ── MB Print Footer ── */
+  .mb-pf { display: block !important; position: fixed !important; left: 0 !important; right: 0 !important; bottom: 0 !important; z-index: 9997 !important; }
+  .mb-pf-bar {
+    background: linear-gradient(90deg, #0d2233 0%, #134460 55%, #1B597B 100%) !important;
+    display: flex !important; align-items: center !important; justify-content: space-between !important;
+    padding: 4pt 13mm !important; min-height: 13mm !important; box-sizing: border-box !important; position: relative !important;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+  }
+  .mb-pf-accent { position: absolute !important; top: 0 !important; left: 0 !important; right: 0 !important; height: 2pt !important; background: linear-gradient(90deg, #E26836, #f09060) !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .mb-pf-left { display: flex !important; align-items: center !important; gap: 7pt !important; flex: 0 0 auto !important; }
+  .mb-pf-logo { width: 16pt !important; height: 16pt !important; border-radius: 50% !important; background: rgba(255,255,255,0.9) !important; padding: 1pt !important; flex-shrink: 0 !important; object-fit: contain !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .mb-pf-brand { display: flex !important; flex-direction: column !important; gap: 1pt !important; }
+  .mb-pf-name { font-size: 7pt !important; font-weight: 700 !important; color: #ffffff !important; line-height: 1.2 !important; }
+  .mb-pf-sub { font-size: 5.5pt !important; color: rgba(255,255,255,0.5) !important; line-height: 1.2 !important; }
+  .mb-pf-mid { font-size: 5.5pt !important; color: rgba(255,255,255,0.45) !important; text-align: center !important; flex: 1 1 auto !important; line-height: 1.5 !important; padding: 0 12pt !important; }
+  .mb-pf-right { display: flex !important; flex-direction: column !important; align-items: flex-end !important; gap: 1.5pt !important; flex: 0 0 auto !important; }
+  .mb-pf-email { font-size: 6.5pt !important; color: rgba(255,255,255,0.75) !important; font-weight: 600 !important; }
+  .mb-pf-url { font-size: 6pt !important; color: rgba(255,255,255,0.4) !important; }
+
+  /* ── Label visualisatie ── */
+  .label-track { display: flex !important; align-items: center !important; gap: 8pt !important; margin-top: 10pt !important; padding-top: 8pt !important; border-top: 1pt solid rgba(255,255,255,0.15) !important; }
+  .label-box { width: 36pt !important; height: 28pt !important; font-size: 14pt !important; border-radius: 3pt !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .label-caption { font-size: 8pt !important; color: rgba(255,255,255,0.6) !important; }
+
+  /* ── Tabellen: nooit buiten pagina ── */
+  table, .rt, .netto-table, .aandacht-table { width: 100% !important; max-width: 100% !important; table-layout: fixed !important; box-sizing: border-box !important; }
+  .rt th, .rt td, .netto-table th, .netto-table td, .aandacht-table th, .aandacht-table td { overflow-wrap: anywhere !important; }
+
+  /* ── Pagina-indeling ── */
+  h2, h3, .sec-head, .rpt-section-head { page-break-after: avoid !important; break-after: avoid !important; }
+  .phase-block, .sub-card-new, .kpi-panel, .geen-actie-block, .totals-block,
+  .live-totals-bar, .adviseur-sluiting, .rente-strip, .punten-grid,
+  .rt tbody tr, .netto-table tr, .aandacht-table tr { page-break-inside: avoid !important; break-inside: avoid !important; }
+  img, canvas, svg { page-break-inside: avoid !important; break-inside: avoid !important; max-width: 100% !important; }
+
+  /* ── Verberg interactieve UI ── */
+  .action-row, button, .btn-orange, .btn-ghost, .btn-sel, input[type="range"],
+  .ai-fab, .toc-rail, .measures-toolbar, .m-checkbox, .ml-controls,
+  [data-print-hide], .chart-tog-group, .scroll-hint, .kpi-edit-hint,
+  .trust-bar, .bron-card, .rpt-footer { display: none !important; }
+
+  /* ── Verberg zware interactieve secties ── */
+  #maandlastenSection, #scenarioSection { display: none !important; }
+
+}
+
+/* =====================================================================
+   DEFINITIEVE PRINT-FIX v2 — A4 VEILIG / GEEN OVERLAP / STRAKKERE PAGINA'S
+===================================================================== */
+@media print {
+  @page { size: A4 portrait !important; margin: 17mm 13mm 22mm 13mm !important; }
+  @page :first { margin: 0 !important; }
+  html, body { width: 210mm !important; min-width: 210mm !important; margin: 0 !important; padding: 0 !important; background: #fff !important; font-size: 8.6pt !important; line-height: 1.35 !important; overflow: visible !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .trust-bar,.hdr,.action-row,.loading-state,.form-error,.disclaimer,.toc-rail,.ai-fab,.ai-panel,.rpt-footer,.bron-card,.measures-toolbar,button,input[type='range'],[data-print-hide]{display:none!important;}
+  .page-wrap,.card,.result,.result .body{width:auto!important;max-width:none!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:transparent!important;overflow:visible!important;transform:none!important;filter:none!important;}
+  .result{display:block!important;opacity:1!important;animation:none!important}.result .body{display:block!important;padding-bottom:0!important;}
+  .print-cover-page{display:block!important;width:210mm!important;height:297mm!important;max-height:297mm!important;overflow:hidden!important;page-break-after:always!important;break-after:page!important;position:relative!important;z-index:99999!important;}
+  .result .body>*:not(.print-cover-page):not(.mb-pf):not(.mb-ph){width:100%!important;max-width:100%!important;margin-left:0!important;margin-right:0!important;box-sizing:border-box!important;}
+  .mb-ph{display:block!important;position:fixed!important;top:0!important;left:0!important;right:0!important;height:13mm!important;z-index:9998!important;}
+  .mb-ph-bar{height:11mm!important;padding:0 13mm!important;background:linear-gradient(90deg,#0d2233 0%,#134460 55%,#1B597B 100%)!important;display:flex!important;align-items:center!important;justify-content:space-between!important;}
+  .mb-ph-accent{height:2mm!important;background:#E26836!important}.mb-ph-logo{width:15pt!important;height:15pt!important}.mb-ph-name{font-size:6.8pt!important}.mb-ph-sub{font-size:5pt!important}.mb-ph-center{font-size:6.7pt!important}.mb-ph-right{font-size:5.8pt!important}
+  .mb-pf{display:block!important;position:fixed!important;bottom:0!important;left:0!important;right:0!important;height:15mm!important;z-index:9999!important;}
+  .mb-pf-bar{height:15mm!important;min-height:15mm!important;padding:3.5pt 13mm!important;background:linear-gradient(90deg,#0d3348 0%,#134460 50%,#1B597B 100%)!important;display:flex!important;align-items:center!important;justify-content:space-between!important;}
+  .mb-pf-accent{height:1.6pt!important;background:#E26836!important}.mb-pf-logo{width:15pt!important;height:15pt!important}.mb-pf-name{font-size:6.8pt!important}.mb-pf-sub,.mb-pf-mid{font-size:5pt!important;line-height:1.25!important}.mb-pf-email{font-size:6pt!important}.mb-pf-url{font-size:5.5pt!important}
+  .rpt-hdr{margin:0 0 7pt 0!important;padding:11pt 14pt 10pt!important;border-radius:0!important;page-break-inside:avoid!important;break-inside:avoid!important;}.rpt-title{font-size:16pt!important;line-height:1.08!important}.rpt-address{font-size:7.8pt!important;line-height:1.3!important}.rpt-pretitle{font-size:6.5pt!important;letter-spacing:1.4pt!important}.label-track{margin-top:6pt!important;padding:5pt 8pt!important}.label-box{width:28pt!important;height:21pt!important;font-size:12pt!important}
+  .sec-head,.rpt-section-head{display:flex!important;align-items:center!important;gap:6pt!important;margin:8pt 0 4pt!important;padding:0!important;border:0!important;background:none!important;page-break-after:avoid!important;break-after:avoid!important}.sec-label{font-size:6.2pt!important;letter-spacing:1.35pt!important;color:#1B597B!important;border-left:2pt solid #E26836!important;padding-left:5pt!important;white-space:nowrap!important}.sec-line{height:.5pt!important;background:#D9D6D2!important}
+  .intro-text{font-size:8pt!important;line-height:1.45!important;padding:7pt 9pt!important;margin:0 0 6pt!important;border-left:2pt solid #1B597B!important;border-radius:0!important;background:#F4F8FB!important}
+  .kpi-panel,.live-totals-bar,.totals-block{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:0!important;margin:0 0 7pt!important;border:.8pt solid #D8DDE0!important;border-top:2pt solid #1B597B!important;border-radius:0!important;overflow:hidden!important;page-break-inside:avoid!important;break-inside:avoid!important;background:#F5F8FA!important}.kpi-cell,.lt-cell,.totals-block>div{padding:7pt 9pt!important;border-right:.5pt solid #D8DDE0!important;background:transparent!important}.kpi-cell:last-child,.lt-cell:last-child,.totals-block>div:last-child{border-right:0!important}.kpi-lbl,.lt-lbl,.total-label{font-size:5.8pt!important;letter-spacing:.9pt!important;margin-bottom:3pt!important;color:#7A7A7A!important}.kpi-num,.kpi-print-val{font-size:16pt!important;line-height:1!important}.kpi-edit-prefix{font-size:14pt!important}.lt-val,.total-val{font-size:13pt!important;line-height:1!important}.kpi-sub,.lt-sub,.total-sub{font-size:6.2pt!important;line-height:1.3!important;margin-top:2pt!important}
+  table,.rt,.netto-table,.aandacht-table{width:100%!important;max-width:100%!important;table-layout:fixed!important;border-collapse:collapse!important;margin:0 0 7pt!important}.rt th,.rt td,.netto-table th,.netto-table td,.aandacht-table th,.aandacht-table td{padding:4.2pt 5pt!important;font-size:7.2pt!important;line-height:1.25!important;overflow-wrap:anywhere!important;word-break:normal!important;vertical-align:top!important}.rt th,.netto-table th,.aandacht-table th{font-size:5.8pt!important;letter-spacing:.75pt!important;background:#F0F4F7!important;color:#243844!important;border-top:1.6pt solid #1B597B!important;border-bottom:.7pt solid #CBD5DB!important}.rt th:nth-child(1),.rt td:nth-child(1){width:32%!important}.rt th:nth-child(2),.rt td:nth-child(2){width:17%!important}.rt th:nth-child(3),.rt td:nth-child(3){width:17%!important}.rt th:nth-child(4),.rt td:nth-child(4){width:21%!important}.rt th:nth-child(5),.rt td:nth-child(5){width:13%!important}.rt tbody tr:nth-child(even) td,.netto-table tbody tr:nth-child(even) td,.aandacht-table tbody tr:nth-child(even) td{background:#FAF9F7!important}.m-name{font-size:7.4pt!important;line-height:1.2!important}.m-save,.m-tvt{font-size:7.4pt!important}.m-invest,.m-co2{font-size:7pt!important}.m-icon,.m-check,.rt th:first-child:empty,.rt td.m-check{display:none!important}
+  .chart-section,#maatregelenChartSection,#chartSection{display:block!important;margin:0 0 7pt!important;page-break-inside:avoid!important;break-inside:avoid!important;overflow:visible!important}.chart-wrap{width:100%!important;padding:7pt 8pt!important;border:.7pt solid #D8DDE0!important;border-top:1.6pt solid #1B597B!important;border-radius:0!important;box-shadow:none!important;overflow:hidden!important;page-break-inside:avoid!important;break-inside:avoid!important}.chart-canvas-wrap{height:118pt!important;min-height:118pt!important;max-height:118pt!important;width:100%!important;margin:0!important;padding:0!important;overflow:hidden!important}.chart-canvas-wrap canvas{width:100%!important;height:118pt!important;max-height:118pt!important}.chart-print-img{width:100%!important;max-width:100%!important;height:auto!important;max-height:118pt!important;object-fit:contain!important;display:block!important}.chart-canvas-wrap:has(.chart-print-img) canvas{display:none!important}.chart-legend{margin-top:3pt!important;gap:9pt!important}.chart-legend-item,#chartNoteFlat,#chartNoteStijg{font-size:6pt!important;line-height:1.25!important}#chartNoteFlat,#chartNoteStijg{margin-top:3pt!important;padding-top:3pt!important}.chart-breakeven-badge{font-size:6pt!important;padding:2pt 5pt!important}
+  #measuresSection{page-break-before:always!important;break-before:page!important;page-break-inside:avoid!important;break-inside:avoid!important}#maatregelenChartSection,#chartSection{page-break-before:avoid!important;break-before:avoid!important}#nettoSection{page-break-before:always!important;break-before:page!important;page-break-inside:avoid!important;break-inside:avoid!important}.netto-table td:last-child{text-align:right!important}.netto-table tr:last-child td{font-size:8.2pt!important;font-weight:700!important}
+  #subsidiesSection{page-break-before:always!important;break-before:page!important;overflow:visible!important}#subsidiesSection .sub-list{display:grid!important;grid-template-columns:1fr 1fr!important;column-gap:8pt!important;row-gap:6pt!important;margin:0!important}.sub-list-item{display:block!important;padding:6pt 7pt!important;border:.6pt solid #D8DDE0!important;border-top:1.5pt solid #1B597B!important;background:#fff!important;margin:0!important;page-break-inside:avoid!important;break-inside:avoid!important;min-height:0!important}.sub-list-name{font-size:7.6pt!important;line-height:1.2!important;margin-bottom:2pt!important}.sub-code-badge{font-size:5.8pt!important;padding:1pt 4pt!important;margin-right:3pt!important}.sub-list-type,.sub-list-voordeel,.sub-list-alert,.sub-list-combine,.sub-list-step{font-size:6.3pt!important;line-height:1.25!important;margin-bottom:2pt!important}.sub-list-steps{gap:1.5pt!important;margin-top:2pt!important}.sls-n{min-width:11pt!important;width:11pt!important;height:11pt!important;font-size:5.5pt!important;margin-top:0!important}.sub-list-url{display:none!important}
+  #phasesSection{page-break-before:always!important;break-before:page!important}.phases-grid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:6pt!important;margin-bottom:8pt!important}.phase-block{border:.7pt solid #D8DDE0!important;border-top:1.5pt solid #E26836!important;border-radius:0!important;overflow:hidden!important;page-break-inside:avoid!important;break-inside:avoid!important}.phase-header{padding:6pt 7pt!important;gap:6pt!important}.phase-num-badge{width:22pt!important;height:22pt!important}.phase-num-label{font-size:5pt!important}.phase-num-value{font-size:10pt!important}.phase-title{font-size:7.6pt!important;line-height:1.2!important}.phase-body{padding:6pt 7pt!important}.phase-desc{font-size:6.8pt!important;line-height:1.35!important}.phase-meta{margin-top:5pt!important;gap:4pt!important}.phase-meta-pill{font-size:6.2pt!important;padding:1.5pt 4pt!important}
+  #aandachtSection{page-break-before:avoid!important;break-before:avoid!important}.aandacht-table th:nth-child(1),.aandacht-table td:nth-child(1){width:32%!important}.aandacht-table th:nth-child(2),.aandacht-table td:nth-child(2){width:68%!important}.aandacht-table td:first-child{white-space:normal!important}
+  #vervolgSection{page-break-before:always!important;break-before:page!important}.vervolg-item{padding:5pt 0!important;gap:8pt!important;page-break-inside:avoid!important;break-inside:avoid!important}.vervolg-num{width:17pt!important;height:17pt!important;font-size:7.5pt!important}.vervolg-title{font-size:7.8pt!important;margin-bottom:1pt!important}.vervolg-desc{font-size:6.8pt!important;line-height:1.35!important}.adviseur-sluiting,.adviseur-card{margin-top:8pt!important;padding:10pt 12pt!important;page-break-inside:avoid!important;break-inside:avoid!important}
+  img,svg,canvas{max-width:100%!important;page-break-inside:avoid!important;break-inside:avoid!important}tr,.kpi-panel,.live-totals-bar,.totals-block,.chart-wrap,.phase-block,.sub-list-item,.vervolg-item{page-break-inside:avoid!important;break-inside:avoid!important}
+}
+
+
+/* MJ DEFINITIEVE PRINT-SCALE FIX v3 */
+@media print {
+  @page { size: A4 portrait !important; margin: 14mm 13mm 23mm 13mm !important; }
+  @page :first { margin: 0 !important; }
+
+  html, body {
+    width: 210mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    overflow: visible !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .page-wrap, .card, .result, .result .body {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+    box-shadow: none !important;
+  }
+
+  .mb-ph, .mb-pf, .mb-ph-bar, .mb-pf-bar, .print-cover-page {
+    transform: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .result .body > *:not(.print-cover-page):not(.mb-ph):not(.mb-pf):not(.action-row),
+  #rptHdr, #kpiPanel, #labelVisSection, #wachtenBanner, #introSection,
+  #geenActieSection, #measuresSection, #scenarioSection, #maatregelenChartSection,
+  #chartSection, #nettoSection, #maandlastenSection, #subsidiesSection,
+  #phasesSection, #aandachtSection, #vervolgSection, .rapport-einde-block {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+    transform: scale(0.89) !important;
+    transform-origin: top center !important;
+  }
+
+  .rpt-section-head, .sec-head { margin-top: 6pt !important; margin-bottom: 4pt !important; }
+  .kpi-panel, .totals-block, .live-totals-bar, .chart-section, .chart-wrap,
+  .netto-table, .maandlasten-block, .phases-grid, .aandacht-table, .vervolg-list {
+    margin-bottom: 5pt !important;
+  }
+
+  .result .body { padding-bottom: 34mm !important; }
+
+  table, .rt, .netto-table, .aandacht-table {
+    width: 100% !important;
+    max-width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: collapse !important;
+    box-sizing: border-box !important;
+  }
+
+  .rt th, .rt td, .netto-table th, .netto-table td, .aandacht-table th, .aandacht-table td {
+    overflow-wrap: anywhere !important;
+    word-break: normal !important;
+  }
+
+  .chart-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 6pt 8pt !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+    border-radius: 3pt !important;
+  }
+
+  .chart-canvas-wrap {
+    width: 100% !important;
+    height: 128pt !important;
+    min-height: 128pt !important;
+    max-height: 128pt !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  .chart-canvas-wrap canvas, .chart-print-img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: 128pt !important;
+    object-fit: contain !important;
+    display: block !important;
+  }
+
+  .chart-canvas-wrap:has(.chart-print-img) canvas { display: none !important; }
+  .chart-legend { margin-top: 3pt !important; }
+  .chart-legend-item { font-size: 6.5pt !important; }
+  #chartNoteFlat, #chartNoteStijg { font-size: 6pt !important; line-height: 1.3 !important; margin-top: 2pt !important; padding-top: 2pt !important; }
+
+  .mb-ph-bar { height: 12mm !important; padding-left: 13mm !important; padding-right: 13mm !important; }
+  .mb-pf-bar { min-height: 12mm !important; padding: 4pt 13mm !important; }
+
+  .action-row, .trust-bar, .hdr, .loading-state, .disclaimer, .form-error,
+  .toc-rail, .ai-fab, .ai-panel, button, input[type="range"], [data-print-hide] {
+    display: none !important;
+  }
+
+  .kpi-panel, .totals-block, .live-totals-bar, .chart-wrap, .netto-table,
+  .maandlasten-block, .phase-block, .sub-list-item, .vervolg-item,
+  .rapport-einde-block, .adviseur-card, .label-vis-card, .intro-text {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  h1, h2, h3, h4, .rpt-section-head, .sec-head {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+
+  img, canvas, svg {
+    max-width: 100% !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .memo-page {
+    width: 100% !important;
+    max-width: 190mm !important;
+    margin: 0 auto !important;
+    box-sizing: border-box !important;
+    transform: scale(0.89) !important;
+    transform-origin: top center !important;
+    padding-bottom: 140px !important;
+  }
+}
+
+/* =====================================================================
+   MJ PRINT FIX v4 — BALANCED A4 / NIET TE KLEIN / NIET ONDER HEADER
+   Geen transform-scale meer op iedere sectie: dat veroorzaakte witvlakken
+   en content die visueel onder de vaste header schoof.
+===================================================================== */
+@media print {
+  @page { size: A4 portrait !important; margin: 17mm 13mm 21mm 13mm !important; }
+  @page :first { margin: 0 !important; }
+
+  html, body {
+    width: 210mm !important; margin: 0 !important; padding: 0 !important;
+    background: #fff !important; overflow: visible !important;
+    font-size: 9pt !important; line-height: 1.36 !important;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+  }
+
+  .result .body > *:not(.print-cover-page):not(.mb-ph):not(.mb-pf):not(.action-row),
+  #rptHdr, #kpiPanel, #labelVisSection, #wachtenBanner, #introSection,
+  #geenActieSection, #measuresSection, #scenarioSection, #maatregelenChartSection,
+  #chartSection, #nettoSection, #maandlastenSection, #subsidiesSection,
+  #phasesSection, #aandachtSection, #vervolgSection, .rapport-einde-block,
+  .memo-page { transform: none !important; transform-origin: initial !important; }
+
+  .page-wrap,.card,.result,.result .body{
+    width:100%!important;max-width:100%!important;margin:0!important;padding:0!important;
+    border:0!important;border-radius:0!important;box-shadow:none!important;background:transparent!important;overflow:visible!important;
+  }
+  .result{display:block!important;opacity:1!important;animation:none!important}
+  .result .body{display:block!important;padding-bottom:16mm!important;}
+
+  .result .body > *:not(.print-cover-page):not(.mb-ph):not(.mb-pf):not(.action-row),
+  #rptHdr,#kpiPanel,#labelVisSection,#wachtenBanner,#introSection,#geenActieSection,#measuresSection,#scenarioSection,
+  #maatregelenChartSection,#chartSection,#nettoSection,#maandlastenSection,#subsidiesSection,#phasesSection,#aandachtSection,
+  #vervolgSection,.rapport-einde-block{
+    width:94%!important;max-width:94%!important;margin-left:auto!important;margin-right:auto!important;box-sizing:border-box!important;overflow:visible!important;
+  }
+
+  .print-cover-page{width:210mm!important;height:297mm!important;min-height:297mm!important;max-height:297mm!important;margin:0!important;padding:0!important;overflow:hidden!important;page-break-after:always!important;break-after:page!important;position:relative!important;z-index:99999!important;}
+
+  .mb-ph{display:block!important;position:fixed!important;top:0!important;left:0!important;right:0!important;height:13mm!important;z-index:9998!important;transform:none!important;}
+  .mb-ph-bar{height:11mm!important;padding:0 13mm!important;background:linear-gradient(90deg,#0d2233 0%,#134460 55%,#1B597B 100%)!important;}
+  .mb-ph-accent{height:2mm!important;background:#E26836!important;}
+  .mb-pf{display:block!important;position:fixed!important;left:0!important;right:0!important;bottom:0!important;height:15mm!important;z-index:9999!important;transform:none!important;}
+  .mb-pf-bar{height:15mm!important;min-height:15mm!important;padding:4pt 13mm!important;background:linear-gradient(90deg,#0d3348 0%,#134460 50%,#1B597B 100%)!important;}
+
+  #measuresSection,#nettoSection,#subsidiesSection,#phasesSection,#vervolgSection{padding-top:3.5mm!important;}
+  #measuresSection .sec-head,#nettoSection .sec-head,#subsidiesSection .sec-head,#phasesSection .sec-head,#vervolgSection .sec-head,
+  #measuresSection .rpt-section-head,#nettoSection .rpt-section-head,#subsidiesSection .rpt-section-head,#phasesSection .rpt-section-head,#vervolgSection .rpt-section-head{margin-top:0!important;}
+
+  .sec-head,.rpt-section-head{margin:10pt 0 5pt!important;gap:7pt!important;display:flex!important;align-items:center!important;page-break-after:avoid!important;break-after:avoid!important;}
+  .sec-label{font-size:6.7pt!important;letter-spacing:1.55pt!important;color:#1B597B!important;border-left:2.2pt solid #E26836!important;padding-left:5.5pt!important;white-space:nowrap!important;}
+  .sec-line{height:.5pt!important;background:#D9D6D2!important;}
+
+  .rpt-hdr{width:94%!important;max-width:94%!important;margin:0 auto 8pt auto!important;padding:12pt 15pt 11pt!important;border-radius:0!important;}
+  .rpt-title{font-size:18pt!important;line-height:1.08!important}.rpt-address{font-size:8.4pt!important;line-height:1.35!important}
+  .intro-text{font-size:8.4pt!important;line-height:1.5!important;padding:8pt 10pt!important;margin-bottom:7pt!important;}
+  .kpi-panel,.live-totals-bar,.totals-block{margin-bottom:8pt!important;border-radius:0!important;}
+  .kpi-cell,.lt-cell,.totals-block>div{padding:8pt 10pt!important;}.kpi-num,.kpi-print-val{font-size:17.5pt!important}.lt-val,.total-val{font-size:14.5pt!important}
+
+  table,.rt,.netto-table,.aandacht-table{width:100%!important;max-width:100%!important;table-layout:fixed!important;border-collapse:collapse!important;}
+  .rt th,.rt td,.netto-table th,.netto-table td,.aandacht-table th,.aandacht-table td{padding:5pt 6pt!important;font-size:7.6pt!important;line-height:1.28!important;overflow-wrap:anywhere!important;word-break:normal!important;}
+  .rt th,.netto-table th,.aandacht-table th{font-size:6.1pt!important;letter-spacing:.8pt!important;}
+  .m-name{font-size:7.9pt!important}.m-save,.m-tvt{font-size:7.9pt!important}
+
+  .chart-section,#maatregelenChartSection,#chartSection{margin-bottom:8pt!important;overflow:visible!important;page-break-inside:avoid!important;break-inside:avoid!important;}
+  .chart-wrap{width:100%!important;max-width:100%!important;padding:8pt 9pt!important;border:.7pt solid #D8DDE0!important;border-top:1.7pt solid #1B597B!important;border-radius:0!important;box-shadow:none!important;overflow:hidden!important;box-sizing:border-box!important;}
+  .chart-canvas-wrap{width:100%!important;height:142pt!important;min-height:142pt!important;max-height:142pt!important;padding:0!important;margin:0!important;overflow:hidden!important;}
+  .chart-canvas-wrap canvas,.chart-print-img{width:100%!important;max-width:100%!important;height:auto!important;max-height:142pt!important;object-fit:contain!important;display:block!important;}
+  .chart-canvas-wrap:has(.chart-print-img) canvas{display:none!important}.chart-legend{margin-top:4pt!important}.chart-legend-item{font-size:6.8pt!important}
+  #chartNoteFlat,#chartNoteStijg{font-size:6.4pt!important;line-height:1.32!important;margin-top:3pt!important;padding-top:3pt!important;}
+
+  #subsidiesSection .sub-list{display:grid!important;grid-template-columns:1fr 1fr!important;column-gap:8pt!important;row-gap:7pt!important;}
+  .sub-list-item{padding:7pt 8pt!important;border:.6pt solid #D8DDE0!important;border-top:1.5pt solid #1B597B!important;page-break-inside:avoid!important;break-inside:avoid!important;}
+  .sub-list-name{font-size:7.9pt!important;line-height:1.22!important}.sub-list-type,.sub-list-voordeel,.sub-list-alert,.sub-list-combine,.sub-list-step{font-size:6.6pt!important;line-height:1.28!important;}
+
+  .phases-grid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:7pt!important;}.phase-title{font-size:8.1pt!important}.phase-desc{font-size:7.1pt!important;line-height:1.38!important;}
+  .aandacht-table th:nth-child(1),.aandacht-table td:nth-child(1){width:31%!important}.aandacht-table th:nth-child(2),.aandacht-table td:nth-child(2){width:69%!important}
+
+  #measuresSection{page-break-before:always!important;break-before:page!important}#nettoSection{page-break-before:always!important;break-before:page!important}#subsidiesSection{page-break-before:always!important;break-before:page!important}#phasesSection{page-break-before:always!important;break-before:page!important}#vervolgSection{page-break-before:always!important;break-before:page!important}
+  .kpi-panel,.live-totals-bar,.totals-block,.chart-wrap,.netto-table,.phase-block,.sub-list-item,.vervolg-item,.rapport-einde-block,.adviseur-card,.label-vis-card,.intro-text{page-break-inside:avoid!important;break-inside:avoid!important;}
+  .trust-bar,.hdr,.action-row,.loading-state,.form-error,.disclaimer,.toc-rail,.ai-fab,.ai-panel,button,input[type="range"],[data-print-hide]{display:none!important;}
+  img,canvas,svg{max-width:100%!important;page-break-inside:avoid!important;break-inside:avoid!important;}
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   DEFINITIEVE HEADER-SAFE PRINT FIX — v5
+   Probleem uit PDF: content raakt/verdwijnt onder de vaste blauwe header.
+   Aanpak: meer topmarge per A4-pagina + duidelijke veilige zones,
+   zonder de hele rapportinhoud opnieuw te klein te schalen.
+═══════════════════════════════════════════════════════════════════════ */
+@media print {
+
+  /* Elke normale pagina krijgt echte ruimte boven de content.
+     De vaste header is ca. 13mm hoog; 25mm topmarge geeft luxe witruimte
+     en voorkomt dat koppen/tabellen onder de banner schuiven. */
+  @page {
+    size: A4 portrait !important;
+    margin: 25mm 13mm 22mm 13mm !important;
+  }
+
+  /* Cover blijft full-bleed. */
+  @page :first {
+    margin: 0 !important;
+  }
+
+  /* Running header blijft compact en zweeft boven de paginamarge. */
+  .mb-ph {
+    display: block !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 9998 !important;
+  }
+
+  .mb-ph-bar {
+    height: 13mm !important;
+    min-height: 13mm !important;
+    padding: 0 13mm !important;
+    box-sizing: border-box !important;
+  }
+
+  .mb-ph-accent {
+    height: 2pt !important;
+  }
+
+  /* Geen agressieve schaal meer; inhoud blijft leesbaar en premium. */
+  .result .body {
+    padding-top: 0 !important;
+    padding-bottom: 18mm !important;
+    margin: 0 !important;
+    transform: none !important;
+  }
+
+  /* Content iets smaller dan volle A4, zodat het rustiger en luxer oogt,
+     maar niet zo klein wordt als de vorige versie. */
+  .result .body > *:not(.print-cover-page):not(.mb-pf):not(.mb-ph) {
+    width: 96% !important;
+    max-width: 96% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  #measuresSection,
+  #maatregelenChartSection,
+  #chartSection,
+  #nettoSection,
+  #maandlastenSection,
+  #subsidiesSection,
+  #phasesSection,
+  #aandachtSection,
+  #vervolgSection,
+  #adviseurSection,
+  #bronSection,
+  #geenActieSection,
+  #kpiPanel,
+  #introSection,
+  #scenarioSection {
+    width: 96% !important;
+    max-width: 96% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+  }
+
+  /* Secties die op nieuwe pagina starten krijgen extra ademruimte bovenaan.
+     Dit is de belangrijkste fix tegen het raken van de topbanner. */
+  #measuresSection,
+  #nettoSection,
+  #subsidiesSection,
+  #phasesSection,
+  #vervolgSection,
+  #aandachtSection,
+  .rapport-einde-block {
+    padding-top: 5mm !important;
+  }
+
+  /* Als een sectie door page-break bovenaan een nieuwe pagina belandt,
+     voorkom dat de eerste kop tegen de banner aankleeft. */
+  .rpt-section-head,
+  .sec-head {
+    margin-top: 6mm !important;
+    margin-bottom: 7pt !important;
+    break-after: avoid !important;
+    page-break-after: avoid !important;
+  }
+
+  /* Maar direct na de cover/rapportheader geen overdreven extra witruimte. */
+  .print-cover-page + .rpt-hdr,
+  .print-cover-page + * {
+    margin-top: 0 !important;
+  }
+
+  /* Tabellen mogen niet meer onder de header of buiten de breedte duwen. */
+  table,
+  .rt,
+  .netto-table,
+  .aandacht-table {
+    width: 100% !important;
+    max-width: 100% !important;
+    table-layout: fixed !important;
+    box-sizing: border-box !important;
+  }
+
+  .rt th,
+  .rt td,
+  .netto-table th,
+  .netto-table td,
+  .aandacht-table th,
+  .aandacht-table td {
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+    hyphens: none !important;
+  }
+
+  /* Specifiek maatregelen-table: kolommen gecontroleerd verdelen zodat
+     TERUGVERDIENTIJD niet meer onder de banner of in twee rare regels valt. */
+  .rt th:nth-child(1), .rt td:nth-child(1) { width: 30% !important; }
+  .rt th:nth-child(2), .rt td:nth-child(2) { width: 18% !important; }
+  .rt th:nth-child(3), .rt td:nth-child(3) { width: 18% !important; }
+  .rt th:nth-child(4), .rt td:nth-child(4) { width: 22% !important; }
+  .rt th:nth-child(5), .rt td:nth-child(5) { width: 12% !important; }
+
+  .rt th {
+    white-space: nowrap !important;
+    font-size: 6.2pt !important;
+    letter-spacing: .55pt !important;
+  }
+
+  .rt td {
+    font-size: 8pt !important;
+    line-height: 1.35 !important;
+  }
+
+  /* Grafieken: niet te klein, wel veilig binnen A4. */
+  .chart-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 8pt 10pt !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+
+  .chart-canvas-wrap {
+    height: 142pt !important;
+    min-height: 142pt !important;
+    max-height: 142pt !important;
+    overflow: hidden !important;
+  }
+
+  .chart-print-img {
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 142pt !important;
+    height: auto !important;
+    object-fit: contain !important;
+  }
+
+  /* Subsidiekaarten: bovenaan op pagina 5 niet onder banner laten vallen. */
+  .sub-grid,
+  .sub-list {
+    margin-top: 3mm !important;
+  }
+
+  .sub-card-new,
+  .sub-list-item,
+  .phase-block,
+  .kpi-panel,
+  .totals-block,
+  .chart-wrap,
+  .aandacht-table,
+  .netto-table,
+  .vervolg-item,
+  .adviseur-card {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Footer heeft zijn eigen ruimte onderaan. */
+  .mb-pf,
+  .mb-pf-bar {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+
+/* LAATSTE WITRUIMTE-FIX v6 - vervolg schuift niet onnodig naar nieuwe pagina */
+@media print {
+  #vervolgSection {
+    page-break-before: auto !important;
+    break-before: auto !important;
+    page-break-inside: auto !important;
+    break-inside: auto !important;
+    padding-top: 0 !important;
+    margin-top: 4pt !important;
+  }
+
+  #phasesSection,
+  #aandachtSection {
+    page-break-inside: auto !important;
+    break-inside: auto !important;
+    margin-bottom: 5pt !important;
+  }
+
+  .vervolg-list {
+    page-break-inside: auto !important;
+    break-inside: auto !important;
+    margin-bottom: 4pt !important;
+  }
+
+  .vervolg-item {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    padding: 3.2pt 0 !important;
+    gap: 6pt !important;
+  }
+
+  .vervolg-num {
+    width: 15pt !important;
+    height: 15pt !important;
+    font-size: 7pt !important;
+    margin-top: 0 !important;
+  }
+
+  .vervolg-title {
+    font-size: 7.4pt !important;
+    line-height: 1.15 !important;
+    margin: 0 0 1pt !important;
+  }
+
+  .vervolg-desc {
+    font-size: 6.55pt !important;
+    line-height: 1.25 !important;
+    margin: 0 !important;
+  }
+
+  #phasesSection .sec-head,
+  #aandachtSection .sec-head,
+  #vervolgSection .sec-head,
+  #phasesSection .rpt-section-head,
+  #aandachtSection .rpt-section-head,
+  #vervolgSection .rpt-section-head {
+    margin-top: 4pt !important;
+    margin-bottom: 4pt !important;
+  }
+
+  .phases-grid {
+    margin-bottom: 5pt !important;
+    gap: 5pt !important;
+  }
+
+  .phase-header {
+    padding: 4.5pt 6pt !important;
+    gap: 5pt !important;
+  }
+
+  .phase-body {
+    padding: 4.5pt 6pt !important;
+  }
+
+  .phase-num-badge {
+    width: 19pt !important;
+    height: 19pt !important;
+  }
+
+  .phase-title {
+    font-size: 7.3pt !important;
+    line-height: 1.15 !important;
+  }
+
+  .phase-desc {
+    font-size: 6.45pt !important;
+    line-height: 1.25 !important;
+  }
+
+  .phase-meta {
+    margin-top: 3pt !important;
+  }
+
+  .phase-meta-pill {
+    font-size: 5.8pt !important;
+    padding: 1pt 3.5pt !important;
+  }
+
+  .aandacht-table {
+    margin-bottom: 5pt !important;
+  }
+
+  .aandacht-table th {
+    padding: 3.5pt 5pt !important;
+    font-size: 6.2pt !important;
+  }
+
+  .aandacht-table td {
+    padding: 4pt 5pt !important;
+    font-size: 6.65pt !important;
+    line-height: 1.25 !important;
+  }
+
+  .aandacht-table td:first-child {
+    font-size: 6.75pt !important;
+    line-height: 1.2 !important;
+  }
+
+  .rapport-einde-block {
+    page-break-before: auto !important;
+    break-before: auto !important;
+    page-break-inside: auto !important;
+    break-inside: auto !important;
+    padding-top: 0 !important;
+    margin-top: 5pt !important;
+  }
+
+  .adviseur-sluiting,
+  .adviseur-card {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin-top: 5pt !important;
+    padding: 8pt 10pt !important;
+  }
+
+  .adviseur-sluiting-cta-sub {
+    font-size: 7pt !important;
+    line-height: 1.3 !important;
+  }
+
+  .adviseur-sluiting-naam {
+    font-size: 9.5pt !important;
+  }
+
+  .adviseur-sluiting-functie,
+  .adviseur-sluiting-link {
+    font-size: 6.8pt !important;
+  }
+}
+
+
+/* LAATSTE HEADER-AFSTAND FIX v7 - normale printpagina's klein stukje omlaag */
+@media print {
+  /* Iets meer echte bovenmarge onder de vaste blauwe header */
+  @page {
+    size: A4 portrait !important;
+    margin: 28mm 13mm 22mm 13mm !important;
+  }
+
+  @page :first {
+    margin: 0 !important;
+  }
+
+  /* Secties die bovenaan een nieuwe pagina starten krijgen extra veilige ruimte.
+     Dit voorkomt dat tabelkoppen/sectietitels tegen of onder de banner vallen. */
+  #measuresSection,
+  #nettoSection,
+  #subsidiesSection,
+  #phasesSection {
+    padding-top: 9mm !important;
+  }
+
+  /* Vervolgstappen mag nog steeds slim aansluiten op pagina 6 als er ruimte is. */
+  #vervolgSection {
+    padding-top: 3mm !important;
+  }
+
+  /* Eerste kop op zo'n pagina niet nog eens te veel marge geven. */
+  #measuresSection > .sec-head:first-child,
+  #measuresSection > .rpt-section-head:first-child,
+  #nettoSection > .sec-head:first-child,
+  #nettoSection > .rpt-section-head:first-child,
+  #subsidiesSection > .sec-head:first-child,
+  #subsidiesSection > .rpt-section-head:first-child,
+  #phasesSection > .sec-head:first-child,
+  #phasesSection > .rpt-section-head:first-child {
+    margin-top: 0 !important;
+  }
+
+  /* Houd de header zelf compact en boven de content. */
+  .mb-ph {
+    height: 13mm !important;
+  }
+
+  .mb-ph-bar {
+    height: 11mm !important;
+    min-height: 11mm !important;
+  }
+
+  .mb-ph-accent {
+    height: 2mm !important;
+  }
+}
+
+</style>
+<style>
+/* FINAL PRINT FIX v8 - header safe + slimmer page flow */
+@media print {
+  @page { size: A4 portrait !important; margin: 24mm 12mm 18mm 12mm !important; }
+  @page :first { margin: 0 !important; }
+  html, body { width: auto !important; height: auto !important; overflow: visible !important; background: #fff !important; }
+  .mb-ph { display:block!important; position:fixed!important; top:0!important; left:0!important; right:0!important; height:14mm!important; z-index:9999!important; transform:none!important; }
+  .mb-ph-bar { height:12mm!important; padding:0 12mm!important; background:linear-gradient(90deg,#0d2233 0%,#134460 55%,#1B597B 100%)!important; display:flex!important; align-items:center!important; justify-content:space-between!important; box-sizing:border-box!important; }
+  .mb-ph-accent { height:2mm!important; background:#E26836!important; }
+  .mb-pf-bar { min-height:12mm!important; padding:4pt 12mm!important; }
+  #measuresSection,#nettoSection,#subsidiesSection,#phasesSection,#aandachtSection,#vervolgSection,#adviseurSection,#bronSection { padding-top:0!important; margin-top:0!important; }
+  #measuresSection { page-break-before:always!important; break-before:page!important; }
+  #nettoSection { page-break-before:always!important; break-before:page!important; }
+  #subsidiesSection,#phasesSection,#aandachtSection,#vervolgSection,#adviseurSection,#bronSection { page-break-before:auto!important; break-before:auto!important; }
+  .sub-list,.phases-grid,.vervolg-list,.rapport-einde-block { page-break-inside:auto!important; break-inside:auto!important; }
+  .sub-list-item,.phase-block,.vervolg-item,.adviseur-sluiting,.aandacht-table tr,.netto-table tr,.rt tr { page-break-inside:avoid!important; break-inside:avoid!important; }
+  .sub-list-item { padding:7pt 8pt!important; margin-bottom:5pt!important; }
+  .sub-list-name { font-size:8.4pt!important; line-height:1.25!important; }
+  .sub-list-type,.sub-list-voordeel,.sub-list-step,.sub-list-alert,.sub-list-combine { line-height:1.32!important; }
+  #phasesSection { margin-bottom:6mm!important; }
+  #aandachtSection { margin-top:3mm!important; margin-bottom:4mm!important; }
+  #vervolgSection { margin-top:3mm!important; }
+  #vervolgSection .vervolg-item { padding:7pt 0!important; }
+  .adviseur-sluiting { margin-top:6mm!important; }
+  .netto-table { margin-bottom:6pt!important; }
+  .netto-fill-card { display:grid!important; grid-template-columns:1fr 1fr 1fr!important; gap:7pt!important; margin:8pt 0 0!important; page-break-inside:avoid!important; break-inside:avoid!important; }
+  .netto-fill-item { border:0.5pt solid #DDE6EC!important; border-top:2pt solid #1B597B!important; background:#F7FAFC!important; padding:8pt 9pt!important; min-height:38pt!important; -webkit-print-color-adjust:exact!important; print-color-adjust:exact!important; }
+  .netto-fill-title { font-family:'IBM Plex Sans',sans-serif!important; font-size:6.7pt!important; font-weight:700!important; letter-spacing:1pt!important; text-transform:uppercase!important; color:#1B597B!important; margin-bottom:4pt!important; }
+  .netto-fill-text { font-family:'IBM Plex Sans',sans-serif!important; font-size:7.4pt!important; line-height:1.45!important; color:#3A3A3A!important; }
+  .rt thead,.netto-table thead,.aandacht-table thead { page-break-after:avoid!important; break-after:avoid!important; }
+  .sec-head,.rpt-section-head { margin-top:8pt!important; margin-bottom:6pt!important; }
+  #measuresSection > .sec-head:first-child,#nettoSection > .sec-head:first-child,#subsidiesSection > .sec-head:first-child,#phasesSection > .sec-head:first-child { margin-top:0!important; }
+}
+</style>
 
 </head>
 <body>
