@@ -5329,10 +5329,12 @@ select.finput {
     margin-top: 5pt !important;
   }
   #adviseurSection, #bronSection, #scenarioSection,
-  #geenActieSection, #labelVisSection, #wachtenBanner, #maatregelenChartSection {
+  #geenActieSection, #wachtenBanner, #maatregelenChartSection {
     page-break-before: auto !important; break-before: auto !important;
     margin-top: 0 !important; padding-top: 0 !important;
   }
+  /* labelVisSection verbergen in print — energieprestatie staat al op pagina 2 */
+  #labelVisSection { display: none !important; }
 
   /* Eerste sec-head op nieuwe pagina: geen extra top-margin */
   #measuresSection > .sec-head:first-child,
@@ -5488,11 +5490,13 @@ select.finput {
   /* ── Adviseur-sluiting ── */
   .adviseur-sluiting, .adviseur-card {
     page-break-inside: avoid !important; break-inside: avoid !important;
-    margin-top: 6pt !important; padding: 8pt 10pt !important;
+    margin-top: 4pt !important; padding: 6pt 8pt !important;
   }
-  .adviseur-sluiting-naam { font-size: 9pt !important; }
-  .adviseur-sluiting-functie, .adviseur-sluiting-link { font-size: 6.5pt !important; }
-  .adviseur-sluiting-cta-sub { font-size: 7pt !important; line-height: 1.3 !important; }
+  .adviseur-sluiting-naam { font-size: 8pt !important; }
+  .adviseur-sluiting-functie, .adviseur-sluiting-link { font-size: 6pt !important; }
+  .adviseur-sluiting-cta-sub { font-size: 6.5pt !important; line-height: 1.25 !important; }
+  .adviseur-sluiting-cta-title { font-size: 9pt !important; }
+  .adviseur-sluiting-logo { width: 28pt !important; height: 28pt !important; }
 
   /* ── Algemene page-break regels ── */
   h1, h2, h3, h4, .sec-head, .rpt-section-head {
@@ -5504,7 +5508,12 @@ select.finput {
   }
   .kpi-panel, .live-totals-bar, .totals-block, .chart-wrap,
   .netto-table, .phase-block, .sub-list-item, .vervolg-item,
-  .rapport-einde-block, .adviseur-card, .label-vis-card, .intro-text {
+  .rapport-einde-block {
+    page-break-inside: avoid !important; break-inside: avoid !important;
+    page-break-before: avoid !important; break-before: avoid !important;
+    margin-top: 6pt !important;
+  }
+  .adviseur-card, .label-vis-card, .intro-text {
     page-break-inside: avoid !important; break-inside: avoid !important;
   }
 
@@ -5596,10 +5605,10 @@ select.finput {
   .bron-card {
     display: flex !important;
     align-items: flex-start !important;
-    gap: 8pt !important;
-    margin-top: 10pt !important;
-    margin-bottom: 6pt !important;
-    padding: 8pt 10pt !important;
+    gap: 6pt !important;
+    margin-top: 5pt !important;
+    margin-bottom: 4pt !important;
+    padding: 5pt 8pt !important;
     background: #FAF8F5 !important;
     border: 0.5pt solid #DDD8D2 !important;
     border-left: 2.5pt solid #E26836 !important;
