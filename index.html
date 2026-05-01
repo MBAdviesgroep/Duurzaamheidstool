@@ -5072,12 +5072,13 @@ select.finput {
   .rpt-hdr {
     border-radius: 0 !important;
     margin: 0 0 10pt 0 !important;
-    padding: 20pt 15pt 10pt !important; /* extra top-ruimte zodat header niet overlapt */
+    padding: 6pt 15pt 10pt !important;
     page-break-inside: avoid !important; break-inside: avoid !important;
     page-break-after: avoid !important; break-after: avoid !important;
   }
-  /* Verberg de oranje accent-balk onderaan de rpt-hdr — botst met de
-     oranje balk van de running header erboven */
+  /* Verberg het logo in de rpt-hdr — de running header toont dit al */
+  .rpt-hdr .rpt-logo, .rpt-hdr .rpt-hdr-top { display: none !important; }
+  /* Verberg de oranje accent-balk onderaan de rpt-hdr */
   .rpt-hdr::after { display: none !important; }
   .rpt-title  { font-size: 17pt !important; line-height: 1.1 !important; }
   .rpt-address { font-size: 8pt !important; line-height: 1.35 !important; }
