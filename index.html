@@ -5995,7 +5995,25 @@ select.finput {
 const SUBSIDIE_DB = [
   {
     code: 'ISDE',
-    naam: 'Investeringssubsidie Duurzame Energie en Energiebesparing',
+    naam: 'Investeringssubsidie Duurzame Energie en Energiebesparing (particulier)',
+    type: 'Directe subsidie',
+    doelgroep: 'particulier',
+    van_toepassing_op: ['warmtepomp', 'zonneboiler', 'pelletkachel', 'warmtenet', 'ventilatie'],
+    voordeel: '± € 1.500 – € 5.000 directe subsidie afhankelijk van type warmtepomp',
+    alert: 'AANVRAGEN VÓÓR ondertekening offerte — daarna vervalt het recht!',
+    stappen: [
+      'Controleer apparaat op RVO meldcodelijst (meldcode verplicht op offerte + factuur)',
+      'Aanvraag via Mijn RVO — vóór akkoord op offerte',
+      'Installatie door erkend installatiebedrijf (RVO-geregistreerd)',
+      'Vaststellingsaanvraag indienen met factuur → uitbetaling binnen 8 weken na besluit',
+    ],
+    combineerbaar_met: ['SEEH'],
+    niet_combineerbaar_met: [],
+    url: 'https://www.rvo.nl/subsidies-financiering/isde',
+  },
+  {
+    code: 'ISDE',
+    naam: 'Investeringssubsidie Duurzame Energie en Energiebesparing (zakelijk)',
     type: 'Directe subsidie',
     doelgroep: 'zakelijk',
     van_toepassing_op: ['warmtepomp', 'zonneboiler', 'pelletkachel', 'warmtenet', 'ventilatie'],
@@ -6010,6 +6028,24 @@ const SUBSIDIE_DB = [
     combineerbaar_met: ['KIA', 'MIA'],
     niet_combineerbaar_met: ['EIA'],
     url: 'https://www.rvo.nl/subsidies-financiering/isde',
+  },
+  {
+    code: 'SEEH',
+    naam: 'Subsidie Energiebesparing Eigen Huis',
+    type: 'Directe subsidie',
+    doelgroep: 'particulier',
+    van_toepassing_op: ['isolatie', 'gevelisolatie', 'dakisolatie', 'vloerisolatie', 'beglazing', 'warmtepomp'],
+    voordeel: 'Tot 30% subsidie op isolatiemaatregelen — max. € 5.000 per woning',
+    alert: null,
+    stappen: [
+      'Aanvraag indienen via RVO.nl vóór of direct na opdracht aan installateur',
+      'Maatregelen uitvoeren door erkend bedrijf',
+      'Factuur en betalingsbewijs uploaden in RVO-portaal',
+      'Uitbetaling binnen 13 weken na goedkeuring',
+    ],
+    combineerbaar_met: ['ISDE'],
+    niet_combineerbaar_met: [],
+    url: 'https://www.rvo.nl/subsidies-financiering/seeh',
   },
   {
     code: 'EIA',
@@ -6115,23 +6151,6 @@ const SUBSIDIE_DB = [
     niet_combineerbaar_met: [],
     url: 'https://www.rvo.nl/onderwerpen/zonne-energie/salderingsregeling',
   },
-  {
-    code: 'WBSO',
-    naam: 'Wet Bevordering Speur- en Ontwikkelingswerk',
-    type: 'Fiscale aftrek loonkosten',
-    doelgroep: 'zakelijk (R&D)',
-    van_toepassing_op: ['innovatieve energietechnieken', 'R&D duurzaamheid'],
-    voordeel: '32% aftrek op S&O-loonkosten (eerste schijf) — relevant bij eigen ontwikkeling',
-    alert: null,
-    stappen: [
-      'Aanvraag indienen vóór start van het project via eLoket RVO',
-      'S&O-uren bijhouden in urenadministratie',
-      'Jaarlijkse mededeling indienen bij RVO',
-    ],
-    combineerbaar_met: ['EIA', 'KIA'],
-    niet_combineerbaar_met: [],
-    url: 'https://www.rvo.nl/subsidies-financiering/wbso',
-  },
 ];
 
 // Matcht subsidies op basis van maatregelen uit het rapport + type aanvrager
@@ -6142,16 +6161,17 @@ function matchSubsidies(maatregelen, aanvragerType) {
     // Filter op doelgroep
     const dg = (sub.doelgroep || '').toLowerCase();
     if (aanvragerType === 'particulier') {
-      // particulier: alleen particulier of 'zakelijk + particulier'
-      if (dg.includes('zakelijk') && !dg.includes('particulier')) continue;
+      // particulier: alleen 'particulier' of 'zakelijk + particulier'
+      if (!dg.includes('particulier')) continue;
     } else if (aanvragerType === 'ondernemer') {
-      // ondernemer: alles met 'zakelijk' of 'particulier' (salderingsregeling geldt ook)
-      // VvE-specifiek (SVVE) uitsluiten voor ondernemer
+      // ondernemer: alleen zakelijke regelingen (+ zakelijk+particulier), geen VvE-exclusief
       if (dg === 'vve') continue;
+      if (dg === 'particulier') continue; // SEEH etc. niet voor ondernemer
     } else if (aanvragerType === 'vve') {
-      // VvE: particulier-achtige regelingen en VvE-specifiek, geen zakelijke fiscale
+      // VvE: particulier-achtige + VvE-specifiek, geen puur zakelijke fiscale
       if (dg.includes('zakelijk') && !dg.includes('particulier') && dg !== 'vve') continue;
     }
+    // Geen type → toon alles (fallback)
     const matches = sub.van_toepassing_op.some(toepassingStr => {
       const tl = toepassingStr.toLowerCase();
       if (namen.some(n => n.includes(tl) || tl.includes(n.split(' ')[0]))) return true;
