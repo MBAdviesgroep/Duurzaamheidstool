@@ -5492,6 +5492,8 @@ select.finput {
   .ml-bedrag.is-direct { color: #2A7A50 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   .ml-bedrag.is-fin { color: #1B597B !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   .ml-eenheid { font-size: 9pt !important; color: #8A8A8A !important; }
+  #mlFinBadge { margin: 5pt 0 2pt !important; }
+  #mlFinBadge > div { border-radius: 3pt !important; }
   .ml-detail { margin-top: 7pt !important; padding-top: 6pt !important; border-top: 0.5pt dashed #D8DDE0 !important; font-size: 6.5pt !important; line-height: 1.4 !important; }
   .ml-detail-row { padding: 1.5pt 0 !important; }
   .ml-detail-row .lbl { color: #8A8A8A !important; font-size: 6.5pt !important; }
@@ -7897,12 +7899,21 @@ function renderMaandlastenSection(r) {
 
     // === Met financiering ===
     set('mlFin', `${fmtEuro(finMnd)}<span class="ml-eenheid">/mnd</span>`);
+    set('mlFinBadge', teLenen > 0 ? `
+      <div style="display:flex;gap:8px;margin:10px 0 2px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:0;background:var(--blue-faint);border:1px solid rgba(27,89,123,0.15);border-left:3px solid var(--blue);border-radius:6px;padding:7px 10px;">
+          <div style="font-size:9.5px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--blue);margin-bottom:2px;">Te lenen</div>
+          <div style="font-size:18px;font-weight:700;color:var(--blue-deep);font-family:var(--f-head);line-height:1;">${fmtEuro(teLenen)}</div>
+        </div>
+        <div style="flex:1;min-width:0;background:var(--page);border:1px solid var(--rule);border-left:3px solid var(--ink-5);border-radius:6px;padding:7px 10px;">
+          <div style="font-size:9.5px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--ink-4);margin-bottom:2px;">Eigen inbreng</div>
+          <div style="font-size:18px;font-weight:700;color:var(--ink-2);font-family:var(--f-head);line-height:1;">${fmtEuro(eigenInbreng)}</div>
+        </div>
+      </div>` : '');
     set('mlFinDet',
       `<div class="ml-detail-row"><span class="lbl">Lening</span><span class="val" style="color:var(--blue-deep);font-weight:600;">${fmtEuro(leningMnd)}/mnd</span></div>
        <div class="ml-detail-row"><span class="lbl">Resterende energie</span><span class="val">${fmtEuro(directMnd)}/mnd</span></div>
-       <div class="ml-detail-row" style="margin-top:6px;padding-top:6px;border-top:1px dotted var(--rule);"><span class="lbl">Geleend bedrag</span><span class="val">${fmtEuro(teLenen)}</span></div>
-       <div class="ml-detail-row"><span class="lbl">Eigen inbreng</span><span class="val">${fmtEuro(eigenInbreng)}</span></div>
-       <div class="ml-detail-row"><span class="lbl">Totale rente</span><span class="val" style="color:var(--ink-3);">${fmtEuro(totaalRente)}</span></div>`);
+       <div class="ml-detail-row" style="margin-top:6px;padding-top:6px;border-top:1px dotted var(--rule);"><span class="lbl">Totale rente</span><span class="val" style="color:var(--ink-3);">${fmtEuro(totaalRente)}</span></div>`);
 
     // Controls: labels & slider posities
     const renteEl = document.getElementById('mlRenteVal'); if (renteEl) renteEl.textContent = s.rente.toFixed(1).replace('.',',') + '%';
@@ -8006,6 +8017,7 @@ function renderMaandlastenSection(r) {
           <span class="ml-eyebrow is-fin">Met financiering</span>
           <div class="ml-titel">Energie + verduurzamingslening</div>
           <div class="ml-bedrag is-fin" id="mlFin"></div>
+          <div id="mlFinBadge"></div>
           <div class="ml-detail" id="mlFinDet"></div>
         </div>
       </div>
