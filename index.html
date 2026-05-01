@@ -3351,10 +3351,10 @@ select.finput {
     inset: 0 !important;
     background: linear-gradient(
       180deg,
-      rgba(13,31,45,0.55) 0%,
-      rgba(13,31,45,0.10) 35%,
-      rgba(13,31,45,0.10) 55%,
-      rgba(13,31,45,0.65) 100%
+      rgba(13,31,45,0.38) 0%,
+      rgba(13,31,45,0.05) 35%,
+      rgba(13,31,45,0.05) 55%,
+      rgba(13,31,45,0.42) 100%
     ) !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
@@ -5300,14 +5300,14 @@ select.finput {
     padding-top: 16mm !important; margin-top: 0 !important;
   }
 
-  /* Pagina 5 — maandlasten eerst (zelfde volgorde als scherm) */
-  #maandlastenSection {
+  /* Pagina 5 — netto investering eerst */
+  #nettoSection {
     page-break-before: always !important; break-before: page !important;
     padding-top: 16mm !important; margin-top: 0 !important;
   }
 
-  /* Netto investering sluit aan op maandlasten-pagina */
-  #nettoSection {
+  /* Maandlasten sluit aan op netto-pagina */
+  #maandlastenSection {
     page-break-before: auto !important; break-before: auto !important;
     margin-top: 10pt !important; padding-top: 0 !important;
   }
@@ -5866,8 +5866,8 @@ select.finput {
         <div id="maatregelenChartSection"></div>
         <div id="chartSection" class="chart-section"></div>
         <div id="subsidiesSection"></div>
-        <div id="maandlastenSection"></div>
         <div id="nettoSection"></div>
+        <div id="maandlastenSection"></div>
         <div id="phasesSection"></div>
         <div id="aandachtSection"></div>
         <div id="vervolgSection"></div>
@@ -8455,8 +8455,8 @@ function renderTocRail() {
     { id:'scenarioSection', label:'Scenario\'s' },
     { id:'chartSection', label:'Besparing' },
     { id:'subsidiesSection', label:'Subsidies' },
-    { id:'maandlastenSection', label:'Maandlasten' },
     { id:'nettoSection', label:'Netto investering' },
+    { id:'maandlastenSection', label:'Maandlasten' },
     { id:'phasesSection', label:'Aanpak' },
     { id:'vervolgSection', label:'Vervolgstappen' },
   ];
