@@ -592,7 +592,7 @@ select.finput {
   font-weight: 300;
   color: var(--ink-2);
   line-height: 1.85;
-  margin-bottom: 32px;
+  margin-bottom: 48px;
   padding: 20px 24px;
   background: var(--blue-faint);
   border-radius: var(--r-md);
@@ -1422,24 +1422,18 @@ select.finput {
   background: var(--orange);
   color: white;
   font-family: var(--f-head);
-  font-weight: 700;
+  font-weight: 800;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   line-height: 1;
-  gap: 1px;
 }
 .phase-num-label {
-  font-size: 6px;
-  letter-spacing: 1px;
-  opacity: 0.85;
-  font-weight: 700;
-  text-transform: uppercase;
+  display: none;
 }
 .phase-num-value {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 800;
   letter-spacing: -0.02em;
   line-height: 1;
@@ -6648,8 +6642,8 @@ function renderReport(r) {
     </div>
     <div class="kpi-cell kpi-c2">
       <span class="kpi-lbl">Jaarlijkse besparing</span>
-      <div class="kpi-num warn">${r.totaal_besparing||'&#8212;'}</div>
-      <div class="kpi-sub">${besparingMnd > 0 ? '≈ <strong style="color:var(--orange);">€ '+besparingMnd.toLocaleString('nl-NL')+'</strong> per maand' : 'bij alle maatregelen'}</div>
+      <div class="kpi-num warn" id="kpiBesparing">&#8212;</div>
+      <div class="kpi-sub" id="kpibesparingMnd">bij geselecteerde maatregelen</div>
     </div>
     <div class="kpi-cell kpi-c3" style="position:relative;">
       <span class="kpi-lbl">CO&#8322; reductie</span>
@@ -6658,18 +6652,29 @@ function renderReport(r) {
     </div>
     <div class="kpi-cell kpi-c4">
       <span class="kpi-lbl">Terugverdientijd</span>
-      <div class="kpi-num">${tvtGem ? '± ' + tvtGem + ' jr' : '&#8212;'}</div>
+      <div style="margin:8px 0 4px;display:flex;align-items:baseline;gap:4px;">
+        <span id="kpiTvt" style="font-size:32px;font-weight:700;font-family:var(--f-head);color:var(--blue);letter-spacing:-0.8px;line-height:1;">—</span>
+        <span id="kpiTvtJaar" style="font-size:15px;font-weight:500;color:var(--ink-4);font-family:var(--f-head);"></span>
+      </div>
       <div class="kpi-sub">gewogen gemiddelde over alle maatregelen</div>
     </div>
     <div class="kpi-cell kpi-c5">
       <span class="kpi-lbl">Financieel aantrekkelijk</span>
-      <div class="kpi-num good">Loont</div>
+      <div style="margin:10px 0 6px;">
+        <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(42,122,80,0.10);color:var(--green);border:1px solid rgba(42,122,80,0.2);border-radius:20px;padding:5px 14px;font-family:var(--f-head);font-size:15px;font-weight:700;letter-spacing:0.2px;">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 8 6 11 13 4"/></svg>
+          Verduurzaming loont
+        </span>
+      </div>
       <div class="kpi-sub">investering verdient zichzelf terug én verhoogt de woningwaarde</div>
     </div>
     <div class="kpi-cell kpi-c6">
       <span class="kpi-lbl">Toekomstbestendig</span>
-      <div class="kpi-num" style="color:var(--orange);">Label ${r.streef_label || 'A+'}</div>
-      <div class="kpi-sub">beter label = lagere lasten & betere verhuurbaarheid</div>
+      <div style="margin:8px 0 6px;display:flex;align-items:center;gap:10px;">
+        <span style="display:inline-flex;align-items:center;justify-content:center;background:${lbg((r.streef_label||'A+').split(/[/,\s]/)[0].trim())};color:#fff;font-family:var(--f-head);font-size:24px;font-weight:800;letter-spacing:-0.5px;width:50px;height:40px;border-radius:6px;">${(r.streef_label||'A+').split(/[/,\s]/)[0].trim()}</span>
+        <span style="font-size:12px;color:var(--ink-3);font-family:var(--f-head);line-height:1.3;">Streef-<br>label</span>
+      </div>
+      <div class="kpi-sub">lagere lasten & betere verhuurbaarheid</div>
     </div>`;
 
   // Intro tekst — sla originele huidige kosten op als data-attribuut voor live-update
@@ -6868,12 +6873,22 @@ function renderReport(r) {
     ? secHead('Subsidies &amp; fiscale regelingen') +
       `<div class="sub-list">${subsHtml}</div>` : '';
 
-  // Fases
+  // Fases — bereken investering live uit de maatregelen
+  // Match fase-maatregelen op naam (f.maatregelen array) of gebruik f.totaal_investering als fallback
   const phases = (r.fases||[]).map((f,i)=>{
     const iconEuro = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M18 7a6 6 0 0 0-10 4.5A6 6 0 0 0 18 17"/><path d="M5 10h9"/><path d="M5 14h9"/></svg>';
     const iconClock = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+    // Bereken investering uit de maatregelen die bij deze fase horen
+    let calcInvestering = 0;
+    if (f.maatregelen && f.maatregelen.length > 0 && r.maatregelen) {
+      f.maatregelen.forEach(fnaam => {
+        const match = r.maatregelen.find(m => (m.naam||'').toLowerCase().includes((fnaam||'').toLowerCase()) || (fnaam||'').toLowerCase().includes((m.naam||'').toLowerCase().split(' ')[0]));
+        if (match) calcInvestering += parseEuro(match.investering);
+      });
+    }
+    const invDisplay = calcInvestering > 0 ? fmtEuro(calcInvestering) : (f.totaal_investering ? f.totaal_investering.replace(/^[€\s]+/, '') : '');
     const pills = [
-      f.totaal_investering ? iconEuro + f.totaal_investering.replace(/^[€\s]+/, '') : '',
+      invDisplay ? iconEuro + invDisplay.replace(/^[€\s]+/, '') : '',
       f.tvt ? iconClock + 'TVT ' + f.tvt : ''
     ].filter(Boolean).map(p=>`<span class="phase-meta-pill">${p}</span>`).join('');
     return `<div class="phase-block">
@@ -7053,6 +7068,48 @@ function recalcTotals() {
   if (ltBesparing) ltBesparing.textContent = fmtEuro(totalBesparing);
   if (ltInvestering) ltInvestering.textContent = fmtEuro(totalInvestering);
   if (ltTVT) ltTVT.textContent = checked > 0 ? (gemTVT + ' jr') : '—';
+
+  // Update KPI besparing blok live
+  const kpiBespEl = document.getElementById('kpiBesparing');
+  const kpiBespMndEl = document.getElementById('kpibesparingMnd');
+  if (kpiBespEl) kpiBespEl.textContent = fmtEuro(totalBesparing);
+  if (kpiBespMndEl) {
+    const mnd = totalBesparing > 0 ? Math.round(totalBesparing / 12) : 0;
+    kpiBespMndEl.innerHTML = mnd > 0
+      ? '≈ <strong style="color:var(--orange);">€ ' + mnd.toLocaleString('nl-NL') + '</strong> per maand'
+      : 'bij geselecteerde maatregelen';
+  }
+
+  // Update KPI terugverdientijd live
+  const kpiTvtEl = document.getElementById('kpiTvt');
+  const kpiTvtJaarEl = document.getElementById('kpiTvtJaar');
+  if (kpiTvtEl) {
+    const tvtDisplay = totalInvestering > 0
+      ? '± ' + (tvtWeightedSum / totalInvestering).toFixed(1).replace('.',',')
+      : '—';
+    kpiTvtEl.textContent = tvtDisplay;
+    if (kpiTvtJaarEl) kpiTvtJaarEl.textContent = totalInvestering > 0 ? 'jaar' : '';
+  }
+
+  // Update besparing in intro-tekst — vervang het originele besparingsbedrag door de live waarde
+  if (totalBesparing > 0 && _rptData) {
+    const introEl = document.getElementById('introText');
+    if (introEl) {
+      // Sla originele tekst op bij eerste recalc
+      if (!introEl.dataset.origTekstBesp) {
+        introEl.dataset.origTekstBesp = introEl.innerHTML;
+        // Sla ook het originele besparingsbedrag op (uit rptData)
+        const origBesp = (_rptData.maatregelen||[]).reduce((s,m)=>s+parseEuro(m.besparing),0);
+        introEl.dataset.origBesparing = origBesp;
+      }
+      const origBesp = parseFloat(introEl.dataset.origBesparing) || 0;
+      if (origBesp > 0) {
+        const escaped = fmtEuro(origBesp).replace(/[€.\s]/g, m => m==='€'?'€':m==='.'?'\.':'\s?');
+        const regex = new RegExp(escaped, 'g');
+        introEl.innerHTML = introEl.dataset.origTekstBesp.replace(regex, fmtEuro(totalBesparing));
+      }
+    }
+  }
 
   // Update grafiek
   updateChart(totalBesparing, totalInvestering);
