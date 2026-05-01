@@ -1214,7 +1214,7 @@ select.finput {
 }
 .rpt-hdr::after {
   content: ''; position: absolute; bottom: 0; left: 0; right: 0;
-  height: 3px; background: linear-gradient(90deg, var(--orange), #f09060);
+  height: 1px; background: linear-gradient(90deg, var(--orange), #f09060);
 }
 .rpt-hdr-top {
   display: flex; align-items: center;
@@ -5052,7 +5052,7 @@ select.finput {
     display: flex !important; align-items: center !important; justify-content: space-between !important;
     -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
   }
-  .mb-ph-accent { height: 2mm !important; background: #E26836 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .mb-ph-accent { height: 1px !important; background: #E26836 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 
   /* ── Vaste footer ── */
   .mb-pf {
@@ -5327,13 +5327,13 @@ select.finput {
   }
 
   .chart-canvas-wrap {
-    width: 100% !important; height: 100pt !important;
-    min-height: 100pt !important; max-height: 100pt !important;
+    width: 100% !important; height: 130pt !important;
+    min-height: 130pt !important; max-height: 130pt !important;
     padding: 0 !important; margin: 0 !important; overflow: hidden !important;
   }
   .chart-canvas-wrap canvas, .chart-print-img {
     width: 100% !important; max-width: 100% !important;
-    height: auto !important; max-height: 100pt !important;
+    height: auto !important; max-height: 130pt !important;
     object-fit: contain !important; display: block !important;
   }
   .chart-canvas-wrap:has(.chart-print-img) canvas { display: none !important; }
