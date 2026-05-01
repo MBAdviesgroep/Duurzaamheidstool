@@ -5333,8 +5333,9 @@ select.finput {
     page-break-before: auto !important; break-before: auto !important;
     margin-top: 0 !important; padding-top: 0 !important;
   }
-  /* labelVisSection verbergen in print — energieprestatie staat al op pagina 2 */
-  #labelVisSection { display: none !important; }
+  /* labelVisSection: tonen in print, maar journey (A→A+ rechtsboven) verbergen */
+  #labelVisSection { display: block !important; }
+  .label-vis-journey { display: none !important; }
 
   /* Eerste sec-head op nieuwe pagina: geen extra top-margin */
   #measuresSection > .sec-head:first-child,
