@@ -1416,19 +1416,20 @@ select.finput {
   justify-content: center;
   flex-shrink: 0;
   line-height: 1;
-  gap: 2px;
+  gap: 1px;
 }
 .phase-num-label {
-  font-size: 7.5px;
-  letter-spacing: 0.8px;
+  font-size: 6px;
+  letter-spacing: 1px;
   opacity: 0.85;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
 }
 .phase-num-value {
-  font-size: 15px;
-  font-weight: 700;
+  font-size: 18px;
+  font-weight: 800;
   letter-spacing: -0.02em;
+  line-height: 1;
 }
 .phase-title {
   font-weight: 600; font-size: 13.5px;
@@ -2985,7 +2986,7 @@ select.finput {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 12px;
-  margin: 16px 0 0;
+  margin: 16px 0 28px;
 }
 .netto-fill-item {
   background: var(--blue-faint, #F4F8FB);
@@ -5208,32 +5209,37 @@ select.finput {
   }
 
   /* ══════════════════════════════════════════════
-     PAGINABREUK-LOGICA
+     PAGINABREUK-LOGICA (volgorde: logisch opgebouwd)
      Pagina 1: cover
-     Pagina 2: rptHdr + kpi + intro
-     Pagina 3: maatregelen + grafieken       (break-before: page)
-     Pagina 4: netto investering             (break-before: page)
-     Pagina 5: subsidies                     (break-before: page)
-     Pagina 6: aanpak + aandacht + vervolg  (break-before: page)
+     Pagina 2: rptHdr + kpi + labelvis + intro
+     Pagina 3: maatregelen + grafieken         (break-before: page)
+     Pagina 4: subsidies & fiscale regelingen  (break-before: page)
+     Pagina 5: netto investering + maandlasten (break-before: page)
+     Pagina 6: aanpak (fases) + aandacht + vervolg (break-before: page)
   ══════════════════════════════════════════════ */
 
-  /* Pagina 3 — maatregelen
-     padding-top = hoogte vaste header (14mm) zodat content er nooit onder begint */
+  /* Pagina 3 — maatregelen */
   #measuresSection {
     page-break-before: always !important; break-before: page !important;
     padding-top: 16mm !important; margin-top: 0 !important;
   }
 
-  /* Pagina 4 — netto */
+  /* Pagina 4 — subsidies: lezer begrijpt nu de aftrekposten vóór de berekening */
+  #subsidiesSection {
+    page-break-before: always !important; break-before: page !important;
+    padding-top: 16mm !important; margin-top: 0 !important;
+  }
+
+  /* Pagina 5 — netto investering (nu logisch na subsidies) */
   #nettoSection {
     page-break-before: always !important; break-before: page !important;
     padding-top: 16mm !important; margin-top: 0 !important;
   }
 
-  /* Pagina 5 — subsidies: eigen pagina */
-  #subsidiesSection {
-    page-break-before: always !important; break-before: page !important;
-    padding-top: 16mm !important; margin-top: 0 !important;
+  /* Maandlasten sluit aan op netto-pagina als er ruimte is, anders volgende pagina */
+  #maandlastenSection {
+    page-break-before: auto !important; break-before: auto !important;
+    margin-top: 8pt !important; padding-top: 0 !important;
   }
 
   /* Pagina 6 — aanpak (fases): eigen pagina */
@@ -5252,7 +5258,7 @@ select.finput {
     page-break-before: auto !important; break-before: auto !important;
     margin-top: 5pt !important;
   }
-  #adviseurSection, #bronSection, #scenarioSection, #maandlastenSection,
+  #adviseurSection, #bronSection, #scenarioSection,
   #geenActieSection, #labelVisSection, #wachtenBanner, #maatregelenChartSection {
     page-break-before: auto !important; break-before: auto !important;
     margin-top: 0 !important; padding-top: 0 !important;
@@ -5261,10 +5267,10 @@ select.finput {
   /* Eerste sec-head op nieuwe pagina: geen extra top-margin */
   #measuresSection > .sec-head:first-child,
   #measuresSection > .rpt-section-head:first-child,
-  #nettoSection > .sec-head:first-child,
-  #nettoSection > .rpt-section-head:first-child,
   #subsidiesSection > .sec-head:first-child,
   #subsidiesSection > .rpt-section-head:first-child,
+  #nettoSection > .sec-head:first-child,
+  #nettoSection > .rpt-section-head:first-child,
   #phasesSection > .sec-head:first-child,
   #phasesSection > .rpt-section-head:first-child { margin-top: 0 !important; }
 
@@ -5668,9 +5674,9 @@ select.finput {
         <div id="scenarioSection"></div>
         <div id="maatregelenChartSection"></div>
         <div id="chartSection" class="chart-section"></div>
+        <div id="subsidiesSection"></div>
         <div id="nettoSection"></div>
         <div id="maandlastenSection"></div>
-        <div id="subsidiesSection"></div>
         <div id="phasesSection"></div>
         <div id="aandachtSection"></div>
         <div id="vervolgSection"></div>
@@ -6594,7 +6600,7 @@ function renderReport(r) {
     const iconEuro = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M18 7a6 6 0 0 0-10 4.5A6 6 0 0 0 18 17"/><path d="M5 10h9"/><path d="M5 14h9"/></svg>';
     const iconClock = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
     const pills = [
-      f.totaal_investering ? iconEuro + f.totaal_investering : '',
+      f.totaal_investering ? iconEuro + f.totaal_investering.replace(/^[€\s]+/, '') : '',
       f.tvt ? iconClock + 'TVT ' + f.tvt : ''
     ].filter(Boolean).map(p=>`<span class="phase-meta-pill">${p}</span>`).join('');
     return `<div class="phase-block">
@@ -8081,9 +8087,9 @@ function renderTocRail() {
     { id:'measuresSection', label:'Maatregelen' },
     { id:'scenarioSection', label:'Scenario\'s' },
     { id:'chartSection', label:'Besparing' },
+    { id:'subsidiesSection', label:'Subsidies' },
     { id:'nettoSection', label:'Netto investering' },
     { id:'maandlastenSection', label:'Maandlasten' },
-    { id:'subsidiesSection', label:'Subsidies' },
     { id:'phasesSection', label:'Aanpak' },
     { id:'vervolgSection', label:'Vervolgstappen' },
   ];
