@@ -199,10 +199,10 @@ body {
   text-transform: uppercase;
   color: var(--ink-4);
   white-space: nowrap;
-  border-left: 4px solid var(--orange);
-  padding-left: 9px;
+  border-left: 3px solid var(--orange);
+  padding-left: 8px;
 }
-.sec-line { flex: 1; height: 1.5px; background: var(--rule); }
+.sec-line { flex: 1; height: 1px; background: var(--rule); }
 
 /* ═══════════════════════════════════════════════════════
    FORM GRID
@@ -5169,9 +5169,9 @@ select.finput {
     font-size: 6.5pt !important; font-weight: 700 !important;
     letter-spacing: 1.6pt !important; text-transform: uppercase !important;
     color: #1B597B !important; white-space: nowrap !important;
-    border-left: 4pt solid #E26836 !important; padding-left: 6pt !important;
+    border-left: 3pt solid #E26836 !important; padding-left: 5.5pt !important;
   }
-  .sec-line { height: 0.7pt !important; background: #C8C4BE !important; }
+  .sec-line { height: 0.5pt !important; background: #C8C4BE !important; }
 
   /* ── KPI panel ── */
   .kpi-panel, .live-totals-bar, .totals-block {
@@ -5323,6 +5323,11 @@ select.finput {
     border: 0.7pt solid #D8DDE0 !important; border-top: 1.6pt solid #1B597B !important;
     border-radius: 0 !important; box-shadow: none !important; overflow: hidden !important;
     page-break-inside: avoid !important; break-inside: avoid !important;
+  }
+  /* sec-head staat nu binnen de chart-wrap — in print geen extra marge nodig */
+  .chart-wrap .sec-head, .chart-wrap .rpt-section-head {
+    margin-top: 0 !important; margin-bottom: 6pt !important;
+    padding: 0 !important;
   }
   .chart-canvas-wrap {
     width: 100% !important; height: 100pt !important;
@@ -7264,8 +7269,12 @@ window._onStijgingSlider = function(val) {
 function renderChartSection() {
   const el = document.getElementById('chartSection');
   if (!el) return;
-  el.innerHTML = secHead('Cumulatieve besparing over tijd') + `
+  el.innerHTML = `
     <div class="chart-wrap">
+    <div class="sec-head rpt-section-head" style="margin-top:0;margin-bottom:16px;">
+      <span class="sec-label">Cumulatieve besparing over tijd</span>
+      <div class="sec-line"></div>
+    </div>
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
           <div class="chart-tog-group">
@@ -7525,11 +7534,11 @@ function renderMaatregelenChart(maatregelen) {
   if (!el || !maatregelen || maatregelen.length === 0) { el && (el.innerHTML = ''); return; }
 
   el.innerHTML = `
-    <div class="sec-head rpt-section-head">
+    <div class="chart-wrap" style="margin-bottom:28px;">
+    <div class="sec-head rpt-section-head" style="margin-top:0;margin-bottom:16px;">
       <span class="sec-label">Besparing per maatregel</span>
       <div class="sec-line"></div>
     </div>
-    <div class="chart-wrap" style="margin-bottom:28px;">
       <div class="chart-canvas-wrap" style="height:${Math.max(160, maatregelen.length * 42)}px;">
         <canvas id="maatregelenChart"></canvas>
       </div>
