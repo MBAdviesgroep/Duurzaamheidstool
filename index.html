@@ -4993,7 +4993,7 @@ select.finput {
   /* ── Paginamarges ──
      Top 18mm: vaste header (14mm) zweeft erboven. Secties met page-break krijgen padding-top:16mm.
      Cover is full-bleed via @page :first { margin:0 }.             */
-  @page          { size: A4 portrait !important; margin: 18mm 13mm 20mm 13mm !important; }
+  @page          { size: A4 portrait !important; margin: 22mm 13mm 20mm 13mm !important; }
   @page :first   { margin: 0 !important; }
 
   /* ── Basis reset ── */
@@ -5069,10 +5069,17 @@ select.finput {
   }
 
   /* ── Rapport-header (blauwe titelbalk pagina 2) ── */
+  /* #rptHdr krijgt padding-top gelijk aan de hoogte van de running header (14mm),
+     zodat de content altijd voorbij de blauwe balk begint —
+     ook als de browser de @page marges negeert */
+  #rptHdr {
+    padding-top: 16mm !important;
+    margin-top: 0 !important;
+  }
   .rpt-hdr {
     border-radius: 0 !important;
     margin: 0 0 10pt 0 !important;
-    padding: 6pt 15pt 10pt !important;
+    padding: 8pt 15pt 10pt !important;
     page-break-inside: avoid !important; break-inside: avoid !important;
     page-break-after: avoid !important; break-after: avoid !important;
   }
