@@ -5327,13 +5327,13 @@ select.finput {
   }
 
   .chart-canvas-wrap {
-    width: 100% !important; height: 130pt !important;
-    min-height: 130pt !important; max-height: 130pt !important;
+    width: 100% !important; height: 150pt !important;
+    min-height: 150pt !important; max-height: 150pt !important;
     padding: 0 !important; margin: 0 !important; overflow: hidden !important;
   }
   .chart-canvas-wrap canvas, .chart-print-img {
     width: 100% !important; max-width: 100% !important;
-    height: auto !important; max-height: 130pt !important;
+    height: auto !important; max-height: 150pt !important;
     object-fit: contain !important; display: block !important;
   }
   .chart-canvas-wrap:has(.chart-print-img) canvas { display: none !important; }
@@ -7905,15 +7905,15 @@ function renderMaandlastenSection(r) {
           <div style="font-size:9.5px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--blue);margin-bottom:2px;">Te lenen</div>
           <div style="font-size:18px;font-weight:700;color:var(--blue-deep);font-family:var(--f-head);line-height:1;">${fmtEuro(teLenen)}</div>
         </div>
-        <div style="flex:1;min-width:0;background:var(--page);border:1px solid var(--rule);border-left:3px solid var(--ink-5);border-radius:6px;padding:7px 10px;">
-          <div style="font-size:9.5px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--ink-4);margin-bottom:2px;">Eigen inbreng</div>
-          <div style="font-size:18px;font-weight:700;color:var(--ink-2);font-family:var(--f-head);line-height:1;">${fmtEuro(eigenInbreng)}</div>
+        <div style="flex:1;min-width:0;background:var(--blue-faint);border:1px solid rgba(27,89,123,0.15);border-left:3px solid var(--blue);border-radius:6px;padding:7px 10px;">
+          <div style="font-size:9.5px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--blue);margin-bottom:2px;">Eigen inbreng</div>
+          <div style="font-size:18px;font-weight:700;color:var(--blue-deep);font-family:var(--f-head);line-height:1;">${fmtEuro(eigenInbreng)}</div>
         </div>
       </div>` : '');
     set('mlFinDet',
-      `<div class="ml-detail-row"><span class="lbl">Lening</span><span class="val" style="color:var(--blue-deep);font-weight:600;">${fmtEuro(leningMnd)}/mnd</span></div>
-       <div class="ml-detail-row"><span class="lbl">Resterende energie</span><span class="val">${fmtEuro(directMnd)}/mnd</span></div>
-       <div class="ml-detail-row" style="margin-top:6px;padding-top:6px;border-top:1px dotted var(--rule);"><span class="lbl">Totale rente</span><span class="val" style="color:var(--ink-3);">${fmtEuro(totaalRente)}</span></div>`);
+      `<div class="ml-detail-row"><span class="lbl">Maandelijkse aflossing</span><span class="val" style="color:var(--blue-deep);font-weight:600;">${fmtEuro(leningMnd)}/mnd</span></div>
+       <div class="ml-detail-row"><span class="lbl">Energiekosten na besparing</span><span class="val">${fmtEuro(directMnd)}/mnd</span></div>
+       <div class="ml-detail-row" style="margin-top:6px;padding-top:6px;border-top:1px dotted var(--rule);"><span class="lbl">Totale rente over looptijd</span><span class="val" style="color:var(--ink-3);">${fmtEuro(totaalRente)}</span></div>`);
 
     // Controls: labels & slider posities
     const renteEl = document.getElementById('mlRenteVal'); if (renteEl) renteEl.textContent = s.rente.toFixed(1).replace('.',',') + '%';
@@ -7980,7 +7980,7 @@ function renderMaandlastenSection(r) {
       </div>
       <div class="maandlasten-head">
         <div class="maandlasten-titel">Wat betaalt u per maand?</div>
-        <div class="maandlasten-sub">Leningbedrag gebaseerd op netto investering na subsidies &amp; fiscale voordelen (zie tabel hierboven)</div>
+        <div class="maandlasten-sub">Gebaseerd op netto investering na subsidies en fiscale voordelen — kies hieronder uw eigen inbreng en looptijd</div>
       </div>
 
       <!-- Financieringsbedrag direct invoer -->
@@ -8002,20 +8002,20 @@ function renderMaandlastenSection(r) {
 
       <div class="maandlasten-grid">
         <div class="ml-col is-now">
-          <span class="ml-eyebrow is-now">Huidige situatie</span>
-          <div class="ml-titel">Alleen energiekosten</div>
+          <span class="ml-eyebrow is-now">Nu — zonder investering</span>
+          <div class="ml-titel">Wat u nu betaalt aan energie</div>
           <div class="ml-bedrag" id="mlNow"></div>
           <div class="ml-detail" id="mlNowDet"></div>
         </div>
         <div class="ml-col is-direct">
-          <span class="ml-eyebrow is-direct">Na investering</span>
-          <div class="ml-titel">Eigen geld, lagere energie</div>
+          <span class="ml-eyebrow is-direct">Na investering — eigen geld</span>
+          <div class="ml-titel">U betaalt alles zelf, energie daalt</div>
           <div class="ml-bedrag is-direct" id="mlDirect"></div>
           <div class="ml-detail" id="mlDirectDet"></div>
         </div>
         <div class="ml-col is-fin">
-          <span class="ml-eyebrow is-fin">Met financiering</span>
-          <div class="ml-titel">Energie + verduurzamingslening</div>
+          <span class="ml-eyebrow is-fin">Met lening — gespreide betaling</span>
+          <div class="ml-titel">Energie + maandelijkse aflossing</div>
           <div class="ml-bedrag is-fin" id="mlFin"></div>
           <div id="mlFinBadge"></div>
           <div class="ml-detail" id="mlFinDet"></div>
