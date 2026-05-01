@@ -5329,7 +5329,7 @@ select.finput {
     margin-top: 5pt !important;
   }
   #adviseurSection, #bronSection, #scenarioSection,
-  #geenActieSection, #wachtenBanner, #maatregelenChartSection {
+  #geenActieSection, #wachtenBanner, #maatregelenChartSection, #nettoInfoSection {
     page-break-before: auto !important; break-before: auto !important;
     margin-top: 0 !important; padding-top: 0 !important;
   }
@@ -5868,6 +5868,7 @@ select.finput {
         <div id="subsidiesSection"></div>
         <div id="nettoSection"></div>
         <div id="maandlastenSection"></div>
+        <div id="nettoInfoSection"></div>
         <div id="phasesSection"></div>
         <div id="aandachtSection"></div>
         <div id="vervolgSection"></div>
@@ -6844,13 +6845,18 @@ function renderReport(r) {
       <tbody id="nettoTbody">
         <tr id="nettoBrutoRij"><td>Bruto investering</td><td id="nettoBrutoVal">${fmtEuro(initBruto)}</td></tr>
       </tbody>
-    </table>
-    <div class="netto-fill-card">
+    </table>`;
+  document.getElementById('nettoSection').innerHTML = nettoHtml;
+
+  // Netto info kaartjes — na maandlasten gerenderd
+  const nettoInfoEl = document.getElementById('nettoInfoSection');
+  if (nettoInfoEl) {
+    nettoInfoEl.innerHTML = `<div class="netto-fill-card">
       <div class="netto-fill-item"><div class="netto-fill-title">Interpretatie</div><div class="netto-fill-text">Fiscale regelingen verlagen niet de factuur, maar leveren voordeel op via de aangifte.</div></div>
       <div class="netto-fill-item"><div class="netto-fill-title">Voor uitvoering</div><div class="netto-fill-text">Controleer per maatregel vooraf de actuele RVO-voorwaarden en meldtermijnen.</div></div>
       <div class="netto-fill-item"><div class="netto-fill-title">Advies</div><div class="netto-fill-text">Vraag offertes uitgesplitst per maatregel op, zodat subsidie en aftrek correct verwerkt kunnen worden.</div></div>
     </div>`;
-  document.getElementById('nettoSection').innerHTML = nettoHtml;
+  }
 
   // Subsidies — combineer AI-output met subsidie database
   // Subsidies — sla AI-extra subsidies globaal op voor dynamische herberekening
