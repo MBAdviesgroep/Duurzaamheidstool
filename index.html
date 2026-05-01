@@ -624,6 +624,14 @@ select.finput {
   position: relative;
 }
 .kpi-cell:not(:last-child) { border-right: 1px solid var(--rule); }
+/* Onderste rij: compacter en iets andere achtergrond */
+.kpi-panel .kpi-cell:nth-child(n+4) {
+  background: var(--page-2);
+  padding-top: 14px;
+  padding-bottom: 16px;
+  border-top: 1px solid var(--rule);
+}
+.kpi-panel .kpi-cell:nth-child(n+4) .kpi-num { margin-top: 4px; }
 .kpi-cell::before {
   content: '';
   position: absolute;
@@ -2910,7 +2918,63 @@ select.finput {
 .m-save { color: var(--green); font-weight: 600; font-family: var(--f-head); }
 
 
-/* Print-only footer — unsichtbar op scherm */
+/* ═══════════════════════════════════════════════════════
+   VERDUURZAMING INFO SECTIE
+═══════════════════════════════════════════════════════ */
+.vdi-wrap {
+  margin: 0 0 28px;
+}
+.vdi-header {
+  margin-bottom: 18px;
+}
+.vdi-eyebrow {
+  font-size: 9.5px; font-weight: 700; letter-spacing: 1.8px;
+  text-transform: uppercase; color: var(--orange);
+  font-family: var(--f-head); display: block; margin-bottom: 4px;
+}
+.vdi-title {
+  font-size: 17px; font-weight: 700; font-family: var(--f-head);
+  color: var(--ink); letter-spacing: -0.2px; line-height: 1.2;
+}
+.vdi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.vdi-card {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-md);
+  padding: 18px 18px 16px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.vdi-icon {
+  width: 38px; height: 38px;
+  border-radius: var(--r-sm);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.vdi-icon-money  { background: rgba(226,104,54,0.10); color: var(--orange); }
+.vdi-icon-value  { background: rgba(27,89,123,0.10);  color: var(--blue); }
+.vdi-icon-comfort{ background: rgba(42,122,80,0.10);  color: var(--green); }
+.vdi-icon-co2    { background: rgba(42,122,80,0.10);  color: var(--green); }
+.vdi-icon-label  { background: rgba(27,89,123,0.10);  color: var(--blue); }
+.vdi-icon-future { background: rgba(226,104,54,0.10); color: var(--orange); }
+.vdi-card-title {
+  font-size: 13px; font-weight: 700; font-family: var(--f-head);
+  color: var(--ink-2); line-height: 1.2;
+}
+.vdi-card-body {
+  font-size: 12px; color: var(--ink-3); line-height: 1.55;
+}
+@media (max-width: 720px) {
+  .vdi-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 480px) {
+  .vdi-grid { grid-template-columns: 1fr; }
+}
+
+/* Print-only footer — unsichtbaar op scherm */
 .mb-pf { display: none; }
 
 /* Print-only page header — unsichtbar op scherm */
@@ -5183,6 +5247,14 @@ select.finput {
     background: #F5F8FA !important;
     -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
   }
+  .kpi-panel .kpi-cell:nth-child(n+4) {
+    background: #EEF3F7 !important; border-top: 0.5pt solid #D8DDE0 !important;
+    padding-top: 6pt !important; padding-bottom: 7pt !important;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+  }
+  .kpi-panel .kpi-cell:nth-child(n+4) .kpi-num { font-size: 10pt !important; margin-top: 2pt !important; }
+  .kpi-panel .kpi-cell:nth-child(n+4) .kpi-lbl { font-size: 5.5pt !important; margin-bottom: 2pt !important; }
+  .kpi-panel .kpi-cell:nth-child(n+4) .kpi-sub { font-size: 6pt !important; margin-top: 2pt !important; }
   .kpi-cell, .lt-cell, .totals-block > div {
     padding: 7pt 10pt !important; border-right: 0.5pt solid #D8DDE0 !important;
     background: transparent !important;
@@ -5502,6 +5574,28 @@ select.finput {
   /* ── Scherm-footer verbergen, print-footer tonen ── */
   .rpt-footer { display: none !important; }
 
+  /* ── Verduurzaming info sectie in print ── */
+  #verduurzamingInfoSection { display: block !important; margin-bottom: 8pt !important; }
+  .vdi-wrap { margin: 0 0 6pt !important; }
+  .vdi-header { margin-bottom: 6pt !important; }
+  .vdi-eyebrow { font-size: 6pt !important; letter-spacing: 1.2pt !important; margin-bottom: 2pt !important; }
+  .vdi-title { font-size: 10pt !important; }
+  .vdi-grid {
+    display: grid !important; grid-template-columns: repeat(3,1fr) !important;
+    gap: 5pt !important;
+  }
+  .vdi-card {
+    padding: 6pt 7pt !important; gap: 3pt !important;
+    border: 0.5pt solid #D8DDE0 !important;
+    border-radius: 0 !important; border-top: 1.5pt solid #1B597B !important;
+    page-break-inside: avoid !important; break-inside: avoid !important;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+  }
+  .vdi-icon { width: 18pt !important; height: 18pt !important; border-radius: 2pt !important; }
+  .vdi-icon svg { width: 11pt !important; height: 11pt !important; }
+  .vdi-card-title { font-size: 7pt !important; font-weight: 700 !important; }
+  .vdi-card-body { font-size: 6.5pt !important; line-height: 1.4 !important; }
+
   /* ── Bron-card: tonen in print, compact opgemaakt ── */
   .bron-card {
     display: flex !important;
@@ -5759,6 +5853,7 @@ select.finput {
         <div id="labelVisSection" class="label-vis-section"></div>
         <div id="wachtenBanner"></div>
         <div id="introSection"></div>
+        <div id="verduurzamingInfoSection"></div>
         <div id="geenActieSection"></div>
         <div id="measuresSection"></div>
         <div id="scenarioSection"></div>
@@ -6512,6 +6607,19 @@ function renderReport(r) {
   const co2ctx = getCO2Context(co2kg);
   // Sla huidige kosten globaal op zodat andere secties herrenderen bij wijziging
   window._huidigKosten = parseEuro(r.huidige_kosten) || 0;
+  const huidigKosten = window._huidigKosten || 0;
+  const totaalBespJaar = (r.maatregelen||[]).reduce((s,m)=>s+parseEuro(m.besparing),0);
+  const besparingMnd = totaalBespJaar > 0 ? Math.round(totaalBespJaar / 12) : 0;
+  const totaalInv = (r.maatregelen||[]).reduce((s,m)=>s+parseEuro(m.investering),0);
+  // Gewogen gemiddelde TVT
+  let tvtWSum = 0, tvtInvSum = 0;
+  (r.maatregelen||[]).forEach(m => {
+    const tvtRaw = (m.tvt||'').replace(',','.').replace(/[^0-9.]/g,'');
+    const tvt = parseFloat(tvtRaw); const inv = parseEuro(m.investering);
+    if (!isNaN(tvt) && inv > 0) { tvtWSum += tvt * inv; tvtInvSum += inv; }
+  });
+  const tvtGem = tvtInvSum > 0 ? (tvtWSum / tvtInvSum).toFixed(1).replace('.',',') : null;
+
   document.getElementById('kpiPanel').innerHTML = `
     <div class="kpi-cell kpi-c1">
       <span class="kpi-lbl">Huidige energiekosten</span>
@@ -6537,15 +6645,38 @@ function renderReport(r) {
       </div>
     </div>
     <div class="kpi-cell kpi-c2">
-      <span class="kpi-lbl">Mogelijke besparing</span>
+      <span class="kpi-lbl">Jaarlijkse besparing</span>
       <div class="kpi-num warn">${r.totaal_besparing||'&#8212;'}</div>
-      <div class="kpi-sub">bij aangepast pakket</div>
+      <div class="kpi-sub">${besparingMnd > 0 ? '≈ <strong style="color:var(--orange);">€ '+besparingMnd.toLocaleString('nl-NL')+'</strong> per maand' : 'bij alle maatregelen'}</div>
     </div>
     <div class="kpi-cell kpi-c3" style="position:relative;">
-      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--green);"></div>
       <span class="kpi-lbl">CO&#8322; reductie</span>
       <div class="kpi-num good">${r.co2_reductie_pct||'&#8212;'}</div>
-      <div class="kpi-sub">${co2ctx || 'bij aangepast pakket'}</div>
+      <div class="kpi-sub">${co2ctx || 'bij alle maatregelen'}</div>
+    </div>
+    <div class="kpi-cell" style="border-top:1px solid var(--rule);">
+      <span class="kpi-lbl" style="color:var(--ink-3);">
+        <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="vertical-align:-1px;margin-right:3px;"><circle cx="8" cy="8" r="5"/><path d="M8 5v3l2 2"/></svg>
+        Terugverdientijd
+      </span>
+      <div class="kpi-num" style="font-size:28px;">${tvtGem ? '± ' + tvtGem + ' jr' : '&#8212;'}</div>
+      <div class="kpi-sub">gewogen gemiddelde alle maatregelen</div>
+    </div>
+    <div class="kpi-cell" style="border-top:1px solid var(--rule);">
+      <span class="kpi-lbl" style="color:var(--ink-3);">
+        <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="vertical-align:-1px;margin-right:3px;"><path d="M2 12l4-4 3 3 5-6"/><path d="M13 14H3a1 1 0 01-1-1V2"/></svg>
+        Financieel aantrekkelijk
+      </span>
+      <div class="kpi-num" style="font-size:22px;color:var(--green);line-height:1.15;">Verduurzaming loont</div>
+      <div class="kpi-sub">investering verdient zichzelf terug + hogere woningwaarde</div>
+    </div>
+    <div class="kpi-cell" style="border-top:1px solid var(--rule);">
+      <span class="kpi-lbl" style="color:var(--ink-3);">
+        <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="vertical-align:-1px;margin-right:3px;"><path d="M8 2l2 4 4.5.7-3.3 3.2.8 4.5L8 12.2l-4 2.2.8-4.5L1.5 6.7 6 6z"/></svg>
+        Toekomstbestendig
+      </span>
+      <div class="kpi-num" style="font-size:22px;color:var(--blue-deep);line-height:1.15;">Label ${r.streef_label || 'A+'} haalbaar</div>
+      <div class="kpi-sub">beter label = lagere energielasten & betere verhuurbaarheid</div>
     </div>`;
 
   // Intro tekst — sla originele huidige kosten op als data-attribuut voor live-update
@@ -6556,6 +6687,65 @@ function renderReport(r) {
   } else {
     document.getElementById('introSection').innerHTML = '';
   }
+
+  // Verduurzaming info sectie
+  (function() {
+    const el = document.getElementById('verduurzamingInfoSection');
+    if (!el) return;
+    const streef = r.streef_label || 'A+';
+    const co2pct = r.co2_reductie_pct || '';
+    el.innerHTML = `
+      <div class="vdi-wrap">
+        <div class="vdi-header">
+          <span class="vdi-eyebrow">Waarom verduurzamen?</span>
+          <div class="vdi-title">Verduurzaming is slim, nu én voor de toekomst</div>
+        </div>
+        <div class="vdi-grid">
+          <div class="vdi-card">
+            <div class="vdi-icon vdi-icon-money">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5c0-1.4 1.1-2.5 2.5-2.5s2.5 1.1 2.5 2.5c0 3-5 3-5 6 0 1.4 1.1 2.5 2.5 2.5s2.5-1.1 2.5-2.5"/></svg>
+            </div>
+            <div class="vdi-card-title">Lagere energierekening</div>
+            <div class="vdi-card-body">Energie wordt duurder. Wie nu investeert in isolatie, warmtepomp en zonnepanelen beschermt zichzelf tegen toekomstige prijsstijgingen en verlaagt direct de maandlasten.</div>
+          </div>
+          <div class="vdi-card">
+            <div class="vdi-icon vdi-icon-value">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+            <div class="vdi-card-title">Hogere woningwaarde</div>
+            <div class="vdi-card-body">Een beter energielabel verhoogt de marktwaarde aantoonbaar. Kopers en huurders betalen meer voor een energiezuinig pand — en het is makkelijker te verhuren of verkopen.</div>
+          </div>
+          <div class="vdi-card">
+            <div class="vdi-icon vdi-icon-comfort">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10z"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>
+            </div>
+            <div class="vdi-card-title">Meer wooncomfort</div>
+            <div class="vdi-card-body">Goede isolatie en een efficiënt ventilatiesysteem zorgen voor een aangenamer binnenklimaat: minder tocht, minder vochtige plekken en een gelijkmatigere temperatuur het hele jaar.</div>
+          </div>
+          <div class="vdi-card">
+            <div class="vdi-icon vdi-icon-co2">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2z"/><path d="M8 12h8M12 8v8"/></svg>
+            </div>
+            <div class="vdi-card-title">Minder CO₂-uitstoot</div>
+            <div class="vdi-card-body">${co2pct ? 'Met de geadviseerde maatregelen is een CO₂-reductie van <strong>' + co2pct + '</strong> haalbaar.' : 'De geadviseerde maatregelen reduceren de CO₂-uitstoot aanzienlijk.'} Een concrete bijdrage aan een duurzamere toekomst.</div>
+          </div>
+          <div class="vdi-card">
+            <div class="vdi-icon vdi-icon-label">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+            </div>
+            <div class="vdi-card-title">Label ${streef} haalbaar</div>
+            <div class="vdi-card-body">Met de geadviseerde aanpak is energielabel ${streef} realiseerbaar. Een beter label vergroot de financierbaarheid, verlaagt verzekeringspremies en voldoet aan toekomstige wet- en regelgeving.</div>
+          </div>
+          <div class="vdi-card">
+            <div class="vdi-icon vdi-icon-future">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+            </div>
+            <div class="vdi-card-title">Toekomstbestendig</div>
+            <div class="vdi-card-body">Regelgeving rondom energieprestatie van gebouwen wordt steeds strenger. Vroeg investeren voorkomt gedwongen ingrepen later en geeft rust: uw pand voldoet aan de eisen van morgen.</div>
+          </div>
+        </div>
+      </div>`;
+  })();
 
   // Energielabel visualisatie + wachten banner
   renderLabelVis(r);
