@@ -5072,10 +5072,13 @@ select.finput {
   .rpt-hdr {
     border-radius: 0 !important;
     margin: 0 0 10pt 0 !important;
-    padding: 12pt 15pt 10pt !important;
+    padding: 20pt 15pt 10pt !important; /* extra top-ruimte zodat header niet overlapt */
     page-break-inside: avoid !important; break-inside: avoid !important;
     page-break-after: avoid !important; break-after: avoid !important;
   }
+  /* Verberg de oranje accent-balk onderaan de rpt-hdr — botst met de
+     oranje balk van de running header erboven */
+  .rpt-hdr::after { display: none !important; }
   .rpt-title  { font-size: 17pt !important; line-height: 1.1 !important; }
   .rpt-address { font-size: 8pt !important; line-height: 1.35 !important; }
   .rpt-pretitle { font-size: 6.5pt !important; letter-spacing: 1.4pt !important; }
