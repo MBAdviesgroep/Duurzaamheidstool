@@ -1327,7 +1327,38 @@ select.finput {
   font-family: var(--f-body); line-height: 1.75; margin: 0;
 }
 
-/* ── Grafiek uitleg kaartjes ── */
+/* ── Fase actie-blok ── */
+.fase-acties {
+  margin-top: 20px;
+  background: var(--blue-faint);
+  border: 1px solid var(--blue-faint2);
+  border-left: 3px solid var(--blue);
+  border-radius: var(--r-md);
+  padding: 16px 20px;
+}
+.fase-acties-title {
+  font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--blue);
+  font-family: var(--f-head); margin-bottom: 12px;
+}
+.fase-actie-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 6px 0; border-bottom: 1px solid var(--rule);
+  font-size: 13px; color: var(--ink-2); font-family: var(--f-body); line-height: 1.5;
+}
+.fase-actie-item:last-child { border-bottom: none; }
+.fase-actie-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+.fase-actie-text { flex: 1; }
+
+/* ── Fase maatregel-tags ── */
+.fase-maatregel-list {
+  display: flex; flex-wrap: wrap; gap: 4px; margin: 8px 0 4px;
+}
+.fase-maatregel-tag {
+  font-size: 10px; font-weight: 600; font-family: var(--f-head);
+  background: var(--blue-faint2); color: var(--blue);
+  padding: 2px 7px; border-radius: 20px;
+}
 .chart-uitleg-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -5807,15 +5838,44 @@ select.finput {
 ═══════════════════════════════════════════════════════ -->
 <style>
 @media print {
-  /* ── Eindpagina: vervolgstappen + adviseur + bron altijd samen ── */
+  /* Eindpagina: aandacht + fases + acties + adviseur — alles samen */
   #vervolgSection {
-    page-break-before: always !important;
-    break-before: page !important;
-    page-break-after: avoid !important;
-    break-after: avoid !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-    margin-bottom: 4pt !important;
+    page-break-before: auto !important;
+    break-before: auto !important;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    display: none !important;
+  }
+
+  /* Fase-acties print */
+  .fase-acties {
+    margin-top: 8pt !important;
+    padding: 7pt 10pt !important;
+    background: #EEF4F8 !important;
+    border-left: 2pt solid #1B597B !important;
+    border-radius: 2pt !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .fase-acties-title {
+    font-size: 6pt !important; letter-spacing: 1pt !important;
+    color: #1B597B !important; margin-bottom: 5pt !important;
+  }
+  .fase-actie-item {
+    font-size: 6.5pt !important; line-height: 1.35 !important;
+    padding: 3pt 0 !important; gap: 6pt !important;
+    border-bottom: 0.3pt solid #D8DDE0 !important;
+  }
+  .fase-actie-item:last-child { border-bottom: none !important; }
+  .fase-actie-icon { display: none !important; }
+
+  /* Fase maatregel-tags print */
+  .fase-maatregel-list { gap: 3pt !important; margin: 4pt 0 3pt !important; }
+  .fase-maatregel-tag {
+    font-size: 5.5pt !important; padding: 1pt 5pt !important;
+    background: #ddeaf2 !important; color: #1B597B !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
   #adviseurSection,
@@ -8023,12 +8083,31 @@ function renderReport(r) {
     ? secHead('Subsidies &amp; fiscale regelingen') +
       `<div class="sub-list">${subsHtml}</div>` : '';
 
-  // Fases — bereken investering live uit de maatregelen
-  // Match fase-maatregelen op naam (f.maatregelen array) of gebruik f.totaal_investering als fallback
+  // VOLGORDE: 1) Aandachtspunten, 2) Fases + acties, 3) Adviseur + bron direct erna
+
+  // Aandachtspunten EERST
+  let aHtml = '';
+  if (r.aandachtspunten && r.aandachtspunten.length > 0) {
+    const arows = r.aandachtspunten.map(a=>
+      `<tr><td>${a.punt}</td><td>${a.toelichting}</td></tr>`).join('');
+    aHtml = secHead('Aandachtspunten') +
+      `<table class="aandacht-table">
+        <thead><tr><th>Aandachtspunt</th><th>Toelichting</th></tr></thead>
+        <tbody>${arows}</tbody>
+      </table>`;
+  }
+  document.getElementById('aandachtSection').innerHTML = aHtml;
+
+  // Fases — rijker, met maatregelen-tags en concrete vervolgacties erin
+  const heeftZonnepanelen = (r.maatregelen||[]).some(m => {
+    const n = (m.naam||'').toLowerCase();
+    return n.includes('zonnepa') || n.includes('solar') || n.includes('pv');
+  });
+
+  const iconEuro = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M18 7a6 6 0 0 0-10 4.5A6 6 0 0 0 18 17"/><path d="M5 10h9"/><path d="M5 14h9"/></svg>';
+  const iconClock = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+
   const phases = (r.fases||[]).map((f,i)=>{
-    const iconEuro = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M18 7a6 6 0 0 0-10 4.5A6 6 0 0 0 18 17"/><path d="M5 10h9"/><path d="M5 14h9"/></svg>';
-    const iconClock = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
-    // Bereken investering uit de maatregelen die bij deze fase horen
     let calcInvestering = 0;
     if (f.maatregelen && f.maatregelen.length > 0 && r.maatregelen) {
       f.maatregelen.forEach(fnaam => {
@@ -8041,35 +8120,37 @@ function renderReport(r) {
       invDisplay ? iconEuro + invDisplay.replace(/^[€\s]+/, '') : '',
       f.tvt ? iconClock + 'TVT ' + f.tvt : ''
     ].filter(Boolean).map(p=>`<span class="phase-meta-pill">${p}</span>`).join('');
+    const maatrLijst = (f.maatregelen && f.maatregelen.length > 0)
+      ? `<div class="fase-maatregel-list">${f.maatregelen.map(m=>`<span class="fase-maatregel-tag">${m}</span>`).join('')}</div>`
+      : '';
     return `<div class="phase-block">
       <div class="phase-header">
-        <div class="phase-num-badge">
-          <span class="phase-num-label">Fase</span>
-          <span class="phase-num-value">${i+1}</span>
-        </div>
+        <div class="phase-num-badge"><span class="phase-num-label">Fase</span><span class="phase-num-value">${i+1}</span></div>
         <div class="phase-title">${f.titel}</div>
       </div>
       <div class="phase-body">
         <div class="phase-desc">${f.beschrijving}</div>
+        ${maatrLijst}
         ${pills ? `<div class="phase-meta">${pills}</div>` : ''}
       </div>
     </div>`;
   }).join('');
-  document.getElementById('phasesSection').innerHTML = phases
-    ? secHead('Aanbevolen aanpak: gefaseerd &amp; slim') + `<div class="phases-grid">${phases}</div>` : '';
 
-  // Aandachtspunten tabel
-  let aHtml = '';
-  if (r.aandachtspunten && r.aandachtspunten.length > 0) {
-    const arows = r.aandachtspunten.map(a=>
-      `<tr><td>${a.punt}</td><td>${a.toelichting}</td></tr>`).join('');
-    aHtml = secHead('Aandachtspunten') +
-      `<table class="aandacht-table">
-        <thead><tr><th>Aandachtspunt</th><th>Toelichting</th></tr></thead>
-        <tbody>${arows}</tbody>
-      </table>`;
-  }
-  document.getElementById('aandachtSection').innerHTML = aHtml;
+  // Concrete acties — compact, direct onder fases
+  const acties = [
+    { icon: '📋', text: 'Vraag bij minimaal drie gecertificeerde installateurs offertes op en vergelijk op prijs, garantie en uitvoeringstermijn.' },
+    { icon: '💰', text: 'Vraag ISDE en EIA aan vóór of direct na ondertekening van de offerte — daarna vervalt het recht op subsidie.' },
+    heeftZonnepanelen ? { icon: '☀️', text: 'Installeer zonnepanelen zo snel mogelijk — de salderingsregeling wordt jaarlijks verder afgebouwd.' } : null,
+    { icon: '📞', text: 'MB Adviesgroep begeleidt u van subsidieaanvraag tot oplevering. Neem contact op voor een vrijblijvend adviesgesprek.' },
+  ].filter(Boolean);
+
+  const actiesHtml = `<div class="fase-acties">
+    <div class="fase-acties-title">Concrete vervolgstappen</div>
+    ${acties.map(a=>`<div class="fase-actie-item"><span class="fase-actie-icon">${a.icon}</span><span class="fase-actie-text">${a.text}</span></div>`).join('')}
+  </div>`;
+
+  document.getElementById('phasesSection').innerHTML = phases
+    ? secHead('Aanbevolen aanpak: gefaseerd &amp; slim') + `<div class="phases-grid">${phases}</div>` + actiesHtml : '';
 
   // Vervolgstappen + adviseur
   renderVervolgSection(r);
@@ -9102,49 +9183,10 @@ function renderMaatregelenChart(maatregelen) {
 
 function renderVervolgSection(r) {
   const el = document.getElementById('vervolgSection');
-  if (!el) return;
-
-  const stappen = [];
-  const heeftZonnepanelen = (r.maatregelen||[]).some(m => {
-    const n = m.naam ? m.naam.toLowerCase() : '';
-    return n.includes('zonnepa') || n.includes('solar') || n.includes('pv');
-  });
-
-  stappen.push({
-    title: 'Offertes opvragen',
-    desc: 'Vraag bij minimaal drie gecertificeerde installateurs offertes op voor de geadviseerde maatregelen. Vergelijk op prijs, garantie en uitvoeringstermijn.'
-  });
-  stappen.push({
-    title: 'Subsidieaanvragen indienen',
-    desc: 'ISDE en EIA moeten worden aangevraagd vóór of direct na het ondertekenen van de offerte. Raadpleeg uw accountant voor de fiscale aftrekposten (KIA, MIA/Vamil).'
-  });
-  if (heeftZonnepanelen) {
-    stappen.push({
-      title: 'Salderingsregeling benutten',
-      desc: 'De salderingsregeling wordt stapsgewijs afgebouwd. Hoe eerder de zonnepanelen worden geïnstalleerd, hoe meer voordeel u kunt behalen.'
-    });
-  }
-  stappen.push({
-    title: 'Uitvoeringsvolgorde bepalen',
-    desc: r.fases && r.fases.length > 0
-      ? `Volg het gefaseerde aanpakplan: ${r.fases.map(f => f.titel).join(' → ')}. Begin met de maatregelen met de kortste terugverdientijd.`
-      : 'Stel samen met uw adviseur een gefaseerd uitvoeringsplan op, rekening houdend met cashflow en beschikbaarheid van installateurs.'
-  });
-  stappen.push({
-    title: 'Plan een adviesgesprek',
-    desc: 'MB Adviesgroep begeleidt u bij subsidieaanvragen, selectie van installateurs en eventuele financieringsmogelijkheden. Neem contact op voor een vrijblijvend gesprek.'
-  });
-
-  const html = stappen.map((s, i) => `
-    <div class="vervolg-item">
-      <div class="vervolg-num">${i + 1}</div>
-      <div class="vervolg-text">
-        <div class="vervolg-title">${s.title}</div>
-        <div class="vervolg-desc">${s.desc}</div>
-      </div>
-    </div>`).join('');
-
-  el.innerHTML = secHead('Aanbevolen vervolgstappen') + `<div class="vervolg-list">${html}</div>`;
+  if (!el) { return; }
+  // Vervolgstappen zijn geïntegreerd in de fase-kaarten en de eindpagina.
+  // Deze sectie wordt leeggemaakt zodat hij geen aparte pagina veroorzaakt.
+  el.innerHTML = '';
 }
 
 // =============================================================================
