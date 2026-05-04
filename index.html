@@ -6252,7 +6252,11 @@ LET OP — wat 'huidige_kosten' WEL en NIET is:
 ✓ WEL: het bedrag dat de eigenaar/huurder per jaar aan ENERGIE betaalt — gas, elektriciteit, stadswarmte, vastrecht netbeheer, energiebelasting, ODE, min teruglevering en min belastingvermindering. Dit is doorgaans tussen € 800 en € 25.000 per jaar voor één gebouw.
 ✗ NIET: marktwaarde, taxatiewaarde, koopsom, WOZ-waarde, huuropbrengst, bouwkosten, totaal investeringsbedrag verduurzaming, vrije verkoopwaarde, getaxeerde waarde of welk ander vastgoedbedrag dan ook. Deze bedragen zijn vele malen groter (€100.000–€2.000.000) en horen NIET in dit veld. Verwar deze nooit met energiekosten.
 
-Plausibiliteits-check vóór je het invult: ligt het gevonden bedrag tussen €500 en €100.000 per jaar? Zo niet → het is geen energiekosten-getal, ga verder zoeken of val terug op de bankscan-schatting. Het mag NOOIT meer dan €100.000 per jaar zijn voor een normaal woonpand of klein zakelijk pand.
+PLAUSIBILITEITS-CHECK — STRIKT, voor je 'huidige_kosten' invult:
+- Het bedrag MOET tussen € 500 en € 50.000 per jaar liggen voor een normaal woon- of bedrijfspand. Bij grote complexen (>10 units, hotels) max € 100.000.
+- Als het gevonden bedrag > € 100.000 is: STOP. Dat is GEEN energiekosten-getal. Dat is gegarandeerd marktwaarde, taxatie, koopsom, huurinkomsten of investeringssom. Negeer het volledig en zoek verder. Vind je niets plausibels, gebruik dan de schatting uit de bankscan.
+- Als het bedrag > € 6 cijfers heeft (bijv. € 1.222.897 of € 1.712.897): dat is per definitie GEEN energiekosten. Niet invullen.
+- Vergelijk met de bankscan-schatting: als je gevonden bedrag meer dan 5x zo hoog is als de bankscan: vermoedelijk fout — controleer of je het juiste getal hebt.
 
 Zoek actief op (in deze volgorde) naar werkelijke energiekosten:
 1. Een meegeleverde jaarafrekening / jaarnota / jaaroverzicht / energierekening / energiecontract van een leverancier (Eneco, Vattenfall, Essent, Engie, Greenchoice, Budget Energie, etc.). Herken aan posten als "gas", "elektriciteit", "kWh", "m³", "termijnbedrag", "jaarafrekening", "vastrecht", "netbeheer".
@@ -6325,11 +6329,11 @@ Retourneer exact het volgende JSON-schema — verzin niets, extraheer alles uit 
   "bron_tool": "string (naam van de duurzaamheidstool zoals die in de energiescan genoemd wordt, bijv. 'ING Duurzaam Zakelijk Advies', 'Rabobank Duurzame Bedrijfsscan', 'ABN AMRO Verduurzamingstool' — exact zoals in de scan; leeg als onbekend)",
   "bron_bank": "string (naam van de bank die de tool aanbiedt, bijv. 'ING', 'Rabobank', 'ABN AMRO' — leeg als onbekend)",
   "samenvatting": "string (2-3 professionele zinnen)",
-  "maatregelen": [{"naam":"string","besparing":"string","investering":"string","tvt":"string","co2":"string","subsidies":"string"}],
+  "maatregelen": [{"naam":"string","besparing":"string (jaarlijkse euro-besparing, bijv. '€ 1.250'. NOOIT leeg, NOOIT €0, NOOIT €1 of €2 — gebruik realistische kengetallen als de scan het niet expliciet noemt)","investering":"string (eenmalige euro-investering, bijv. '€ 8.500'. NOOIT leeg, NOOIT €0)","tvt":"string (terugverdientijd in jaren, bijv. '6,8 jaar')","co2":"string","subsidies":"string"}],
   "totaal_besparing": "string",
   "totaal_investering": "string",
   "gemiddelde_tvt": "string",
-  "co2_reductie_pct": "string",
+  "co2_reductie_pct": "string (één getal als percentage zonder %-teken, bijv. '55'. Geen ranges, geen tekst, geen 'circa'. Bereken realistisch op basis van de maatregelen.)",
   "netto_investering": {"bruto":"string","posten":[{"naam":"string","bedrag":"string","is_aftrek":true}],"netto":"string"},
   "subsidies": [{"code":"string","naam":"string","type":"string","van_toepassing_op":"string","voordeel":"string","alert":"string of null","stappen":["string"]}],
   "fases": [{"titel":"string","beschrijving":"string","maatregelen":["string (exacte naam zoals in maatregelen-lijst)"],"totaal_investering":"string of null","tvt":"string of null"}],
