@@ -1373,46 +1373,46 @@ select.finput {
 .md-card-head {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 13px 8px;
+  gap: 8px;
+  padding: 7px 11px 6px;
   background: var(--blue-faint);
   border-bottom: 1px solid var(--blue-faint2);
 }
 .md-icon {
-  width: 26px; height: 26px;
+  width: 22px; height: 22px;
   background: var(--blue-faint2);
   border-radius: var(--r-xs);
   display: flex; align-items: center; justify-content: center;
-  font-size: 13px; flex-shrink: 0;
+  font-size: 11px; flex-shrink: 0;
 }
 .md-card-title-wrap { flex: 1; min-width: 0; }
 .md-card-title {
-  font-size: 12px; font-weight: 700;
+  font-size: 11.5px; font-weight: 700;
   font-family: var(--f-head); color: var(--blue-deep);
-  line-height: 1.2; margin-bottom: 6px;
+  line-height: 1.2; margin-bottom: 4px;
 }
 .md-card-pills {
-  display: flex; flex-wrap: wrap; gap: 5px;
+  display: flex; flex-wrap: wrap; gap: 3px;
 }
 .md-pill {
-  font-size: 10.5px; font-weight: 600; font-family: var(--f-head);
-  padding: 2px 8px; border-radius: 20px; white-space: nowrap;
+  font-size: 9.5px; font-weight: 600; font-family: var(--f-head);
+  padding: 1px 6px; border-radius: 20px; white-space: nowrap;
 }
 .md-pill-green { background: var(--green-bg); color: var(--green); }
 .md-pill-orange { background: var(--orange-faint); color: var(--orange-deep); }
 .md-pill-blue { background: var(--blue-faint2); color: var(--blue); }
 .md-card-body {
-  padding: 10px 13px 11px;
-  display: flex; flex-direction: column; gap: 8px;
+  padding: 7px 11px 8px;
+  display: flex; flex-direction: column; gap: 4px;
 }
 .md-waarom {
-  font-size: 12px; font-weight: 400; color: var(--ink-2);
-  font-family: var(--f-body); line-height: 1.65; margin: 0;
+  font-size: 11px; font-weight: 400; color: var(--ink-2);
+  font-family: var(--f-body); line-height: 1.5; margin: 0;
 }
 .md-toelichting {
-  font-size: 12px; font-weight: 400; color: var(--ink-3);
-  font-family: var(--f-body); line-height: 1.6; margin: 0;
-  padding-top: 6px; border-top: 1px solid var(--rule);
+  font-size: 10.5px; font-weight: 400; color: var(--ink-3);
+  font-family: var(--f-body); line-height: 1.45; margin: 0;
+  padding-top: 4px; border-top: 1px solid var(--rule);
 }
 .md-subsidie {
   display: flex; align-items: center; gap: 6px;
@@ -7860,7 +7860,6 @@ function renderReport(r) {
 
   // Maatregelen detail-kaarten — uitgebreide uitleg per maatregel
   const detailCards = (r.maatregelen||[]).map((m,i) => {
-    const subsidieHtml = m.subsidies ? `<div class="md-subsidie"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Subsidie: ${m.subsidies}</div>` : '';
     return `<div class="md-card" data-index="${i}">
       <div class="md-card-head">
         <div class="md-icon">${ico(m.naam)}</div>
@@ -7876,7 +7875,6 @@ function renderReport(r) {
       <div class="md-card-body">
         ${m.omschrijving ? `<p class="md-waarom">${m.omschrijving}</p>` : ''}
         ${m.toelichting ? `<p class="md-toelichting">${m.toelichting}</p>` : ''}
-        ${subsidieHtml}
       </div>
     </div>`;
   }).join('');
