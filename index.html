@@ -5843,27 +5843,10 @@ select.finput {
   .bron-desc strong { color: #0d2233 !important; font-weight: 600 !important; }
 
   /* ── Algemene typografische rust voor luxe gevoel ── */
-  .rpt-section-head, .sec-head {
-    font-family: var(--f-head) !important;
-    font-size: 7.5pt !important;
-    font-weight: 700 !important;
-    letter-spacing: 2.2pt !important;
-    color: #0d2233 !important;
-    text-transform: uppercase !important;
-    padding-left: 8pt !important;
-    padding-bottom: 4pt !important;
-    margin: 14pt 0 8pt !important;
-    border-left: 2pt solid #E26836 !important;
-    border-bottom: 0.5pt solid #DDE6EC !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-  }
-
-  /* Eerste sectie-heading op een pagina krijgt minder bovenmarge */
-  .rpt-section-head:first-of-type,
-  *[id$="Section"] > .rpt-section-head:first-child {
-    margin-top: 0 !important;
-  }
+  /* Note: bestaande structuur gebruikt .sec-label (binnenin) voor het oranje
+     accent-balkje + uppercase tekst, en .sec-line voor de horizontale lijn.
+     Hier alleen de wrapper-spacing en first-of-type aanpassen — GEEN border
+     op de wrapper zelf, anders krijg je een dubbel balkje. */
 
   /* ── KPI-panel iets statiger ── */
   .kpi-panel {
@@ -6558,13 +6541,26 @@ Voor elke zelf-toegevoegde maatregel: vermeld in 'aandachtspunten' kort waarom (
 VERPLICHT — eigen aanvullingen actief opnemen in de maatregelenlijst:
 De maatregelen-array MOET ALLE relevante kansen bevatten — zowel die uit de bankscan als die jij zelf signaleert op basis van brochure/label/jaarrekening. Beperk je NIET tot wat de bankscan letterlijk noemt. De gebruiker verwacht een COMPLEET advies.
 
-Concreet: doorloop deze checklist en voeg toe wat in dit pand zinvol is en nog niet aanwezig:
+⚠️ MINIMUM 7 MAATREGELEN. Als je maatregelen-array minder dan 7 items bevat, ben je tekortgeschoten. Een advies met slechts 4-5 maatregelen is ALTIJD onvoldoende — er zijn ALTIJD meer kansen in een gebouw.
+
+⚠️ DUPLICAAT-CHECK met bestaande installaties — VERPLICHT vóór je een maatregel voorstelt:
+Lees eerst de feiten over wat al aanwezig is (uit energielabel, brochure, taxatierapport, notities). Kruis dan af:
+- Zonnepanelen al aanwezig (bijv. "10 panelen / 2200 kWh")? → noem maatregel "Zonnepanelen UITBREIDEN", niet "Zonnepanelen plaatsen". Vermeld het huidige aantal/kWp in de toelichting.
+- HR++ glas al aanwezig? → adviseer dan TRIPLE glas, of laat HR++ uit het advies (geen dubbele maatregel).
+- Spouw al geïsoleerd? → laat na-isolatie weg, OF adviseer alleen aanvullende kierdichting.
+- Hybride warmtepomp al aanwezig? → adviseer dan VOLLEDIG ELEKTRISCH, of laat warmtepomp weg.
+- CV-ketel <5 jaar oud? → noem warmtepomp pas in fase 2/3, niet als directe quick-win.
+- Dakisolatie al goed (Rc >3,5)? → laat weg.
+- Mechanische ventilatie/WTW al aanwezig? → laat weg.
+LED al volledig aanwezig? → laat weg.
+
+Concreet: doorloop deze checklist en voeg toe wat in dit pand zinvol is EN nog niet (volledig) aanwezig:
 1. Spouwmuurisolatie of na-isolatie gevel (als gevel Rc < 1,5)
 2. Dakisolatie (als dak Rc < 3,0)
 3. Vloer-/bodemisolatie (als vloer Rc < 2,5)
 4. HR++ of triple beglazing (als nog enkel/HR-glas aanwezig)
 5. Hybride of volledig elektrische warmtepomp (als ketel >10 jr of gasverbruik >1.500 m³)
-6. Zonnepanelen (uitbreiding) als dakvlak nog ruimte biedt
+6. Zonnepanelen UITBREIDEN als al aanwezig, anders nieuw plaatsen — als dakvlak nog ruimte biedt
 7. WTW-ventilatie of CO₂-gestuurde ventilatie (als alleen natuurlijke ventilatie en goed geïsoleerde schil)
 8. LED-verlichting (vooral zakelijk pand met lange branduren)
 9. Slimme thermostaat / zonering
