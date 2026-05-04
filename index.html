@@ -1281,7 +1281,7 @@ select.finput {
 }
 
 /* Measures table */
-.rt { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; }
+.rt { width: 100%; border-collapse: collapse; margin-bottom: 10px; table-layout: fixed; }
 .rt th:nth-child(1), .rt td:nth-child(1) { width: 4%; }
 .rt th:nth-child(2), .rt td:nth-child(2) { width: 26%; }
 .rt th:nth-child(3), .rt td:nth-child(3) { width: 16%; }
@@ -1290,15 +1290,15 @@ select.finput {
 .rt th:nth-child(6), .rt td:nth-child(6) { width: 16%; }
 .rt thead tr { border-bottom: 2px solid var(--blue); }
 .rt th {
-  font-size: 9.5px; letter-spacing: 1.2px; text-transform: uppercase;
+  font-size: 9px; letter-spacing: 1.2px; text-transform: uppercase;
   color: var(--ink-4); font-family: var(--f-head); font-weight: 600;
-  padding: 0 12px 12px; text-align: left;
+  padding: 0 10px 8px; text-align: left;
 }
 .rt th:first-child { padding-left: 0; }
 .rt tbody tr { border-bottom: 1px solid var(--rule); transition: background var(--t-fast); }
 .rt tbody tr:hover { background: var(--page); }
 .rt tbody tr:last-child { border-bottom: none; }
-.rt td { padding: 12px 12px; vertical-align: middle; font-size: 13.5px; color: var(--ink-2); }
+.rt td { padding: 7px 10px; vertical-align: middle; font-size: 12.5px; color: var(--ink-2); }
 .rt td:first-child { padding-left: 0; }
 .m-name {
   display: flex; align-items: flex-start; gap: 10px;
@@ -1356,11 +1356,11 @@ select.finput {
   font-size: 12px; font-weight: 400; color: var(--ink-3);
   font-family: var(--f-body); line-height: 1.6;
 }
-.md-section { margin-top: 20px; }
+.md-section { margin-top: 14px; }
 .md-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: 8px;
   margin-bottom: 8px;
 }
 .md-card {
@@ -2054,8 +2054,8 @@ select.finput {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: 10px;
+  margin-bottom: 8px;
   flex-wrap: wrap;
 }
 .measures-toolbar-label {
@@ -2118,12 +2118,12 @@ select.finput {
   border: 1.5px solid var(--blue-faint2);
   border-radius: var(--r-sm);
   overflow: hidden;
-  margin-bottom: 28px;
+  margin-bottom: 16px;
   background: var(--surface);
   transition: all var(--t-mid);
 }
 .lt-cell {
-  padding: 16px 18px 14px;
+  padding: 10px 14px 9px;
   position: relative;
   border-right: 1px solid var(--rule);
 }
@@ -2136,18 +2136,18 @@ select.finput {
 .lt-cell.c-orange::before { background: var(--orange); }
 .lt-cell.c-green::before { background: var(--green); }
 .lt-lbl {
-  font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+  font-size: 8.5px; letter-spacing: 1.5px; text-transform: uppercase;
   color: var(--ink-4); font-family: var(--f-head); font-weight: 600;
-  margin-bottom: 7px; display: block;
+  margin-bottom: 4px; display: block;
 }
 .lt-val {
-  font-size: 22px; font-weight: 700; font-family: var(--f-head);
+  font-size: 18px; font-weight: 700; font-family: var(--f-head);
   color: var(--blue); line-height: 1; letter-spacing: -0.5px;
   transition: all 0.3s ease;
 }
 .lt-val.orange { color: var(--orange); }
 .lt-val.green { color: var(--green); }
-.lt-sub { font-size: 10.5px; color: var(--ink-4); margin-top: 5px; }
+.lt-sub { font-size: 9.5px; color: var(--ink-4); margin-top: 3px; }
 
 /* ═══════════════════════════════════════════════════════
    BESPARINGSGRAFIEK
