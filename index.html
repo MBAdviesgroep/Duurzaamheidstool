@@ -1563,9 +1563,9 @@ select.finput {
   .rpt-logo img { filter: none !important; background: white !important; border-radius: 50% !important; width: 22pt !important; height: 22pt !important; object-fit: contain !important; padding: 1.5pt !important; }
   .rpt-logo-name, .rpt-logo-sub { color: white !important; }
   .rpt-date { color: rgba(255,255,255,0.7) !important; }
-  .rpt-pretitle { color: rgba(255,255,255,0.7) !important; font-size: 8pt !important; letter-spacing: 1.5pt; }
+  .rpt-pretitle { color: rgba(255,255,255,0.85) !important; font-size: 8pt !important; letter-spacing: 1.5pt; }
   .rpt-title { color: white !important; font-size: 20pt !important; font-weight: 600 !important; }
-  .rpt-address { color: rgba(255,255,255,0.75) !important; font-size: 9pt !important; }
+  .rpt-address { color: rgba(255,255,255,0.92) !important; font-size: 9pt !important; }
 
   /* ── Label-track ── */
   .label-track {
@@ -6228,13 +6228,96 @@ select.finput {
   /* Page-header (mb-ph) op iedere pagina top */
   .mb-ph {
     background: linear-gradient(135deg, #0d2233 0%, #134460 50%, #1B597B 100%) !important;
-    border-bottom: 1.8pt solid #E26836 !important;
+    border-bottom: 0.6pt solid rgba(255,255,255,0.08) !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
 
   /* Algemene visuele rust */
   * { text-rendering: geometricPrecision !important; }
+
+  /* ═══════════════════════════════════════════════════════════
+     FINALE PRINT-FIXES (laatste kans, hoogste prioriteit)
+     - Geen dubbele oranje accentlijnen
+     - Cumulatieve grafiek + legenda altijd samen, ruimte voor footer
+     - Einde van het rapport correct afsluiten
+     ═══════════════════════════════════════════════════════════ */
+
+  /* Géén dubbele oranje lijn: alleen page-header heeft een subtiele scheiding */
+  .mb-ph { border-bottom: 0.6pt solid rgba(255,255,255,0.08) !important; }
+
+  /* Sec-head niet té dicht na page-header */
+  .mb-ph + * .sec-head:first-child,
+  .card .sec-head:first-of-type { margin-top: 4pt !important; }
+
+  /* Adres & subtekst in donkere banner: voldoende contrast */
+  .rpt-hdr .rpt-address {
+    color: rgba(255,255,255,0.95) !important;
+    font-weight: 400 !important;
+  }
+  .rpt-hdr .rpt-pretitle {
+    color: rgba(255,255,255,0.88) !important;
+  }
+
+  /* Cumulatieve grafiek: forceer dat alles bij elkaar blijft (chart + KPI + legenda + noot) */
+  #chartSection {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    page-break-after: auto !important;
+    break-after: auto !important;
+    /* Veiligheidsmarge zodat legenda/noot niet onder footer-banner valt */
+    margin-bottom: 14pt !important;
+  }
+  #chartSection .chart-wrap {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  #chartSection .chart-legend,
+  #chartSection #chartNoteFlat,
+  #chartSection #chartNoteStijg {
+    page-break-before: avoid !important;
+    break-before: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  /* Iets compactere grafiek-canvas zodat alles binnen A4-pagina past INCL. legenda + footer */
+  #chartSection .chart-canvas-wrap {
+    height: 130pt !important;
+    min-height: 130pt !important;
+    max-height: 130pt !important;
+  }
+  #chartSection .chart-canvas-wrap canvas,
+  #chartSection .chart-print-img {
+    max-height: 130pt !important;
+  }
+
+  /* Einde van rapport: aandachtspunten → vervolg → adviseur in correcte volgorde,
+     géén ongewenste page-breaks. */
+  #aandachtSection {
+    page-break-after: auto !important;
+    break-after: auto !important;
+  }
+  #vervolgSection {
+    page-break-before: auto !important;
+    break-before: auto !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  #adviseurSection {
+    page-break-before: avoid !important;
+    break-before: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin-top: 8pt !important;
+  }
+  /* Bron sectie als laatste, weinig ruimte ervoor */
+  #bronSection {
+    page-break-before: avoid !important;
+    break-before: avoid !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    margin-top: 6pt !important;
+  }
 }
 </style>
 
@@ -7444,7 +7527,7 @@ function renderReport(r) {
     </div>
     <div class="rpt-pretitle">Verduurzamingsadvies</div>
     <div class="rpt-title">${r.pand_naam || 'Pand'}</div>
-    <div class="rpt-address">${[r.pand_adres, r.bouwjaar?'Bouwjaar '+r.bouwjaar:'', r.oppervlakte?r.oppervlakte:''].filter(Boolean).join(' &middot; ')}</div>
+    <div class="rpt-address">${[r.pand_adres, r.bouwjaar?'Bouwjaar '+r.bouwjaar:'', r.oppervlakte?(/m[²2]/i.test(String(r.oppervlakte))?r.oppervlakte:r.oppervlakte+' m²'):''].filter(Boolean).join(' &middot; ')}</div>
     ${labelHtml}`;
 
   // KPI panel
@@ -8612,7 +8695,8 @@ function renderPrintCover(r, today) {
       <div class="pc-label-desc">Energielabeltraject</div>
     </div>` : '';
 
-  const detailParts = [r.pand_adres, r.bouwjaar ? 'Bouwjaar\u00a0' + r.bouwjaar : '', r.oppervlakte || '', r.functie || ''].filter(Boolean);
+  const oppervlakteFmt = r.oppervlakte ? (/m[²2]/i.test(String(r.oppervlakte)) ? r.oppervlakte : r.oppervlakte + ' m²') : '';
+  const detailParts = [r.pand_adres, r.bouwjaar ? 'Bouwjaar\u00a0' + r.bouwjaar : '', oppervlakteFmt, r.functie || ''].filter(Boolean);
 
   const photoSection = huisFotoDataUrl
     ? `<div class="pc-hero"><img src="${huisFotoDataUrl}" alt="${r.pand_naam}" class="pc-hero-img"/><div class="pc-hero-gradient"></div></div>`
