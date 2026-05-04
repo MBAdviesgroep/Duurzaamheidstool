@@ -188,7 +188,7 @@ body {
 .sec-head {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
   margin-bottom: 28px;
 }
 .sec-label {
@@ -322,7 +322,7 @@ select.finput {
 ═══════════════════════════════════════════════════════ */
 .live-preview {
   margin-bottom: 28px;
-  border-radius: var(--r-md);
+  border-radius: var(--r-sm);
   overflow: hidden;
   border: 1.5px solid var(--rule);
   transition: border-color var(--t-mid), box-shadow var(--t-mid);
@@ -540,7 +540,7 @@ select.finput {
 .aanvrager-inner {
   padding: 14px 14px 13px;
   border: 1.5px solid var(--rule);
-  border-radius: var(--r-md);
+  border-radius: var(--r-sm);
   background: white;
   transition: border-color var(--t-fast), background var(--t-fast), box-shadow var(--t-fast);
   height: 100%;
@@ -595,7 +595,7 @@ select.finput {
   margin-bottom: 48px;
   padding: 20px 24px;
   background: var(--blue-faint);
-  border-radius: var(--r-md);
+  border-radius: var(--r-sm);
   border-left: 3px solid var(--blue);
 }
 .intro-text.loading {
@@ -613,7 +613,7 @@ select.finput {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   margin-bottom: 36px;
-  border-radius: var(--r-md);
+  border-radius: var(--r-sm);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--rule);
@@ -726,7 +726,7 @@ select.finput {
   margin-bottom: 28px;
 }
 .punten-block {
-  border-radius: var(--r-md);
+  border-radius: var(--r-sm);
   padding: 22px 20px;
   border: 1px solid transparent;
 }
@@ -773,7 +773,7 @@ select.finput {
   justify-content: space-between;
   padding: 24px 28px;
   background: var(--blue-faint);
-  border-radius: var(--r-md);
+  border-radius: var(--r-sm);
   margin-bottom: 28px;
   border: 1px solid var(--blue-faint2);
 }
@@ -836,7 +836,7 @@ select.finput {
 .conclusie-wrap { margin-bottom: 28px; }
 .conclusie-inner {
   background: var(--surface);
-  border-radius: var(--r-md);
+  border-radius: var(--r-sm);
   border-top: 3px solid var(--orange);
   box-shadow: var(--shadow-md);
   overflow: hidden;
@@ -955,7 +955,7 @@ select.finput {
 .lead-actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  gap: 10px;
   margin-top: 20px;
 }
 
@@ -1102,7 +1102,7 @@ select.finput {
 /* Drop zone */
 .drop-zone {
   border: 1.5px dashed var(--rule);
-  border-radius: var(--r-md);
+  border-radius: var(--r-sm);
   padding: 28px 20px;
   text-align: center;
   cursor: pointer;
@@ -1327,18 +1327,46 @@ select.finput {
   font-family: var(--f-body); line-height: 1.75; margin: 0;
 }
 
-/* ── Maatregel detail-kaarten ── */
-.md-section { margin-top: 32px; }
+/* ── Grafiek uitleg kaartjes ── */
+.chart-uitleg-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 16px;
+  margin-bottom: 8px;
+}
+.chart-uitleg-grid:has(.chart-uitleg-card:nth-child(2):last-child) {
+  grid-template-columns: repeat(2, 1fr);
+}
+.chart-uitleg-card {
+  background: var(--blue-faint);
+  border: 1px solid var(--blue-faint2);
+  border-radius: var(--r-sm);
+  padding: 14px 16px;
+}
+.chart-uitleg-icon {
+  font-size: 20px; margin-bottom: 8px;
+}
+.chart-uitleg-title {
+  font-size: 12.5px; font-weight: 700;
+  font-family: var(--f-head); color: var(--blue-deep);
+  margin-bottom: 6px; line-height: 1.2;
+}
+.chart-uitleg-text {
+  font-size: 12px; font-weight: 400; color: var(--ink-3);
+  font-family: var(--f-body); line-height: 1.6;
+}
+.md-section { margin-top: 20px; }
 .md-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  gap: 10px;
   margin-bottom: 8px;
 }
 .md-card {
   background: var(--surface);
   border: 1px solid var(--rule);
-  border-radius: var(--r-md);
+  border-radius: var(--r-sm);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
 }
@@ -1346,20 +1374,20 @@ select.finput {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px 16px 12px;
+  padding: 10px 13px 8px;
   background: var(--blue-faint);
   border-bottom: 1px solid var(--blue-faint2);
 }
 .md-icon {
-  width: 32px; height: 32px;
+  width: 26px; height: 26px;
   background: var(--blue-faint2);
   border-radius: var(--r-xs);
   display: flex; align-items: center; justify-content: center;
-  font-size: 16px; flex-shrink: 0;
+  font-size: 13px; flex-shrink: 0;
 }
 .md-card-title-wrap { flex: 1; min-width: 0; }
 .md-card-title {
-  font-size: 13.5px; font-weight: 700;
+  font-size: 12px; font-weight: 700;
   font-family: var(--f-head); color: var(--blue-deep);
   line-height: 1.2; margin-bottom: 6px;
 }
@@ -1374,11 +1402,11 @@ select.finput {
 .md-pill-orange { background: var(--orange-faint); color: var(--orange-deep); }
 .md-pill-blue { background: var(--blue-faint2); color: var(--blue); }
 .md-card-body {
-  padding: 14px 16px 16px;
+  padding: 10px 13px 11px;
   display: flex; flex-direction: column; gap: 8px;
 }
 .md-waarom {
-  font-size: 13px; font-weight: 400; color: var(--ink-2);
+  font-size: 12px; font-weight: 400; color: var(--ink-2);
   font-family: var(--f-body); line-height: 1.65; margin: 0;
 }
 .md-toelichting {
@@ -1504,7 +1532,7 @@ select.finput {
 .phase-header {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
   padding: 14px 18px;
   background: var(--page);
   border-bottom: 1px solid var(--rule);
@@ -2088,7 +2116,7 @@ select.finput {
   grid-template-columns: repeat(3, 1fr);
   gap: 0;
   border: 1.5px solid var(--blue-faint2);
-  border-radius: var(--r-md);
+  border-radius: var(--r-sm);
   overflow: hidden;
   margin-bottom: 28px;
   background: var(--surface);
@@ -2131,7 +2159,7 @@ select.finput {
   position: relative;
   background: var(--surface);
   border: 1px solid var(--rule);
-  border-radius: var(--r-md);
+  border-radius: var(--r-sm);
   padding: 24px 24px 20px;
   box-shadow: var(--shadow-sm);
 }
@@ -2178,7 +2206,7 @@ select.finput {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--rule);
-  border-radius: var(--r-md);
+  border-radius: var(--r-sm);
   padding: 10px 6px;
   box-shadow: var(--shadow-md);
   display: none;
@@ -2229,7 +2257,7 @@ select.finput {
   padding: 18px 24px;
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
 }
 .geen-actie-icon {
   width: 36px; height: 36px;
@@ -2641,7 +2669,7 @@ select.finput {
 }
 .ai-panel-head-l { display: flex; align-items: center; gap: 10px; }
 .ai-panel-avatar {
-  width: 32px; height: 32px; border-radius: 50%;
+  width: 26px; height: 26px; border-radius: 50%;
   background: var(--orange);
   display: flex; align-items: center; justify-content: center;
   font-weight: 700; font-family: var(--f-head); color: white;
@@ -2730,7 +2758,7 @@ select.finput {
 .label-vis-card {
   background: var(--surface);
   border: 1px solid var(--rule);
-  border-radius: var(--r-md);
+  border-radius: var(--r-sm);
   padding: 20px 24px 26px;
   box-shadow: var(--shadow-sm);
 }
@@ -2801,7 +2829,7 @@ select.finput {
   background: var(--orange-faint);
   border: 1px solid rgba(226,104,54,0.15);
   border-left: 2px solid var(--orange);
-  border-radius: var(--r-md);
+  border-radius: var(--r-sm);
   margin-bottom: 28px;
 }
 .wachten-icon {
@@ -2917,7 +2945,7 @@ select.finput {
 ═══════════════════════════════════════════════════════ */
 .adviseur-card {
   background: linear-gradient(135deg, var(--blue-deep) 0%, var(--blue) 100%);
-  border-radius: var(--r-md);
+  border-radius: var(--r-sm);
   padding: 24px 28px;
   display: flex; align-items: center; gap: 20px;
   margin-bottom: 8px; position: relative; overflow: hidden;
@@ -2971,10 +2999,10 @@ select.finput {
   background: #FAF8F5;
   border: 1px solid var(--rule);
   border-left: 3px solid var(--orange);
-  border-radius: var(--r-md);
+  border-radius: var(--r-sm);
   display: flex;
   align-items: flex-start;
-  gap: 14px;
+  gap: 10px;
 }
 .bron-icon {
   color: var(--orange);
@@ -3025,12 +3053,12 @@ select.finput {
 .vdi-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
+  gap: 10px;
 }
 .vdi-card {
   background: var(--surface);
   border: 1px solid var(--rule);
-  border-radius: var(--r-md);
+  border-radius: var(--r-sm);
   padding: 18px 18px 16px;
   display: flex; flex-direction: column; gap: 8px;
 }
@@ -5118,6 +5146,7 @@ select.finput {
   /* Secties die bovenaan een nieuwe pagina starten krijgen extra veilige ruimte.
      Dit voorkomt dat tabelkoppen/sectietitels tegen of onder de banner vallen. */
   #measuresSection,
+  #maatregelenChartSection,
   #nettoSection,
   #subsidiesSection,
   #phasesSection {
@@ -5132,6 +5161,8 @@ select.finput {
   /* Eerste kop op zo'n pagina niet nog eens te veel marge geven. */
   #measuresSection > .sec-head:first-child,
   #measuresSection > .rpt-section-head:first-child,
+  #maatregelenChartSection > .sec-head:first-child,
+  #maatregelenChartSection > .rpt-section-head:first-child,
   #nettoSection > .sec-head:first-child,
   #nettoSection > .rpt-section-head:first-child,
   #subsidiesSection > .sec-head:first-child,
@@ -6196,6 +6227,37 @@ select.finput {
     color: #3A3A3A !important;
     line-height: 1.5 !important;
     margin: 0 !important;
+  }
+
+  /* ── Grafiek uitleg kaartjes print ── */
+  .chart-uitleg-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 5pt !important;
+    margin-top: 7pt !important;
+    margin-bottom: 4pt !important;
+  }
+  .chart-uitleg-grid:has(.chart-uitleg-card:nth-child(2):last-child) {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .chart-uitleg-card {
+    background: #EEF4F8 !important;
+    border: 0.4pt solid #C5D5DE !important;
+    border-radius: 3pt !important;
+    padding: 6pt 7pt !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .chart-uitleg-icon { display: none !important; }
+  .chart-uitleg-title {
+    font-size: 7pt !important; font-weight: 700 !important;
+    color: #0d2233 !important; margin-bottom: 3pt !important;
+  }
+  .chart-uitleg-text {
+    font-size: 6.5pt !important; color: #6B7B82 !important;
+    line-height: 1.4 !important;
   }
 
   /* ── Maatregel detail-kaarten print ── */
@@ -7799,7 +7861,7 @@ function renderReport(r) {
   // Maatregelen detail-kaarten — uitgebreide uitleg per maatregel
   const detailCards = (r.maatregelen||[]).map((m,i) => {
     const subsidieHtml = m.subsidies ? `<div class="md-subsidie"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Subsidie: ${m.subsidies}</div>` : '';
-    return `<div class="md-card">
+    return `<div class="md-card" data-index="${i}">
       <div class="md-card-head">
         <div class="md-icon">${ico(m.naam)}</div>
         <div class="md-card-title-wrap">
@@ -8092,6 +8154,10 @@ function recalcTotals() {
     } else {
       row && row.classList.add('row-unchecked');
     }
+
+    // Sync detail-kaart zichtbaarheid
+    const card = document.querySelector(`.md-card[data-index="${i}"]`);
+    if (card) card.style.display = cb.checked ? '' : 'none';
   });
 
   const gemTVT = totalInvestering > 0
@@ -8600,10 +8666,7 @@ window._onStijgingSlider = function(val) {
 function renderChartSection() {
   const el = document.getElementById('chartSection');
   if (!el) return;
-  const introHtml = `<div class="chart-intro-block">
-    <p class="chart-intro-text">De onderstaande grafieken geven inzicht in de financiële prestatie van de geadviseerde maatregelen. De staafgrafiek toont per maatregel de verhouding tussen jaarlijkse besparing en eenmalige investering. De lijngraef toont wanneer de cumulatieve besparing de investering overtreft — het break-even punt.</p>
-  </div>`;
-  el.innerHTML = introHtml + secHead('Cumulatieve besparing over tijd') + `
+  el.innerHTML = secHead('Cumulatieve besparing over tijd') + `
     <div class="chart-wrap">
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
@@ -8660,6 +8723,23 @@ function renderChartSection() {
       </div>
       <div id="chartNoteStijg" class="chart-explainer" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--rule);font-size:11.5px;color:var(--ink-4);line-height:1.55;">
         <strong style="color:var(--ink-2);font-weight:600;">Met prijsstijging:</strong> de blauwe lijn toont de besparing als energieprijzen elk jaar met het ingestelde percentage stijgen. Break-even punt verschuift eerder, totale besparing loopt hoger op.
+      </div>
+    </div>
+    <div class="chart-uitleg-grid">
+      <div class="chart-uitleg-card">
+        <div class="chart-uitleg-icon">📈</div>
+        <div class="chart-uitleg-title">Wat betekent break-even?</div>
+        <div class="chart-uitleg-text">Het break-even punt is het jaar waarin de opgetelde energiebesparing de eenmalige investering volledig heeft terugverdiend. Daarna levert elke euro investering puur winst op.</div>
+      </div>
+      <div class="chart-uitleg-card">
+        <div class="chart-uitleg-icon">⚡</div>
+        <div class="chart-uitleg-title">Energieprijsstijging meenemen</div>
+        <div class="chart-uitleg-text">Energietarieven stijgen historisch gezien met 3–5% per jaar. Bij stijgende prijzen verdient de investering zichzelf sneller terug en loopt het totale rendement over 15 jaar aanzienlijk hoger op.</div>
+      </div>
+      <div class="chart-uitleg-card">
+        <div class="chart-uitleg-icon">🏠</div>
+        <div class="chart-uitleg-title">Effect op woningwaarde</div>
+        <div class="chart-uitleg-text">Naast directe energiebesparing verhoogt een beter energielabel de marktwaarde aantoonbaar. Dit voordeel is in de grafiek niet meegenomen, maar maakt de investering in de praktijk nóg aantrekkelijker.</div>
       </div>
     </div>`;
 }
@@ -8865,12 +8945,24 @@ function renderMaatregelenChart(maatregelen) {
 
   el.innerHTML = `
     <div class="sec-head rpt-section-head"><span class="sec-label">Besparing per maatregel</span><div class="sec-line"></div></div>
-    <div class="chart-wrap" style="margin-bottom:28px;">
+    <div class="chart-wrap" style="margin-bottom:16px;">
       <div class="chart-canvas-wrap" style="height:${Math.max(160, maatregelen.length * 42)}px;">
         <canvas id="maatregelenChart"></canvas>
       </div>
-      <div class="chart-explainer" style="margin-top:16px;padding-top:14px;border-top:1px solid var(--line);font-size:11.5px;color:var(--ink-4);font-family:var(--f-body);line-height:1.55;">
-        <strong style="color:var(--ink-2);font-weight:600;">Toelichting:</strong> per maatregel wordt de <em>jaarlijkse besparing</em> (groene balk) afgezet tegen de <em>eenmalige investering</em> (oranje balk). Hoe kleiner de verhouding oranje ten opzichte van groen, hoe sneller de maatregel zichzelf terugverdient. Maatregelen met een korte balk rechts maar een lange balk links leveren meerdere jaren achter elkaar rendement op.
+      <div class="chart-explainer" style="margin-top:16px;padding-top:14px;border-top:1px solid var(--rule);font-size:11.5px;color:var(--ink-4);font-family:var(--f-body);line-height:1.55;">
+        <strong style="color:var(--ink-2);font-weight:600;">Toelichting:</strong> per maatregel wordt de <em>jaarlijkse besparing</em> (groene balk) afgezet tegen de <em>eenmalige investering</em> (grijze balk). Hoe korter de grijze balk ten opzichte van de groene, hoe sneller de maatregel zichzelf terugverdient.
+      </div>
+    </div>
+    <div class="chart-uitleg-grid">
+      <div class="chart-uitleg-card">
+        <div class="chart-uitleg-icon">🎯</div>
+        <div class="chart-uitleg-title">Quick wins eerst</div>
+        <div class="chart-uitleg-text">Maatregelen met een korte terugverdientijd — zoals isolatie en slimme thermostaten — leveren direct rendement op en maken grotere investeringen later financieel makkelijker.</div>
+      </div>
+      <div class="chart-uitleg-card">
+        <div class="chart-uitleg-icon">🔗</div>
+        <div class="chart-uitleg-title">Synergie tussen maatregelen</div>
+        <div class="chart-uitleg-text">Isolatie en een warmtepomp versterken elkaar: hoe beter de schil, hoe efficiënter de pomp werkt. De juiste volgorde verhoogt het totale rendement van het pakket.</div>
       </div>
     </div>`;
 
