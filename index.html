@@ -1720,12 +1720,7 @@ select.finput {
     position: relative !important;
   }
   .mb-pf-accent {
-    position: absolute !important;
-    top: 0 !important; left: 0 !important; right: 0 !important;
-    height: 2.5pt !important;
-    background: linear-gradient(90deg, #E26836, #f09060) !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
+    display: none !important;
   }
   .mb-pf-left { display: flex !important; align-items: center !important; gap: 7pt !important; }
   .mb-pf-logo { width: 20pt !important; height: 20pt !important; border-radius: 50% !important; background: rgba(255,255,255,0.95) !important; object-fit: contain !important; padding: 1.5pt !important; flex-shrink: 0 !important; }
@@ -3731,13 +3726,7 @@ select.finput {
   }
 
   .mb-pf-accent {
-    position: absolute !important;
-    top: 0 !important; left: 0 !important; right: 0 !important;
-    height: 2pt !important;
-    background: #E26836 !important;
-    background-image: linear-gradient(90deg, #E26836, #f09060) !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
+    display: none !important;
   }
 
   .mb-pf-left  { display: flex !important; align-items: center !important; gap: 7pt !important; flex: 0 0 auto !important; }
@@ -4375,7 +4364,7 @@ select.finput {
     padding: 4pt 13mm !important; min-height: 13mm !important; box-sizing: border-box !important; position: relative !important;
     -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
   }
-  .mb-pf-accent { position: absolute !important; top: 0 !important; left: 0 !important; right: 0 !important; height: 2pt !important; background: linear-gradient(90deg, #E26836, #f09060) !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .mb-pf-accent { display: none !important; }
   .mb-pf-left { display: flex !important; align-items: center !important; gap: 7pt !important; flex: 0 0 auto !important; }
   .mb-pf-logo { width: 16pt !important; height: 16pt !important; border-radius: 50% !important; background: rgba(255,255,255,0.9) !important; padding: 1pt !important; flex-shrink: 0 !important; object-fit: contain !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   .mb-pf-brand { display: flex !important; flex-direction: column !important; gap: 1pt !important; }
@@ -4427,10 +4416,10 @@ select.finput {
   .result .body>*:not(.print-cover-page):not(.mb-pf):not(.mb-ph){width:100%!important;max-width:100%!important;margin-left:0!important;margin-right:0!important;box-sizing:border-box!important;}
   .mb-ph{display:block!important;position:fixed!important;top:0!important;left:0!important;right:0!important;height:13mm!important;z-index:9998!important;}
   .mb-ph-bar{height:13mm!important;padding:0 13mm!important;background:linear-gradient(90deg,#0d2233 0%,#134460 55%,#1B597B 100%)!important;display:flex!important;align-items:center!important;justify-content:space-between!important;}
-  .mb-ph-accent{height:1mm!important;background:#E26836!important}.mb-ph-logo{width:15pt!important;height:15pt!important}.mb-ph-name{font-size:6.8pt!important}.mb-ph-sub{font-size:5pt!important}.mb-ph-center{font-size:6.7pt!important}.mb-ph-right{font-size:5.8pt!important}
+  .mb-ph-accent{height:0.6mm!important;background:#E26836!important}.mb-ph-logo{width:15pt!important;height:15pt!important}.mb-ph-name{font-size:6.8pt!important}.mb-ph-sub{font-size:5pt!important}.mb-ph-center{font-size:6.7pt!important}.mb-ph-right{font-size:5.8pt!important}
   .mb-pf{display:block!important;position:fixed!important;bottom:0!important;left:0!important;right:0!important;height:15mm!important;z-index:9999!important;}
   .mb-pf-bar{height:15mm!important;min-height:15mm!important;padding:3.5pt 13mm!important;background:linear-gradient(90deg,#0d3348 0%,#134460 50%,#1B597B 100%)!important;display:flex!important;align-items:center!important;justify-content:space-between!important;}
-  .mb-pf-accent{height:1.6pt!important;background:#E26836!important}.mb-pf-logo{width:15pt!important;height:15pt!important}.mb-pf-name{font-size:6.8pt!important}.mb-pf-sub,.mb-pf-mid{font-size:5pt!important;line-height:1.25!important}.mb-pf-email{font-size:6pt!important}.mb-pf-url{font-size:5.5pt!important}
+  .mb-pf-accent{display:none!important}.mb-pf-logo{width:15pt!important;height:15pt!important}.mb-pf-name{font-size:6.8pt!important}.mb-pf-sub,.mb-pf-mid{font-size:5pt!important;line-height:1.25!important}.mb-pf-email{font-size:6pt!important}.mb-pf-url{font-size:5.5pt!important}
   .rpt-hdr{margin:0 0 7pt 0!important;padding:11pt 14pt 10pt!important;border-radius:0!important;page-break-inside:avoid!important;break-inside:avoid!important;}.rpt-title{font-size:16pt!important;line-height:1.08!important}.rpt-address{font-size:7.8pt!important;line-height:1.3!important}.rpt-pretitle{font-size:6.5pt!important;letter-spacing:1.4pt!important}.label-track{margin-top:6pt!important;padding:5pt 8pt!important}.label-box{width:28pt!important;height:21pt!important;font-size:12pt!important}
   .sec-head,.rpt-section-head{display:flex!important;align-items:center!important;gap:6pt!important;margin:8pt 0 4pt!important;padding:0!important;border:0!important;background:none!important;page-break-after:avoid!important;break-after:avoid!important}.sec-label{font-size:6.2pt!important;letter-spacing:1.35pt!important;color:#1B597B!important;border-left:2pt solid #E26836!important;padding-left:5pt!important;white-space:nowrap!important}.sec-line{height:.5pt!important;background:#D9D6D2!important}
   .intro-text{font-size:8pt!important;line-height:1.45!important;padding:7pt 9pt!important;margin:0 0 6pt!important;border-left:2pt solid #1B597B!important;border-radius:0!important;background:#F4F8FB!important}
@@ -4625,7 +4614,7 @@ select.finput {
 
   .mb-ph{display:block!important;position:fixed!important;top:0!important;left:0!important;right:0!important;height:13mm!important;z-index:9998!important;transform:none!important;}
   .mb-ph-bar{height:13mm!important;padding:0 13mm!important;background:linear-gradient(90deg,#0d2233 0%,#134460 55%,#1B597B 100%)!important;}
-  .mb-ph-accent{height:1mm!important;background:#E26836!important;}
+  .mb-ph-accent{height:0.6mm!important;background:#E26836!important;}
   .mb-pf{display:block!important;position:fixed!important;left:0!important;right:0!important;bottom:0!important;height:15mm!important;z-index:9999!important;transform:none!important;}
   .mb-pf-bar{height:15mm!important;min-height:15mm!important;padding:4pt 13mm!important;background:linear-gradient(90deg,#0d3348 0%,#134460 50%,#1B597B 100%)!important;}
 
@@ -5066,7 +5055,7 @@ select.finput {
 
   /* Houd de header zelf compact en boven de content. */
   .mb-ph {
-    height: 14mm !important;
+    height: 13.6mm !important;
   }
 
   .mb-ph-bar {
@@ -5075,7 +5064,7 @@ select.finput {
   }
 
   .mb-ph-accent {
-    height: 1mm !important;
+    height: 0.6mm !important;
   }
 }
 
@@ -5110,7 +5099,7 @@ select.finput {
   .mb-ph {
     display: block !important; position: fixed !important;
     top: 0 !important; left: 0 !important; right: 0 !important;
-    height: 14mm !important; z-index: 9999 !important; transform: none !important;
+    height: 13.6mm !important; z-index: 9999 !important; transform: none !important;
     -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
   }
   .mb-ph-bar {
@@ -5120,7 +5109,7 @@ select.finput {
     display: flex !important; align-items: center !important; justify-content: space-between !important;
     -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
   }
-  .mb-ph-accent { height: 1mm !important; background: #E26836 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .mb-ph-accent { height: 0.6mm !important; background: #E26836 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 
   /* ── Vaste footer ── */
   .mb-pf {
@@ -5656,7 +5645,17 @@ select.finput {
 ═══════════════════════════════════════════════════════ -->
 <style>
 @media print {
-  /* ── Adviseur + bron NOOIT op nieuwe pagina ── */
+  /* ── Eindpagina: vervolgstappen + adviseur + bron altijd samen ── */
+  #vervolgSection {
+    page-break-before: always !important;
+    break-before: page !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin-bottom: 4pt !important;
+  }
+
   #adviseurSection,
   #bronSection,
   .rapport-einde-block {
@@ -5666,17 +5665,7 @@ select.finput {
     break-inside: avoid !important;
   }
 
-  /* Vervolgstappen mag wel breken als nodig, maar einde-block volgt direct */
-  #vervolgSection {
-    page-break-before: auto !important;
-    break-before: auto !important;
-    page-break-after: avoid !important;
-    break-after: avoid !important;
-    margin-bottom: 6pt !important;
-  }
-
-  /* Aandachtspunten: laat vervolgstappen er ZONDER page-break op volgen
-     als er ruimte is. Niet forceren op eigen pagina. */
+  /* Aandachtspunten: vrij laten breken */
   #aandachtSection {
     page-break-after: auto !important;
     break-after: auto !important;
@@ -5684,7 +5673,7 @@ select.finput {
 
   /* ── Compactere vervolgstappen voor meer ruimte einde-blok ── */
   .vervolg-item {
-    padding: 3.5pt 0 !important;
+    padding: 3pt 0 !important;
     gap: 8pt !important;
     border-bottom: 0.4pt solid #EDE8E3 !important;
   }
