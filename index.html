@@ -1405,16 +1405,16 @@ select.finput {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 7px 11px 6px;
+  padding: 9px 13px 8px;
   background: var(--blue-faint);
   border-bottom: 1px solid var(--blue-faint2);
 }
 .md-icon {
-  width: 22px; height: 22px;
+  width: 24px; height: 24px;
   background: var(--blue-faint2);
   border-radius: var(--r-xs);
   display: flex; align-items: center; justify-content: center;
-  font-size: 11px; flex-shrink: 0;
+  font-size: 12px; flex-shrink: 0;
 }
 .md-card-title-wrap { flex: 1; min-width: 0; }
 .md-card-title-row {
@@ -1424,33 +1424,33 @@ select.finput {
   gap: 8px;
 }
 .md-card-title {
-  font-size: 11.5px; font-weight: 700;
+  font-size: 14px; font-weight: 700;
   font-family: var(--f-head); color: var(--blue-deep);
   line-height: 1.2; white-space: nowrap;
   overflow: hidden; text-overflow: ellipsis;
 }
 .md-card-pills {
-  display: flex; flex-wrap: nowrap; gap: 3px; flex-shrink: 0;
+  display: flex; flex-wrap: nowrap; gap: 4px; flex-shrink: 0;
 }
 .md-pill {
-  font-size: 9.5px; font-weight: 600; font-family: var(--f-head);
-  padding: 1px 6px; border-radius: 20px; white-space: nowrap;
+  font-size: 11px; font-weight: 600; font-family: var(--f-head);
+  padding: 2px 7px; border-radius: 20px; white-space: nowrap;
 }
 .md-pill-green { background: var(--green-bg); color: var(--green); }
 .md-pill-orange { background: var(--orange-faint); color: var(--orange-deep); }
 .md-pill-blue { background: var(--blue-faint2); color: var(--blue); }
 .md-card-body {
-  padding: 7px 11px 8px;
-  display: flex; flex-direction: column; gap: 4px;
+  padding: 9px 13px 10px;
+  display: flex; flex-direction: column; gap: 5px;
 }
 .md-waarom {
-  font-size: 12.5px; font-weight: 400; color: var(--ink-2);
-  font-family: var(--f-body); line-height: 1.55; margin: 0;
+  font-size: 13.5px; font-weight: 400; color: var(--ink-2);
+  font-family: var(--f-body); line-height: 1.6; margin: 0;
 }
 .md-toelichting {
-  font-size: 12px; font-weight: 400; color: var(--ink-3);
-  font-family: var(--f-body); line-height: 1.5; margin: 0;
-  padding-top: 5px; border-top: 1px solid var(--rule);
+  font-size: 13px; font-weight: 400; color: var(--ink-3);
+  font-family: var(--f-body); line-height: 1.55; margin: 0;
+  padding-top: 6px; border-top: 1px solid var(--rule);
 }
 .md-subsidie {
   display: flex; align-items: center; gap: 6px;
@@ -9091,12 +9091,12 @@ function renderMaatregelenChart(maatregelen) {
   const el = document.getElementById('maatregelenChartSection');
   if (!el || !maatregelen || maatregelen.length === 0) { el && (el.innerHTML = ''); return; }
 
-  const chartH = Math.max(220, maatregelen.length * 64);
+  const chartH = Math.max(220, maatregelen.length * 54);
   el.innerHTML = `
     <div class="sec-head rpt-section-head"><span class="sec-label">Besparing per maatregel</span><div class="sec-line"></div></div>
     <div class="chart-wrap" style="margin-bottom:16px;">
-      <div style="position:relative;width:100%;height:${chartH}px;">
-        <canvas id="maatregelenChart" style="position:absolute;top:0;left:0;width:100%!important;height:100%!important;"></canvas>
+      <div class="chart-canvas-wrap" style="position:relative;width:100%;height:${chartH}px;">
+        <canvas id="maatregelenChart"></canvas>
       </div>
       <div class="chart-explainer" style="margin-top:16px;padding-top:14px;border-top:1px solid var(--rule);font-size:11.5px;color:var(--ink-4);font-family:var(--f-body);line-height:1.55;">
         <strong style="color:var(--ink-2);font-weight:600;">Toelichting:</strong> per maatregel wordt de <em>jaarlijkse besparing</em> (groene balk) afgezet tegen de <em>eenmalige investering</em> (grijze balk). Hoe korter de grijze balk ten opzichte van de groene, hoe sneller de maatregel zichzelf terugverdient.
