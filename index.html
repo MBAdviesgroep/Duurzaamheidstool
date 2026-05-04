@@ -5463,6 +5463,8 @@ select.finput {
   /* Eerste sec-head op nieuwe pagina: geen extra top-margin */
   #measuresSection > .sec-head:first-child,
   #measuresSection > .rpt-section-head:first-child,
+  .md-section > .sec-head:first-child,
+  .md-section > .rpt-section-head:first-child,
   #subsidiesSection > .sec-head:first-child,
   #subsidiesSection > .rpt-section-head:first-child,
   #nettoSection > .sec-head:first-child,
@@ -5513,14 +5515,19 @@ select.finput {
   .measures-toolbar { display: none !important; }
 
   /* md-section print compact */
-  .md-section { margin-top: 5pt !important; }
-  .md-grid { gap: 4pt !important; }
-  .md-card-head { padding: 4pt 7pt 3pt !important; }
-  .md-card-title { font-size: 6.5pt !important; margin-bottom: 2pt !important; }
-  .md-pill { font-size: 5pt !important; padding: 1pt 3pt !important; }
-  .md-card-body { padding: 3pt 7pt 4pt !important; gap: 2pt !important; }
-  .md-waarom { font-size: 6pt !important; line-height: 1.3 !important; }
-  .md-toelichting { font-size: 5.5pt !important; line-height: 1.25 !important; padding-top: 2pt !important; }
+  .md-section {
+    margin-top: 0 !important;
+    page-break-before: always !important;
+    break-before: page !important;
+    padding-top: 16mm !important;
+  }
+  .md-grid { gap: 6pt !important; }
+  .md-card-head { padding: 6pt 9pt 5pt !important; }
+  .md-card-title { font-size: 7.5pt !important; margin-bottom: 3pt !important; }
+  .md-pill { font-size: 5.5pt !important; padding: 1pt 4pt !important; }
+  .md-card-body { padding: 5pt 9pt 6pt !important; gap: 3pt !important; }
+  .md-waarom { font-size: 6.5pt !important; line-height: 1.4 !important; }
+  .md-toelichting { font-size: 6pt !important; line-height: 1.3 !important; padding-top: 3pt !important; }
 
   /* Totals block (onder maatregelen-tabel) */
   .totals-block > div { padding: 7pt 9pt !important; }
