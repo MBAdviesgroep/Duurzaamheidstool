@@ -6244,13 +6244,29 @@ Regels:
 - Vermeld ALLE bestaande installaties als 'aandachtspunt' zodat duidelijk is wat al gedaan is.
 
 ═══════════════════════════════════════════════════════════════
-WERKELIJKE KOSTEN BOVEN SCHATTINGEN
+WERKELIJKE KOSTEN BOVEN SCHATTINGEN — STRIKT
 ═══════════════════════════════════════════════════════════════
-- Als energierekening, jaarafrekening of werkelijke verbruikscijfers (gas in m³, elektra in kWh) aanwezig zijn in brochure of als losse bijlage: gebruik dit WERKELIJKE jaarverbruik (gas + elektriciteit, excl. btw, totaal) als 'huidige_kosten'. Dit overschrijft altijd de indicatieve kosten uit de bankscan.
+'huidige_kosten' MOET het werkelijke totaalbedrag op jaarbasis zijn als dat ergens in de stukken te vinden is. Negeer in dat geval volledig het indicatieve/geschatte bedrag uit de bankscan.
+
+Zoek actief op (in deze volgorde) naar werkelijke energiekosten:
+1. Een meegeleverde jaarafrekening / jaarnota / jaaroverzicht / energierekening van de leverancier (bijv. Eneco, Vattenfall, Essent, Engie, Greenchoice). Deze bestanden hebben meestal "jaarrekening", "jaarnota", "jaaroverzicht" of "afrekening" in de naam of titel.
+2. In de brochure of het taxatierapport: een vermelding van werkelijke energiekosten of werkelijk jaarverbruik in m³ gas en kWh elektra.
+3. Termijnbedragen × 12 (alleen als geen jaartotaal beschikbaar is).
+4. Verbruik (m³ gas, kWh elektra) × actuele tarieven (alleen als geen bedragen staan).
+
+Tel ALLE energieposten op tot één jaarbedrag: gas + elektriciteit + (eventueel) stadswarmte + vastrecht + netbeheer + heffingen, MIN eventuele teruglevering of energiebelastingvermindering. Gebruik bedragen INCLUSIEF btw zoals een gebruiker die op zijn rekening ziet — tenzij het een zakelijke aanvrager is, dan exclusief btw.
+
+Bij meerdere woningen/units in één pand (bijv. een pand met 5 appartementen): tel de energiekosten van ALLE units op tot één gebouwtotaal, tenzij het rapport over één specifieke unit gaat.
+
+Bij meerdere jaren beschikbaar: gebruik het meest recente volledige jaar.
+
+Als werkelijke kosten >10% afwijken van de bankscan-schatting: meld dit expliciet in de samenvatting (bijv. "Werkelijke energiekosten (€ 7.420) liggen aanzienlijk hoger dan de indicatie uit de bankscan (€ 2.006); advies is hierop aangepast.").
+
+Verder:
 - Als de brochure investeringskosten of offerte-bedragen voor een maatregel bevat: gebruik die WERKELIJKE bedragen in plaats van kengetallen.
 - Als werkelijke besparing per maatregel uit een eerdere offerte/scan blijkt: gebruik die.
-- Vermeld in de samenvatting kort als werkelijke kosten >10% afwijken van de bankscan-schatting.
 - Pas alleen kengetallen/schattingen toe waar geen werkelijke cijfers beschikbaar zijn.
+- Herbereken besparingspercentages en terugverdientijd op basis van de werkelijke huidige kosten — anders kloppen tvt en jaarlijkse besparing niet.
 
 ═══════════════════════════════════════════════════════════════
 EIGEN INZICHT — proactief aanvullen waar logisch
@@ -6297,7 +6313,7 @@ Retourneer exact het volgende JSON-schema — verzin niets, extraheer alles uit 
   "huidig_label_indicatief": "boolean (true als het huidige label een indicatief/geschat label is en NIET officieel geregistreerd staat in het EP-online register; false of weglaten als het label wel officieel geregistreerd is)",
   "streef_label": "string",
   "functie": "string",
-  "huidige_kosten": "string",
+  "huidige_kosten": "string (werkelijk jaartotaal energiekosten in € op basis van jaarafrekening / jaarnota / werkelijk verbruik. NOOIT de indicatieve schatting uit de bankscan als er werkelijke cijfers zijn.)",
   "bron_tool": "string (naam van de duurzaamheidstool zoals die in de energiescan genoemd wordt, bijv. 'ING Duurzaam Zakelijk Advies', 'Rabobank Duurzame Bedrijfsscan', 'ABN AMRO Verduurzamingstool' — exact zoals in de scan; leeg als onbekend)",
   "bron_bank": "string (naam van de bank die de tool aanbiedt, bijv. 'ING', 'Rabobank', 'ABN AMRO' — leeg als onbekend)",
   "samenvatting": "string (2-3 professionele zinnen)",
