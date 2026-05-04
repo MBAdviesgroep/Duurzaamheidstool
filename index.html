@@ -7159,6 +7159,7 @@ NOTITIEVELD — directe opdrachten van de adviseur, LETTERLIJK opvolgen
 In 'notities' staat het TYPE AANVRAGER (particulier, ondernemer of VvE) plus optionele aanvullingen van de adviseur of klant. Behandel iedere zin als een directe opdracht:
 
 - WIL NIET / GEEN / UITSLUITEN ("geen warmtepomp", "geen zonnepanelen op voorgevel", "geen ingrepen aan monumentale gevel"): neem die maatregel NIET op in 'maatregelen', NIET in 'fases', en vermeld kort in 'aandachtspunten' dat dit op verzoek is uitgesloten.
+- AANTAL MAATREGELEN ("geef 8 maatregelen", "minimaal 10 adviezen", "precies 6 maatregelen"): dit is een HARDE EIS — lever exact dat aantal of meer. Tel vóór output. NOOIT minder dan gevraagd.
 - WIL WEL / PRIORITEIT / GRAAG ("graag zonnepanelen", "warmtepomp heeft prioriteit", "starten met isolatie"): zet die maatregel BOVENAAN de maatregelenlijst, plaats hem in fase 1 en benoem hem expliciet in de samenvatting.
 - BUDGET / FINANCIËLE GRENS ("budget max €20.000", "fasering binnen €10k per jaar"): selecteer en faseer alleen maatregelen die binnen dat budget passen; meld in samenvatting hoe het budget is verdeeld.
 - GEBOUWFEIT ("dak vorig jaar geïsoleerd", "monumentenstatus", "VvE-besluit alleen voor schil", "huurder mag geen ingrepen doen aan binnenzijde"): verwerk in aandachtspunten EN sluit conflicterende maatregelen uit.
@@ -7244,7 +7245,11 @@ Voor elke zelf-toegevoegde maatregel: vermeld in 'aandachtspunten' kort waarom (
 VERPLICHT — eigen aanvullingen actief opnemen in de maatregelenlijst:
 De maatregelen-array MOET ALLE relevante kansen bevatten — zowel die uit de bankscan als die jij zelf signaleert op basis van brochure/label/jaarrekening. Beperk je NIET tot wat de bankscan letterlijk noemt. De gebruiker verwacht een COMPLEET advies.
 
-⚠️ MINIMUM 7 MAATREGELEN. Als je maatregelen-array minder dan 7 items bevat, ben je tekortgeschoten. Een advies met slechts 4-5 maatregelen is ALTIJD onvoldoende — er zijn ALTIJD meer kansen in een gebouw.
+⚠️ MINIMUM AANTAL MAATREGELEN — ABSOLUUT BINDEND:
+- Als de adviseur in het notitieveld een EXACT AANTAL noemt ("geef 8 maatregelen", "minimaal 10 maatregelen", "7 adviezen"): dit is een HARDE EIS. Lever precies dat aantal of meer. NOOIT minder. Tel je maatregelen vóór je output genereert — als je er minder hebt: voeg toe.
+- Als geen aantal is opgegeven: MINIMUM 8 MAATREGELEN. Een advies met 5, 6 of 7 maatregelen is ALTIJD onvoldoende — er zijn ALTIJD meer kansen in een gebouw.
+- Tel expliciet: schrijf intern "Maatregel 1: ..., Maatregel 2: ..., Maatregel 3: ..." tot je het gevraagde aantal hebt bereikt. Dan pas genereer je de JSON output.
+- Kom je tekort? Gebruik de checklist verderop (spouwmuur, dak, vloer, glas, warmtepomp, zonnepanelen, ventilatie, thermostaat, deuren, LED, zonneboiler) en voeg de meest relevante toe.
 
 ⚠️ TVT-FILTER — geen onrealistische maatregelen in de hoofdtabel:
 Een maatregel met een terugverdientijd van >25 jaar hoort NIET thuis in de hoofdtabel met geadviseerde maatregelen. Concreet:
