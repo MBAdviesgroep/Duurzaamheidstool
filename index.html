@@ -2203,7 +2203,16 @@ select.finput {
 }
 .chart-canvas-wrap {
   position: relative;
-  height: 240px;
+}
+/* Maatregelen bar chart: hoogte wordt dynamisch via inline style gezet */
+#maatregelenChartSection .chart-canvas-wrap {
+  position: relative;
+  height: auto;
+  min-height: 220px;
+}
+#maatregelenChartSection .chart-canvas-wrap canvas {
+  width: 100% !important;
+  height: 100% !important;
 }
 .chart-legend {
   display: flex; gap: 20px; flex-wrap: wrap;
