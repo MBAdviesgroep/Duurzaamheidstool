@@ -1281,7 +1281,13 @@ select.finput {
 }
 
 /* Measures table */
-.rt { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+.rt { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; }
+.rt th:nth-child(1), .rt td:nth-child(1) { width: 4%; }
+.rt th:nth-child(2), .rt td:nth-child(2) { width: 26%; }
+.rt th:nth-child(3), .rt td:nth-child(3) { width: 16%; }
+.rt th:nth-child(4), .rt td:nth-child(4) { width: 16%; }
+.rt th:nth-child(5), .rt td:nth-child(5) { width: 22%; }
+.rt th:nth-child(6), .rt td:nth-child(6) { width: 16%; }
 .rt thead tr { border-bottom: 2px solid var(--blue); }
 .rt th {
   font-size: 9.5px; letter-spacing: 1.2px; text-transform: uppercase;
@@ -4796,13 +4802,14 @@ select.finput {
     hyphens: none !important;
   }
 
-  /* Specifiek maatregelen-table: kolommen gecontroleerd verdelen zodat
-     TERUGVERDIENTIJD niet meer onder de banner of in twee rare regels valt. */
-  .rt th:nth-child(1), .rt td:nth-child(1) { width: 30% !important; }
-  .rt th:nth-child(2), .rt td:nth-child(2) { width: 18% !important; }
-  .rt th:nth-child(3), .rt td:nth-child(3) { width: 18% !important; }
-  .rt th:nth-child(4), .rt td:nth-child(4) { width: 22% !important; }
-  .rt th:nth-child(5), .rt td:nth-child(5) { width: 12% !important; }
+  /* Specifiek maatregelen-table: 6 kolommen (checkbox + 5 data) gecontroleerd verdelen
+     zodat TERUGVERDIENTIJD en CO₂ niet meer over elkaar vallen of in 2 regels breken. */
+  .rt th:nth-child(1), .rt td:nth-child(1) { width: 4% !important; }
+  .rt th:nth-child(2), .rt td:nth-child(2) { width: 26% !important; }
+  .rt th:nth-child(3), .rt td:nth-child(3) { width: 16% !important; }
+  .rt th:nth-child(4), .rt td:nth-child(4) { width: 16% !important; }
+  .rt th:nth-child(5), .rt td:nth-child(5) { width: 22% !important; }
+  .rt th:nth-child(6), .rt td:nth-child(6) { width: 16% !important; }
 
   .rt th {
     white-space: nowrap !important;
@@ -5365,11 +5372,12 @@ select.finput {
     -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
   }
   .rt th { white-space: nowrap !important; }
-  .rt th:nth-child(1), .rt td:nth-child(1) { width: 30% !important; }
-  .rt th:nth-child(2), .rt td:nth-child(2) { width: 17% !important; }
-  .rt th:nth-child(3), .rt td:nth-child(3) { width: 17% !important; }
-  .rt th:nth-child(4), .rt td:nth-child(4) { width: 24% !important; }
-  .rt th:nth-child(5), .rt td:nth-child(5) { width: 12% !important; }
+  .rt th:nth-child(1), .rt td:nth-child(1) { width: 4% !important; }
+  .rt th:nth-child(2), .rt td:nth-child(2) { width: 26% !important; }
+  .rt th:nth-child(3), .rt td:nth-child(3) { width: 16% !important; }
+  .rt th:nth-child(4), .rt td:nth-child(4) { width: 16% !important; }
+  .rt th:nth-child(5), .rt td:nth-child(5) { width: 22% !important; }
+  .rt th:nth-child(6), .rt td:nth-child(6) { width: 16% !important; }
   .rt tbody tr:nth-child(even) td { background: #FAF9F7 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   .rt tr, .netto-table tr, .aandacht-table tr { page-break-inside: avoid !important; break-inside: avoid !important; }
   .rt thead, .netto-table thead, .aandacht-table thead { page-break-after: avoid !important; break-after: avoid !important; }
@@ -5660,9 +5668,18 @@ select.finput {
 
   /* Vervolgstappen mag wel breken als nodig, maar einde-block volgt direct */
   #vervolgSection {
+    page-break-before: auto !important;
+    break-before: auto !important;
     page-break-after: avoid !important;
     break-after: avoid !important;
     margin-bottom: 6pt !important;
+  }
+
+  /* Aandachtspunten: laat vervolgstappen er ZONDER page-break op volgen
+     als er ruimte is. Niet forceren op eigen pagina. */
+  #aandachtSection {
+    page-break-after: auto !important;
+    break-after: auto !important;
   }
 
   /* ── Compactere vervolgstappen voor meer ruimte einde-blok ── */
@@ -5878,6 +5895,346 @@ select.finput {
     border-top: 0.5pt solid #DDE6EC !important;
     color: #6B7B82 !important;
   }
+
+  /* ── Niet-geselecteerde maatregelen WEGLATEN in print ── */
+  .m-tr.m-unchecked,
+  tr.m-unchecked { display: none !important; }
+
+  /* ── Maatregelen-tabel kolom-fix: voorkom dat CO₂ over TVT-header valt ── */
+  /* checkbox-kolom is verborgen, dus we zetten widths op nth-child 2..6 */
+  .rt th:nth-child(1), .rt td:nth-child(1) { display: none !important; width: 0 !important; padding: 0 !important; }
+  .rt th:nth-child(2), .rt td:nth-child(2) { width: 33% !important; }
+  .rt th:nth-child(3), .rt td:nth-child(3) { width: 14% !important; text-align: left !important; }
+  .rt th:nth-child(4), .rt td:nth-child(4) { width: 14% !important; text-align: left !important; }
+  .rt th:nth-child(5), .rt td:nth-child(5) { width: 19% !important; text-align: left !important; white-space: nowrap !important; }
+  .rt th:nth-child(6), .rt td:nth-child(6) { width: 12% !important; text-align: left !important; white-space: nowrap !important; padding-left: 8pt !important; }
+
+  /* CO₂-header rustig en uitgelijnd */
+  .rt th:nth-child(6) { padding-left: 8pt !important; }
+  .m-co2 { white-space: nowrap !important; }
+
+  /* ═══════════════════════════════════════════════════════
+     LUXE LAAG 2 — typografische rust & visuele finesse
+     ═══════════════════════════════════════════════════════ */
+
+  /* Body — fijnere typografische defaults */
+  body {
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "tnum" 1 !important;
+    color: #1a2332 !important;
+  }
+
+  /* Tabular numerals — alle bedragen netjes onder elkaar uitgelijnd */
+  .m-save, .m-invest, .m-tvt, .m-co2,
+  .kpi-num, .lt-val, .totals-block strong,
+  .netto-table td, .ml-bedrag, .scenario-num,
+  .vdi-num, .geen-actie-num, [class*="-num"], [class*="-bedrag"],
+  .live-totals-bar, .totals-block, .rt td {
+    font-variant-numeric: tabular-nums !important;
+    font-feature-settings: "tnum" 1 !important;
+  }
+
+  /* KPI panel — cleaner */
+  .kpi-panel {
+    border: 0.6pt solid #DDE6EC !important;
+    border-top: 1.8pt solid #1B597B !important;
+    border-radius: 3pt !important;
+    box-shadow: none !important;
+    background: white !important;
+    margin-bottom: 10pt !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .kpi-cell {
+    padding: 11pt 14pt !important;
+    border-right: 0.4pt solid #EDEEEF !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .kpi-cell:last-child { border-right: none !important; }
+  .kpi-lbl {
+    font-family: var(--f-head) !important;
+    font-size: 6.4pt !important;
+    font-weight: 600 !important;
+    color: #6B7B82 !important;
+    letter-spacing: 1.6pt !important;
+    text-transform: uppercase !important;
+    margin-bottom: 6pt !important;
+    display: block !important;
+  }
+  .kpi-num {
+    font-family: var(--f-head) !important;
+    font-size: 19pt !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.7pt !important;
+    line-height: 1.05 !important;
+    margin: 0 !important;
+  }
+  .kpi-num.good { color: #2A7A50 !important; }
+  .kpi-num.warn { color: #E26836 !important; }
+  .kpi-sub {
+    font-size: 7pt !important;
+    color: #6B7B82 !important;
+    margin-top: 5pt !important;
+    line-height: 1.35 !important;
+  }
+
+  /* Live totals bar — meer rust */
+  .live-totals-bar, .totals-block {
+    border: 0.6pt solid #DDE6EC !important;
+    border-radius: 3pt !important;
+    box-shadow: none !important;
+    background: white !important;
+    overflow: hidden !important;
+  }
+  .lt-cell, .totals-block > div {
+    padding: 9pt 13pt !important;
+    border-right: 0.4pt solid #EDEEEF !important;
+    border-top: none !important;
+    background: white !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .lt-cell:last-child, .totals-block > div:last-child { border-right: none !important; }
+  .lt-cell.c-green { border-top: 1.6pt solid #2A7A50 !important; }
+  .lt-cell.c-orange { border-top: 1.6pt solid #E26836 !important; }
+  .lt-cell.c-blue { border-top: 1.6pt solid #1B597B !important; }
+  .lt-lbl {
+    font-family: var(--f-head) !important;
+    font-size: 6.2pt !important;
+    font-weight: 600 !important;
+    color: #6B7B82 !important;
+    letter-spacing: 1.5pt !important;
+    text-transform: uppercase !important;
+    display: block !important;
+    margin-bottom: 4pt !important;
+  }
+  .lt-val {
+    font-family: var(--f-head) !important;
+    font-size: 16pt !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.5pt !important;
+    line-height: 1.05 !important;
+  }
+  .lt-val.green { color: #2A7A50 !important; }
+  .lt-val.orange, #ltInvestering { color: #E26836 !important; }
+  .lt-val.blue, #ltTvt { color: #1B597B !important; }
+  .lt-sub {
+    font-size: 6.8pt !important;
+    color: #6B7B82 !important;
+    margin-top: 3pt !important;
+    line-height: 1.3 !important;
+  }
+
+  /* Sectie-headers: alleen subtiel verbeteren via .sec-label
+     (de wrapper niet aanraken om dubbel-balk te voorkomen) */
+  .sec-label {
+    font-family: var(--f-head) !important;
+    font-size: 7pt !important;
+    font-weight: 700 !important;
+    letter-spacing: 2pt !important;
+    color: #1B597B !important;
+    text-transform: uppercase !important;
+    border-left: 2pt solid #E26836 !important;
+    padding-left: 7pt !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .sec-line {
+    height: 0.6pt !important;
+    background: #DDE6EC !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Tabellen — luxe typografie */
+  .rt, .netto-table, .aandacht-table {
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+  }
+  .rt thead th,
+  .netto-table thead th,
+  .aandacht-table thead th {
+    font-family: var(--f-head) !important;
+    font-size: 6.4pt !important;
+    font-weight: 600 !important;
+    color: #6B7B82 !important;
+    letter-spacing: 1.5pt !important;
+    text-transform: uppercase !important;
+    padding: 7pt 6pt 6pt !important;
+    border-bottom: 1.5pt solid #1B597B !important;
+    background: white !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .rt tbody td,
+  .netto-table tbody td,
+  .aandacht-table tbody td {
+    padding: 7pt 6pt !important;
+    border-bottom: 0.3pt solid #EDEEEF !important;
+    line-height: 1.4 !important;
+    vertical-align: middle !important;
+  }
+  .rt tbody tr:last-child td { border-bottom: none !important; }
+  .rt tbody tr:nth-child(even) td { background: transparent !important; }
+
+  .m-name {
+    font-family: var(--f-head) !important;
+    font-weight: 600 !important;
+    color: #0d2233 !important;
+    font-size: 8.5pt !important;
+    letter-spacing: -0.1pt !important;
+    line-height: 1.3 !important;
+  }
+  .m-save {
+    color: #2A7A50 !important;
+    font-weight: 700 !important;
+    font-family: var(--f-head) !important;
+    font-size: 8.8pt !important;
+  }
+  .m-invest {
+    color: #1a2332 !important;
+    font-weight: 500 !important;
+    font-size: 8.5pt !important;
+  }
+  .m-tvt {
+    color: #1B597B !important;
+    font-weight: 700 !important;
+    font-family: var(--f-head) !important;
+    font-size: 8.5pt !important;
+  }
+  .m-co2 {
+    color: #6B7B82 !important;
+    font-size: 7.8pt !important;
+    font-weight: 500 !important;
+  }
+
+  /* Aandachtspunten */
+  .aandacht-table tbody td:first-child {
+    font-family: var(--f-head) !important;
+    font-weight: 600 !important;
+    color: #1B597B !important;
+    font-size: 8pt !important;
+    letter-spacing: -0.05pt !important;
+  }
+  .aandacht-table tbody td:nth-child(2) {
+    color: #3A4754 !important;
+    font-size: 7.8pt !important;
+    line-height: 1.5 !important;
+  }
+
+  /* Netto-tabel — luxer */
+  .netto-table tbody td:first-child {
+    font-weight: 500 !important;
+    color: #1a2332 !important;
+    font-size: 8pt !important;
+  }
+  .netto-table tbody td:last-child {
+    text-align: right !important;
+    font-family: var(--f-head) !important;
+    font-weight: 600 !important;
+    font-variant-numeric: tabular-nums !important;
+  }
+  .netto-table tr.netto-totaal td,
+  .netto-table tr.netto-bruto td {
+    border-top: 1pt solid #1B597B !important;
+    border-bottom: 1pt solid #1B597B !important;
+    background: #F4F8FB !important;
+    font-weight: 700 !important;
+    color: #0d2233 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Scenario kaarten — luxer */
+  .sc-card {
+    border: 0.6pt solid #DDE6EC !important;
+    border-radius: 4pt !important;
+    box-shadow: none !important;
+    overflow: hidden !important;
+    background: white !important;
+  }
+  .sc-card.active,
+  .sc-card[data-active="true"] {
+    border: 1pt solid #E26836 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Subsidie-kaarten consistent */
+  .sub-card-new {
+    border: 0.6pt solid #DDE6EC !important;
+    border-top: 2pt solid #1B597B !important;
+    border-radius: 3pt !important;
+    background: white !important;
+    box-shadow: none !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Maandlasten-block */
+  .maandlasten-block {
+    border: 0.6pt solid #DDE6EC !important;
+    border-top: 1.6pt solid #1B597B !important;
+    border-radius: 3pt !important;
+  }
+
+  /* Phase-blocks */
+  .phase-block {
+    border: 0.6pt solid #DDE6EC !important;
+    border-radius: 4pt !important;
+    overflow: hidden !important;
+  }
+
+  /* Header banner luxer */
+  .rpt-hdr {
+    background: linear-gradient(135deg, #0d2233 0%, #134460 50%, #1B597B 100%) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    padding: 13pt 18pt 12pt !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    position: relative !important;
+    overflow: hidden !important;
+  }
+  .rpt-hdr::after {
+    content: '' !important;
+    position: absolute !important;
+    bottom: 0 !important; left: 0 !important; right: 0 !important;
+    height: 1.8pt !important;
+    background: linear-gradient(90deg, #E26836 0%, #f09060 100%) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .rpt-title {
+    font-family: var(--f-head) !important;
+    font-weight: 300 !important;
+    letter-spacing: 4pt !important;
+    text-transform: uppercase !important;
+    color: rgba(255,255,255,0.9) !important;
+    font-size: 8pt !important;
+    margin-bottom: 6pt !important;
+  }
+  .rpt-subtitle {
+    font-family: var(--f-head) !important;
+    font-weight: 700 !important;
+    color: white !important;
+    font-size: 18pt !important;
+    letter-spacing: -0.4pt !important;
+    line-height: 1.1 !important;
+  }
+
+  /* Page-header (mb-ph) op iedere pagina top */
+  .mb-ph {
+    background: linear-gradient(135deg, #0d2233 0%, #134460 50%, #1B597B 100%) !important;
+    border-bottom: 1.8pt solid #E26836 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Algemene visuele rust */
+  * { text-rendering: geometricPrecision !important; }
 }
 </style>
 
@@ -6543,6 +6900,19 @@ De maatregelen-array MOET ALLE relevante kansen bevatten — zowel die uit de ba
 
 ⚠️ MINIMUM 7 MAATREGELEN. Als je maatregelen-array minder dan 7 items bevat, ben je tekortgeschoten. Een advies met slechts 4-5 maatregelen is ALTIJD onvoldoende — er zijn ALTIJD meer kansen in een gebouw.
 
+⚠️ TVT-FILTER — geen onrealistische maatregelen in de hoofdtabel:
+Een maatregel met een terugverdientijd van >25 jaar hoort NIET thuis in de hoofdtabel met geadviseerde maatregelen. Concreet:
+- Reken vóór opname altijd: investering ÷ besparing per jaar = TVT in jaren
+- Als TVT > 25 jaar → maatregel WEGLATEN of investering corrigeren
+- TVT > 30 jaar = bijna altijd een rekenfout of verkeerde kosten-toewijzing
+
+⚠️ KOSTEN-TOEWIJZING — let op verwarring tussen onderhoud en verduurzaming:
+In documenten staan vaak ONDERHOUDSKOSTEN (rietdak vervangen € 100.000, schilderwerk, gevelreiniging) die NIET de kosten zijn van de verduurzamings­maatregel.
+- "Rietdak vervangen kost € 100.000" is GEEN dakisolatie-investering. Dakisolatie kost typisch € 60-100/m² aan extra werk bovenop de vervanging.
+- "Gevel pleisteren kost X" is GEEN gevelisolatie. Gevelisolatie kost € 25-50/m².
+- Gebruik ALTIJD kengetallen-bedragen voor de verduurzamings­component zelf, ook als het document onderhoudskosten noemt.
+- Als rietdak toch vervangen moet worden: vermeld dit in 'aandachtspunten' als KANS om gelijktijdig te isoleren tegen meerprijs, maar reken NIET de volledige rietdak-vervanging als isolatie-investering.
+
 ⚠️ DUPLICAAT-CHECK met bestaande installaties — VERPLICHT vóór je een maatregel voorstelt:
 Lees eerst de feiten over wat al aanwezig is (uit energielabel, brochure, taxatierapport, notities). Kruis dan af:
 - Zonnepanelen al aanwezig (bijv. "10 panelen / 2200 kWh")? → noem maatregel "Zonnepanelen UITBREIDEN", niet "Zonnepanelen plaatsen". Vermeld het huidige aantal/kWp in de toelichting.
@@ -7014,6 +7384,32 @@ function secHead(title) {
 }
 
 function renderReport(r) {
+  // SANITY-FILTER: gooi maatregelen met absurde TVT (>25 jaar) eruit voordat de tabel wordt gerenderd.
+  // Dit vangt rekenfouten en verkeerde kosten-toewijzingen op (bijv. rietdak-vervanging als isolatie-investering).
+  if (r && Array.isArray(r.maatregelen)) {
+    const _origCount = r.maatregelen.length;
+    r.maatregelen = r.maatregelen.filter(m => {
+      const inv = parseEuro(m.investering);
+      const besp = parseEuro(m.besparing);
+      // TVT uit string of berekend
+      let tvt = parseTVT(m.tvt);
+      if ((!tvt || tvt <= 0) && inv > 0 && besp > 0) tvt = inv / besp;
+      // Filter: TVT > 25 jaar = onrealistisch, maatregel weglaten
+      if (tvt > 25) {
+        console.warn('[sanity] Maatregel weggelaten ivm TVT >25j:', m.naam, '(' + tvt.toFixed(1) + 'j)');
+        return false;
+      }
+      // Filter: investering >€100k voor losse maatregel = vrijwel altijd verwarring met onderhoudskost
+      if (inv > 100000) {
+        console.warn('[sanity] Maatregel weggelaten ivm investering >€100k:', m.naam, '(€' + inv + ')');
+        return false;
+      }
+      return true;
+    });
+    if (r.maatregelen.length < _origCount) {
+      console.info('[sanity] ' + (_origCount - r.maatregelen.length) + ' maatregelen verwijderd na plausibiliteits-check');
+    }
+  }
   _rptData = r;
   _chartInstance = null; // reset grafiek bij nieuw rapport
   const today = new Date().toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric'});
@@ -7205,8 +7601,8 @@ function renderReport(r) {
 
   // Maatregelen tabel — met interactieve checkboxes
   const mrows = (r.maatregelen||[]).map((m,i)=>`
-    <tr>
-      <td class="m-check"><input type="checkbox" class="m-checkbox" checked onchange="recalcTotals()"></td>
+    <tr class="m-tr">
+      <td class="m-check"><input type="checkbox" class="m-checkbox" checked onchange="recalcTotals(); this.closest('tr').classList.toggle('m-unchecked', !this.checked);"></td>
       <td><div class="m-name"><div class="m-icon">${ico(m.naam)}</div>${m.naam}</div></td>
       <td class="m-save">${m.besparing||'&#8212;'}</td>
       <td class="m-invest">${m.investering||'&#8212;'}</td>
@@ -7782,7 +8178,11 @@ function updateSubsidies() {
 }
 
 function selectAllMeasures(val) {
-  document.querySelectorAll('.m-checkbox').forEach(cb => { cb.checked = val; });
+  document.querySelectorAll('.m-checkbox').forEach(cb => {
+    cb.checked = val;
+    const tr = cb.closest('tr');
+    if (tr) tr.classList.toggle('m-unchecked', !val);
+  });
   recalcTotals();
 }
 
@@ -8798,7 +9198,11 @@ function renderScenarioSection(r) {
   function applyScenario(key) {
     activeKey = key;
     const sel = window._scStats[key].sel;
-    document.querySelectorAll('.m-checkbox').forEach((cb,i)=>{ cb.checked = sel.has(i); });
+    document.querySelectorAll('.m-checkbox').forEach((cb,i)=>{
+      cb.checked = sel.has(i);
+      const tr = cb.closest('tr');
+      if (tr) tr.classList.toggle('m-unchecked', !cb.checked);
+    });
     if (typeof recalcTotals === 'function') recalcTotals();
     // Update kaart active state
     document.querySelectorAll('.sc-card').forEach(c=>c.classList.toggle('sc-active', c.dataset.k===key));
