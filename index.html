@@ -6843,9 +6843,9 @@ function renderReport(r) {
       <div class="kpi-sub" id="kpibesparingMnd">bij geselecteerde maatregelen</div>
     </div>
     <div class="kpi-cell kpi-c3" style="position:relative;">
-      <span class="kpi-lbl">CO&#8322; reductie</span>
-      <div class="kpi-num good">${r.co2_reductie_pct||'&#8212;'}</div>
-      <div class="kpi-sub">${co2ctx || 'bij alle maatregelen'}</div>
+      <span class="kpi-lbl">CO&#8322;-reductie t.o.v. nu</span>
+      <div class="kpi-num good">${(()=>{const v=(r.co2_reductie_pct||'').toString().trim();if(!v)return '&#8212;';return /%/.test(v)?v:v+'%';})()}</div>
+      <div class="kpi-sub">${co2ctx ? co2ctx + ' minder uitstoot' : 'minder uitstoot na verduurzaming'}</div>
     </div>
     <div class="kpi-cell kpi-c4">
       <span class="kpi-lbl">Terugverdientijd</span>
