@@ -1386,13 +1386,20 @@ select.finput {
   font-size: 11px; flex-shrink: 0;
 }
 .md-card-title-wrap { flex: 1; min-width: 0; }
+.md-card-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
 .md-card-title {
   font-size: 11.5px; font-weight: 700;
   font-family: var(--f-head); color: var(--blue-deep);
-  line-height: 1.2; margin-bottom: 4px;
+  line-height: 1.2; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
 }
 .md-card-pills {
-  display: flex; flex-wrap: wrap; gap: 3px;
+  display: flex; flex-wrap: nowrap; gap: 3px; flex-shrink: 0;
 }
 .md-pill {
   font-size: 9.5px; font-weight: 600; font-family: var(--f-head);
@@ -5516,18 +5523,18 @@ select.finput {
 
   /* md-section print compact */
   .md-section {
-    margin-top: 0 !important;
-    page-break-before: always !important;
-    break-before: page !important;
-    padding-top: 16mm !important;
+    margin-top: 6pt !important;
+    page-break-before: auto !important;
+    break-before: auto !important;
+    padding-top: 0 !important;
   }
-  .md-grid { gap: 6pt !important; }
-  .md-card-head { padding: 6pt 9pt 5pt !important; }
-  .md-card-title { font-size: 7.5pt !important; margin-bottom: 3pt !important; }
-  .md-pill { font-size: 5.5pt !important; padding: 1pt 4pt !important; }
-  .md-card-body { padding: 5pt 9pt 6pt !important; gap: 3pt !important; }
-  .md-waarom { font-size: 6.5pt !important; line-height: 1.4 !important; }
-  .md-toelichting { font-size: 6pt !important; line-height: 1.3 !important; padding-top: 3pt !important; }
+  .md-grid { gap: 5pt !important; }
+  .md-card-head { padding: 5pt 8pt 4pt !important; }
+  .md-card-title { font-size: 7pt !important; }
+  .md-pill { font-size: 5pt !important; padding: 1pt 4pt !important; }
+  .md-card-body { padding: 4pt 8pt 5pt !important; gap: 2pt !important; }
+  .md-waarom { font-size: 6.5pt !important; line-height: 1.35 !important; }
+  .md-toelichting { font-size: 6pt !important; line-height: 1.3 !important; padding-top: 2pt !important; }
 
   /* Totals block (onder maatregelen-tabel) */
   .totals-block > div { padding: 7pt 9pt !important; }
@@ -6321,11 +6328,19 @@ select.finput {
     display: flex !important; align-items: center !important; gap: 6pt !important;
   }
   .md-icon { display: none !important; }
-  .md-card-title {
-    font-size: 7.8pt !important; font-weight: 700 !important;
-    color: #0d2233 !important; margin-bottom: 3pt !important;
+  .md-card-title-row {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 6pt !important;
+    width: 100% !important;
   }
-  .md-card-pills { display: flex !important; gap: 3pt !important; flex-wrap: wrap !important; }
+  .md-card-title {
+    font-size: 7pt !important; font-weight: 700 !important;
+    color: #0d2233 !important; white-space: nowrap !important;
+    overflow: hidden !important; text-overflow: ellipsis !important;
+  }
+  .md-card-pills { display: flex !important; gap: 2pt !important; flex-wrap: nowrap !important; flex-shrink: 0 !important; }
   .md-pill {
     font-size: 6pt !important; padding: 1pt 5pt !important;
     border-radius: 20pt !important;
@@ -7900,11 +7915,13 @@ function renderReport(r) {
       <div class="md-card-head">
         <div class="md-icon">${ico(m.naam)}</div>
         <div class="md-card-title-wrap">
-          <div class="md-card-title">${m.naam}</div>
-          <div class="md-card-pills">
-            <span class="md-pill md-pill-green">${m.besparing}/jr</span>
-            <span class="md-pill md-pill-orange">${m.investering}</span>
-            <span class="md-pill md-pill-blue">${m.tvt}</span>
+          <div class="md-card-title-row">
+            <span class="md-card-title">${m.naam}</span>
+            <div class="md-card-pills">
+              <span class="md-pill md-pill-green">${m.besparing}/jr</span>
+              <span class="md-pill md-pill-orange">${m.investering}</span>
+              <span class="md-pill md-pill-blue">${m.tvt}</span>
+            </div>
           </div>
         </div>
       </div>
