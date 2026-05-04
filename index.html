@@ -7284,16 +7284,151 @@ Concreet: doorloop deze checklist en voeg toe wat in dit pand zinvol is EN nog n
 
 De regel "verzin niets, extraheer alles uit de documenten" geldt voor FEITEN over het pand (adres, oppervlakte, label, bestaande installaties). Voor MAATREGELEN mag en moet je proactief aanvullen — dat is je toegevoegde waarde als adviseur. Een advies dat alleen herhaalt wat de bankscan al noemt is onvoldoende.
 
-Realistische kengetallen voor zelf-toegevoegde maatregelen (gebruik en pas aan op pandgrootte):
-- Spouwmuurisolatie: investering € 25–50/m² gevel, besparing € 300–800/jr per woning
-- Dakisolatie binnenzijde: € 60–100/m², besparing € 400–1.000/jr
-- Vloerisolatie: € 30–60/m², besparing € 200–500/jr
-- HR++ glas: € 250–400/m², besparing € 100–250/jr per raam
-- Hybride warmtepomp: € 5.000–8.000, besparing € 400–900/jr
-- Volledig elektrische warmtepomp: € 14.000–22.000, besparing € 800–1.800/jr
-- Zonnepanelen (per kWp): € 1.000–1.400, opbrengst € 250–350/jr per kWp
-- WTW-ventilatie: € 4.000–7.000, besparing € 200–500/jr
-- LED-verlichting (zakelijk): € 50–150/armatuur, besparing € 30–80/armatuur/jr
+═══════════════════════════════════════════════════════════════
+BEDRAGEN — hoe je ze bepaalt, STRIKT aanhouden
+═══════════════════════════════════════════════════════════════
+Er zijn twee categorieën maatregelen. Behandel ze ANDERS:
+
+CATEGORIE A — Maatregelen die EXPLICIET in de bankscan staan met een bedrag:
+→ Neem de investering en besparing EXACT over zoals de scan ze noemt.
+→ Pas NOOIT aan op basis van eigen inschatting of kengetallen.
+→ Herbereken alleen de tvt: tvt = investering ÷ besparing.
+
+De Rabobank-scan gebruikt deze vaste maatregelnamen — herken ze en neem hun bedragen 1-op-1 over:
+  • "Zonnepanelen" → zonnepanelen plaatsen of uitbreiden
+  • "Elektrische warmtepomp" → volledig elektrische warmtepomp
+  • "Hybride warmtepomp" → hybride warmtepomp
+  • "Isolerende beglazing" → HR++ of triple glas
+  • "Zonnecollectoren" → zonneboiler / zonnecollectoren voor warm tapwater
+  • "Gevelisolatie" → spouwmuurisolatie of na-isolatie gevel
+  • "Warmteterugwinning ventilatie" → WTW-ventilatiesysteem
+  • "Gasabsorptiewarmtepomp" → gasabsorptiewarmtepomp
+  • "SmartWindows" → dynamisch glas / SmartWindows
+  • "HR107 ketel" → hoog-rendement CV-ketel (HR107)
+  • "LED verlichting ipv PL" → LED-verlichting ter vervanging van PL-lampen
+  • "Vloerisolatie" → vloer- of bodemisolatie
+  Als de scan een van bovenstaande noemt met investering én besparing: gebruik die bedragen exact.
+  Als de scan een maatregel noemt zónder bedrag: gebruik dan het rekenmodel uit Categorie B.
+
+CATEGORIE B — Maatregelen die JIJ zelf toevoegt (niet in de scan):
+→ Gebruik het onderstaande rekenmodel. Lees eerst uit de documenten:
+   • Gasverbruik (m³/jr) — uit jaarafrekening, bankscan of energielabel
+   • Elektraverbruik (kWh/jr) — idem
+   • Gasprijs (€/m³) en stroomprijs (€/kWh) — uit jaarafrekening of gebruik €1,05/m³ gas en €0,32/kWh stroom als fallback
+   • Oppervlakte dak, gevel, vloer (m²) — uit brochure of energielabel; als niet expliciet: schat op basis van GBO (bijv. geveloppervlak ≈ GBO × 0,8; dakoppervlak ≈ GBO ÷ aantal lagen)
+   • Huidige Rc-waarden per bouwdeel — uit energielabel of brochure
+
+REKENMODEL PER MAATREGEL:
+
+▸ Dakisolatie
+  - Bepaal dakoppervlak: als niet expliciet in brochure → schat als GBO ÷ aantal bouwlagen × 1,15 (overstek)
+  - Type isolatie op basis van daktype en toegankelijkheid:
+    • Plat dak: isolatie bovenzijde (€70–110/m²) of onderzijde (€50–80/m²)
+    • Hellend dak met zolder: isolatie zoldervloer (€25–40/m²) of dakschuine zijde (€60–90/m²)
+    • Hellend dak zonder zolder (mansarde/slaapkamer eronder): isolatie binnenzijde dak (€80–120/m²)
+    • Rietdak: isolatie alleen zinvol bij vervanging; gebruik meerprijs €30–50/m² bovenop reguliere vervanging
+  - Investering: dakoppervlak (m²) × kosten/m² op basis van daktype
+  - Besparing: gasverbruik × aandeel dak in warmteverlies × gasprijs
+    Vuistregel aandeel dak: Rc<0,5 → 28%, Rc 0,5-1 → 20%, Rc 1-2 → 12%, Rc 2-4 → 6%
+  - Voorbeeld: 90m² hellend dak met zolder, Rc 0,3, 1.800m³ gas à €1,05
+    → Investering: 90 × €30 (zoldervloer) = €2.700
+    → Besparing: 1.800 × 28% × €1,05 = €529/jr
+    → TVT: €2.700 ÷ €529 = 5,1 jaar
+
+▸ Vloerisolatie
+  - Bepaal vloeroppervlak: als niet expliciet → gebruik GBO van begane grond (= GBO ÷ aantal bouwlagen)
+  - Type isolatie op basis van constructie:
+    • Kruipruimte aanwezig (houten vloer, pand voor 1980): isolatie onderzijde vloer via kruipruimte (€25–40/m²)
+    • Geen kruipruimte / betonvloer: isolatie bovenzijde met nieuwe dekvloer (€60–90/m²) — ingrijpender
+    • Begane grond appartement boven parkeergarage: onderzijde isoleren (€35–55/m²)
+  - Investering: vloeroppervlak (m²) × kosten/m² op basis van type
+  - Besparing: gasverbruik × aandeel vloer in warmteverlies × gasprijs
+    Vuistregel aandeel vloer: Rc<0,5 → 15%, Rc 0,5-1,5 → 9%, Rc 1,5-2,5 → 4%
+  - Voorbeeld: 75m² begane grond, kruipruimte, Rc 0,2, 1.800m³ gas à €1,05
+    → Investering: 75 × €32 = €2.400
+    → Besparing: 1.800 × 15% × €1,05 = €284/jr
+    → TVT: €2.400 ÷ €284 = 8,5 jaar
+
+▸ HR++ of triple glas
+  - Bepaal glasoppervlak: als niet expliciet → schat als geveloppervlak × 0,25 (woningen) of × 0,40 (kantoren/winkels met veel glas)
+  - Type op basis van huidig glas:
+    • Enkel glas → HR++ (€280–380/m² inclusief plaatsing, kozijn hergebruiken)
+    • HR-glas (U≈1,8) → HR++ of triple (€200–300/m², alleen glas vervangen)
+    • HR++ al aanwezig → triple glas (€320–450/m², alleen zinvol bij hoog comfort-niveau of koude omgeving)
+  - Bij kozijnvervanging tegelijk: +€150–250/m² extra
+  - Investering: glasoppervlak (m²) × kosten/m²
+  - Besparing: gasverbruik × aandeel glas in warmteverlies × gasprijs
+    Vuistregel aandeel glas: enkel glas → 22%, HR-glas → 12%, HR++ → 5%
+  - Voorbeeld: 28m² enkel glas, 2.000m³ gas à €1,05
+    → Investering: 28 × €330 = €9.240
+    → Besparing: 2.000 × 22% × €1,05 = €462/jr
+    → TVT: €9.240 ÷ €462 = 20 jaar — controleer of dit zinvol is
+
+▸ Geïsoleerde buitendeuren
+  - Bepaal aantal deuren: uit brochure of schat 1–2 voor woning, 2–4 voor bedrijfspand
+  - Investering: aantal deuren × €800–1.800/deur (afhankelijk van afmeting en type: staal/hout/glas)
+    Garagedeur (groot): €1.500–3.500 per stuk
+  - Besparing: aantal deuren × €60–120/jr per deur (kierdichting + isolatiewaarde)
+    Bij garagedeuren naar verwarmde ruimte: tot €200/jr per deur
+  - Vuistregel: besparing is relatief klein — deuren zijn primarily comfort, niet financieel rendabel
+  - Voorbeeld: 2 buitendeuren à €1.200
+    → Investering: €2.400
+    → Besparing: 2 × €80 = €160/jr
+    → TVT: 15 jaar — grens van haalbaarheid, benadruk comfort in toelichting
+
+▸ Zonnepanelen (nieuw of uitbreiden)
+  - Bepaal beschikbaar dakoppervlak:
+    • Totaal dakoppervlak (m²) × 0,65 (netto bruikbaar na schaduw/obstakels/veiligheidszone)
+    • Bij uitbreiding: totaal − reeds bezet door bestaande panelen (bestaand aantal × 1,7m²/paneel)
+  - Bereken maximaal aantal panelen: netto dakoppervlak ÷ 1,7m² per paneel
+  - Vermogen: aantal panelen × 400Wp = totaal kWp
+  - Jaaropbrengst: kWp × 875 kWh/jr (NL gemiddelde, south-facing; west/oost × 0,85)
+  - Besparing:
+    • Zelfverbruik (schat 30–50% van opbrengst): kWh × stroomprijs (€0,32/kWh)
+    • Teruglevering (rest): kWh × salderingstarief (€0,09/kWh in 2025, daalt verder)
+    • Totaal: (opbrengst × 0,40 × €0,32) + (opbrengst × 0,60 × €0,09)
+  - Investering: kWp × €1.100–1.350/kWp (inclusief omvormer en installatie)
+  - Voorbeeld: 80m² bruikbaar dak, south-facing, stroomverbruik 4.500 kWh/jr
+    → Panelen: 80 ÷ 1,7 = 47 panelen → afronden op 20 (realistisch voor woningen) of meer voor zakelijk
+    → Vermogen: 20 × 400Wp = 8 kWp
+    → Opbrengst: 8 × 875 = 7.000 kWh/jr
+    → Besparing: (7.000 × 0,40 × €0,32) + (7.000 × 0,60 × €0,09) = €896 + €378 = €1.274/jr (maar begrensd door eigen verbruik)
+    → Investering: 8 × €1.200 = €9.600 → TVT: 7,5 jaar
+
+▸ Hybride warmtepomp
+  - Vaste kostpost, niet m²-afhankelijk: €6.000–9.500 inclusief installatie
+  - Besparing: gasverbruik voor ruimteverwarming × reductiepercentage × gasprijs
+    • Gasverbruik ruimteverwarming = totaal gasverbruik − warmwater (schat 500m³/jr voor warm tapwater)
+    • Reductie ruimteverwarming gas: 55–70% (warmtepomp dekt dit deel, ketel springt bij bij <-5°C)
+    • Extra elektrakosten: opgewekte warmte ÷ COP (3,2) × stroomprijs — trek dit af van besparing
+  - Alleen zinvol als: schil enigszins op orde (Rc dak >2, gevel >1,0) EN gasverbruik >1.200m³/jr
+  - Voorbeeld: 2.200m³ gas totaal, 1.700m³ voor verwarming, gasprijs €1,05, stroomprijs €0,32
+    → Gasbesparing: 1.700 × 65% × €1,05 = €1.160/jr
+    → Extra elektra: (1.700 × 65% × 9,8 kWh/m³) ÷ 3,2 × €0,32 = €1.080 ÷ 3,2 × €0,32 = €108/jr
+    → Netto besparing: €1.160 − €108 = €1.052/jr
+    → Investering: €7.500 → TVT: 7,1 jaar
+
+▸ Energie-efficiënt ventilatiesysteem (WTW)
+  - Investering:
+    • Woning (tot 150m² GBO): €4.500–7.000
+    • Groter woonpand / appartementencomplex: €7.000–15.000
+    • Zakelijk pand / utiliteit: €8.000–20.000 (afhankelijk van kanaalwerk)
+  - Besparing: komt uit twee bronnen:
+    1. Warmteterugwinning: ventilatievoud × GBO × 2,5m (volume) × luchtdichtheid × warmtecapaciteit × ΔT × rendement WTW × gasprijs
+       Vuistregel: GBO (m²) × €1,50–2,50/m²/jr (hoger bij slecht geïsoleerde schil, lager bij al goede isolatie)
+    2. Geen tochtkieren meer nodig: kleine extra isolatiebesparing (al meegenomen in andere maatregelen)
+  - WTW alleen zinvol als:
+    • Schil al redelijk geïsoleerd (anders lekt warmte sowieso weg)
+    • Ventilatie momenteel alleen natuurlijk (roosters/kieren) — niet bij bestaande mechanische afzuiging
+  - Voorbeeld: 120m² GBO, goede isolatie
+    → Besparing: 120 × €2,00 = €240/jr
+    → Investering: €5.500 → TVT: 22,9 jaar — benadruk comfort/luchtkwaliteit boven financieel rendement
+
+CONSISTENTIE-CHECK — verplicht vóór output:
+1. Bereken voor ELKE maatregel: investering ÷ besparing = tvt. Als tvt > 25 jaar → weglaten.
+2. Controleer: geen twee maatregelen mogen exact hetzelfde investeringsbedrag hebben tenzij aantoonbaar correct.
+3. Controleer: besparingen optellen mag NOOIT meer zijn dan de totale huidige energiekosten.
+4. Controleer: totaal_besparing = som van individuele besparingen, totaal_investering = som van investeringen.
 
 ═══════════════════════════════════════════════════════════════
 NETTO INVESTERING — alleen directe subsidies
