@@ -1344,10 +1344,10 @@ select.finput {
 .fase-actie-item {
   display: flex; align-items: flex-start; gap: 10px;
   padding: 6px 0; border-bottom: 1px solid var(--rule);
-  font-size: 13px; color: var(--ink-2); font-family: var(--f-body); line-height: 1.5;
+  font-size: 14.5px; color: var(--ink-2); font-family: var(--f-body); line-height: 1.55;
 }
 .fase-actie-item:last-child { border-bottom: none; }
-.fase-actie-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+.fase-actie-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
 .fase-actie-text { flex: 1; }
 
 /* ── Fase maatregel-tags ── */
@@ -1355,9 +1355,9 @@ select.finput {
   display: flex; flex-wrap: wrap; gap: 4px; margin: 8px 0 4px;
 }
 .fase-maatregel-tag {
-  font-size: 10px; font-weight: 600; font-family: var(--f-head);
+  font-size: 11.5px; font-weight: 600; font-family: var(--f-head);
   background: var(--blue-faint2); color: var(--blue);
-  padding: 2px 7px; border-radius: 20px;
+  padding: 2px 8px; border-radius: 20px;
 }
 .chart-uitleg-grid {
   display: grid;
@@ -1444,13 +1444,13 @@ select.finput {
   display: flex; flex-direction: column; gap: 4px;
 }
 .md-waarom {
-  font-size: 11px; font-weight: 400; color: var(--ink-2);
-  font-family: var(--f-body); line-height: 1.5; margin: 0;
+  font-size: 12.5px; font-weight: 400; color: var(--ink-2);
+  font-family: var(--f-body); line-height: 1.55; margin: 0;
 }
 .md-toelichting {
-  font-size: 10.5px; font-weight: 400; color: var(--ink-3);
-  font-family: var(--f-body); line-height: 1.45; margin: 0;
-  padding-top: 4px; border-top: 1px solid var(--rule);
+  font-size: 12px; font-weight: 400; color: var(--ink-3);
+  font-family: var(--f-body); line-height: 1.5; margin: 0;
+  padding-top: 5px; border-top: 1px solid var(--rule);
 }
 .md-subsidie {
   display: flex; align-items: center; gap: 6px;
@@ -1606,7 +1606,7 @@ select.finput {
   padding: 14px 18px;
   flex: 1;
 }
-.phase-desc { font-size: 12.5px; color: var(--ink-3); line-height: 1.65; }
+.phase-desc { font-size: 14px; color: var(--ink-3); line-height: 1.65; }
 .phase-meta {
   margin-top: 10px;
   display: flex;
@@ -6540,13 +6540,14 @@ select.finput {
     print-color-adjust: exact !important;
   }
   .rpt-title {
-    font-family: var(--f-head) !important;
-    font-weight: 300 !important;
-    letter-spacing: 4pt !important;
-    text-transform: uppercase !important;
-    color: rgba(255,255,255,0.9) !important;
-    font-size: 8pt !important;
-    margin-bottom: 6pt !important;
+    font-family: var(--f-serif) !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.5px !important;
+    text-transform: none !important;
+    color: rgba(255,255,255,1) !important;
+    font-size: 22pt !important;
+    line-height: 1.1 !important;
+    margin-bottom: 4pt !important;
   }
   .rpt-subtitle {
     font-family: var(--f-head) !important;
@@ -9084,7 +9085,7 @@ function renderMaatregelenChart(maatregelen) {
   el.innerHTML = `
     <div class="sec-head rpt-section-head"><span class="sec-label">Besparing per maatregel</span><div class="sec-line"></div></div>
     <div class="chart-wrap" style="margin-bottom:16px;">
-      <div class="chart-canvas-wrap" style="height:${Math.max(160, maatregelen.length * 42)}px;">
+      <div class="chart-canvas-wrap" style="height:${Math.max(200, maatregelen.length * 54)}px;">
         <canvas id="maatregelenChart"></canvas>
       </div>
       <div class="chart-explainer" style="margin-top:16px;padding-top:14px;border-top:1px solid var(--rule);font-size:11.5px;color:var(--ink-4);font-family:var(--f-body);line-height:1.55;">
