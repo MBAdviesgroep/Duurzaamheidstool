@@ -8443,8 +8443,8 @@ function recalcTotals() {
     if (card) card.style.display = cb.checked ? '' : 'none';
   });
 
-  const gemTVT = totalInvestering > 0
-    ? (tvtWeightedSum / totalInvestering).toFixed(1)
+  const gemTVT = totalInvestering > 0 && totalBesparing > 0
+    ? (totalInvestering / totalBesparing).toFixed(1)
     : 0;
 
   // Update live totals bar
@@ -8470,8 +8470,8 @@ function recalcTotals() {
   const kpiTvtEl = document.getElementById('kpiTvt');
   const kpiTvtJaarEl = document.getElementById('kpiTvtJaar');
   if (kpiTvtEl) {
-    const tvtDisplay = totalInvestering > 0
-      ? '± ' + (tvtWeightedSum / totalInvestering).toFixed(1).replace('.',',')
+    const tvtDisplay = totalInvestering > 0 && totalBesparing > 0
+      ? '± ' + (totalInvestering / totalBesparing).toFixed(1).replace('.',',')
       : '—';
     kpiTvtEl.textContent = tvtDisplay;
     if (kpiTvtJaarEl) kpiTvtJaarEl.textContent = totalInvestering > 0 ? 'jaar' : '';
