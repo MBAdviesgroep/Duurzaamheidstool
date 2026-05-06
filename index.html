@@ -6580,6 +6580,286 @@ select.finput {
   /* Algemene visuele rust */
   * { text-rendering: geometricPrecision !important; }
 }
+
+
+/* ═══════════════════════════════════════════════════════
+   COVER OVERRIDE — Duurzaamheidstool met ESG/SDG-coverlook
+   Alleen de voorpagina-opmaak wordt aangepast; rapportinhoud blijft gelijk.
+═══════════════════════════════════════════════════════ */
+@media print {
+  .print-cover-page {
+    width: 210mm !important;
+    height: 297mm !important;
+    min-height: 297mm !important;
+    max-height: 297mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    position: relative !important;
+    background: #0d2233 !important;
+    page-break-after: always !important;
+    break-after: page !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .pc-wrap.pc-esg-cover-look {
+    position: relative !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    min-height: 297mm !important;
+    max-height: 297mm !important;
+    overflow: hidden !important;
+    background: #0d2233 !important;
+    color: #fff !important;
+    display: block !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .pc-wrap.pc-esg-cover-look .pc-hero {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 0 !important;
+  }
+  .pc-wrap.pc-esg-cover-look .pc-hero-img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    display: block !important;
+    opacity: 1 !important;
+    filter: none !important;
+  }
+  .pc-wrap.pc-esg-cover-look .pc-hero-empty {
+    background:
+      radial-gradient(circle at 18% 6%, rgba(226,104,54,.18) 0%, transparent 45%),
+      radial-gradient(circle at 90% 92%, rgba(31,79,111,.50) 0%, transparent 50%),
+      linear-gradient(160deg, #134460 0%, #0d2233 100%) !important;
+  }
+  .pc-wrap.pc-esg-cover-look .pc-hero-grid {
+    position: absolute !important;
+    inset: 0 !important;
+    background-image:
+      linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px) !important;
+    background-size: 48px 48px !important;
+    opacity: 1 !important;
+  }
+  .pc-wrap.pc-esg-cover-look .pc-hero-gradient {
+    position: absolute !important;
+    inset: 0 !important;
+    background:
+      linear-gradient(180deg, rgba(13,34,51,.18) 0%, rgba(13,34,51,.28) 52%, rgba(13,34,51,.48) 100%),
+      radial-gradient(ellipse at 28% 82%, rgba(8,24,36,.46) 0%, rgba(8,24,36,.30) 35%, transparent 72%) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .pc-wrap.pc-esg-cover-look .pc-overlay {
+    position: relative !important;
+    z-index: 2 !important;
+    height: 100% !important;
+    padding: 42px 50px 42px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: initial !important;
+    color: #fff !important;
+    background: transparent !important;
+  }
+  .pc-wrap.pc-esg-cover-look .pc-rule-top {
+    position: absolute !important;
+    top: 24px !important;
+    left: 50px !important;
+    right: 50px !important;
+    height: 1px !important;
+    background: rgba(255,255,255,.22) !important;
+  }
+
+  .pc-wrap.pc-esg-cover-look .pc-top-bar {
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: space-between !important;
+    padding: 14px 0 0 !important;
+    border: none !important;
+    background: transparent !important;
+  }
+  .pc-wrap.pc-esg-cover-look .pc-logo-row {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+  }
+  .pc-wrap.pc-esg-cover-look .pc-logo-circle {
+    width: 46px !important;
+    height: 46px !important;
+    border-radius: 50% !important;
+    background: transparent !important;
+    overflow: hidden !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: none !important;
+  }
+  .pc-wrap.pc-esg-cover-look .pc-logo-circle img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+    display: block !important;
+    transform: scale(1.08) !important;
+    border-radius: 50% !important;
+  }
+  .pc-wrap.pc-esg-cover-look .pc-brand {
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+    letter-spacing: .1px !important;
+    color: #fff !important;
+    font-family: 'DM Sans','Segoe UI',system-ui,sans-serif !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,.35) !important;
+  }
+  .pc-wrap.pc-esg-cover-look .pc-brand-sub {
+    font-size: 10.5px !important;
+    color: rgba(255,255,255,.60) !important;
+    margin-top: 2px !important;
+    letter-spacing: .2px !important;
+    line-height: 1.2 !important;
+    font-family: 'DM Sans','Segoe UI',system-ui,sans-serif !important;
+  }
+  .pc-wrap.pc-esg-cover-look .pc-date-chip {
+    font-size: 11px !important;
+    color: rgba(255,255,255,.82) !important;
+    text-align: right !important;
+    letter-spacing: .3px !important;
+    font-family: 'DM Sans','Segoe UI',system-ui,sans-serif !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,.35) !important;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+  }
+
+  .pc-wrap.pc-esg-cover-look .pc-content {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-end !important;
+    padding: 0 0 18px !important;
+    margin: 0 !important;
+  }
+  .pc-wrap.pc-esg-cover-look .pc-eyebrow-wrap {
+    display: flex !important;
+    align-items: center !important;
+    gap: 14px !important;
+    margin: 0 0 18px !important;
+  }
+  .pc-wrap.pc-esg-cover-look .pc-eyebrow {
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    letter-spacing: 1.6px !important;
+    text-transform: uppercase !important;
+    color: #ff7842 !important;
+    font-family: 'DM Sans','Segoe UI',system-ui,sans-serif !important;
+    text-shadow: 0 2px 6px rgba(0,0,0,.65), 0 0 2px rgba(0,0,0,.55) !important;
+  }
+  .pc-wrap.pc-esg-cover-look .pc-accent-line {
+    display: inline-block !important;
+    flex: 0 0 68px !important;
+    width: 68px !important;
+    height: 2px !important;
+    background: #ff7842 !important;
+    border-radius: 0 !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,.50) !important;
+  }
+  .pc-wrap.pc-esg-cover-look .pc-pand-title {
+    font-family: 'DM Sans','Segoe UI',system-ui,sans-serif !important;
+    font-size: 46px !important;
+    font-weight: 650 !important;
+    line-height: 1.06 !important;
+    letter-spacing: -1px !important;
+    color: #fff !important;
+    margin: 0 0 14px !important;
+    text-shadow: 0 3px 10px rgba(0,0,0,.50), 0 1px 2px rgba(0,0,0,.45) !important;
+    max-width: 600px !important;
+  }
+  .pc-wrap.pc-esg-cover-look .pc-pand-address {
+    font-size: 13.5px !important;
+    color: rgba(255,255,255,.95) !important;
+    max-width: 560px !important;
+    text-shadow: 0 2px 7px rgba(0,0,0,.55), 0 1px 2px rgba(0,0,0,.42) !important;
+    line-height: 1.55 !important;
+    margin: 0 0 22px !important;
+    font-family: 'DM Sans','Segoe UI',system-ui,sans-serif !important;
+    font-weight: 400 !important;
+    letter-spacing: 0 !important;
+  }
+  .pc-wrap.pc-esg-cover-look .pc-pand-address b {
+    color: #fff !important;
+    font-weight: 600 !important;
+  }
+
+  .pc-wrap.pc-esg-cover-look .pc-label-track,
+  .pc-wrap.pc-esg-cover-look .pc-label-box,
+  .pc-wrap.pc-esg-cover-look .pc-label-arrow,
+  .pc-wrap.pc-esg-cover-look .pc-label-desc {
+    display: none !important;
+  }
+
+  .pc-wrap.pc-esg-cover-look .pc-cover-badges {
+    display: flex !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+    margin-top: 6px !important;
+  }
+  .pc-wrap.pc-esg-cover-look .pc-cover-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 10px !important;
+    font-weight: 600 !important;
+    letter-spacing: 1.5px !important;
+    text-transform: uppercase !important;
+    padding: 6px 12px !important;
+    border-radius: 99px !important;
+    background: rgba(255,255,255,.08) !important;
+    border: 1px solid rgba(255,255,255,.18) !important;
+    color: rgba(255,255,255,.88) !important;
+    font-family: 'DM Sans','Segoe UI',system-ui,sans-serif !important;
+  }
+  .pc-wrap.pc-esg-cover-look .pc-cover-badge-dark {
+    background: rgba(226,104,54,.22) !important;
+    border-color: rgba(226,104,54,.40) !important;
+    color: #fff !important;
+  }
+
+  .pc-wrap.pc-esg-cover-look .pc-bottom-bar {
+    border-top: 1px solid rgba(255,255,255,.25) !important;
+    padding: 18px 0 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    font-size: 10.5px !important;
+    color: rgba(255,255,255,.76) !important;
+    letter-spacing: .4px !important;
+    text-shadow: 0 2px 6px rgba(0,0,0,.45) !important;
+    background: transparent !important;
+    font-family: 'DM Sans','Segoe UI',system-ui,sans-serif !important;
+  }
+  .pc-wrap.pc-esg-cover-look .pc-bottom-left,
+  .pc-wrap.pc-esg-cover-look .pc-bottom-right {
+    font-size: 10.5px !important;
+    color: rgba(255,255,255,.76) !important;
+    font-family: 'DM Sans','Segoe UI',system-ui,sans-serif !important;
+    font-weight: 400 !important;
+  }
+  .pc-wrap.pc-esg-cover-look .pc-bottom-left b,
+  .pc-wrap.pc-esg-cover-look .pc-bottom-right {
+    color: #fff !important;
+    font-weight: 600 !important;
+  }
+}
 </style>
 
 </head>
@@ -9152,31 +9432,22 @@ function renderPrintCover(r, today) {
   const el = document.getElementById('printCover');
   if (!el) return;
 
-  // Label kleuren
-  const labelColors = { 'A+++':'#006400','A++':'#007800','A+':'#009900','A':'#2A7A50','B':'#5BA300','C':'#A8C400','D':'#E0C000','E':'#E8820A','F':'#E05010','G':'#C0260A' };
-  const huidigColor  = labelColors[r.huidig_label]  || '#6B6B6B';
-  const streefColor  = labelColors[r.streef_label]   || '#2A7A50';
-
-  const labelTrack = (r.huidig_label && r.streef_label) ? `
-    <div class="pc-label-track">
-      <div class="pc-label-box" style="background:${huidigColor};">${r.huidig_label}</div>
-      <div class="pc-label-arrow">
-        <svg width="28" height="14" viewBox="0 0 28 14" fill="none"><path d="M0 7h22M16 1l6 6-6 6" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="pc-label-box pc-label-target" style="background:${streefColor};">${r.streef_label}</div>
-      <div class="pc-label-desc">Energielabeltraject</div>
-    </div>` : '';
-
-  const detailParts = [r.pand_adres, r.bouwjaar ? 'Bouwjaar\u00a0' + r.bouwjaar : '', r.oppervlakte || '', r.functie || ''].filter(Boolean);
+  const detailMain = [
+    r.pand_adres,
+    r.bouwjaar ? 'Bouwjaar ' + r.bouwjaar : '',
+    r.oppervlakte || ''
+  ].filter(Boolean).join(' &nbsp;·&nbsp; ');
+  const functie = r.functie || '';
 
   const photoSection = huisFotoDataUrl
-    ? `<div class="pc-hero"><img src="${huisFotoDataUrl}" alt="${r.pand_naam}" class="pc-hero-img"/><div class="pc-hero-gradient"></div></div>`
+    ? `<div class="pc-hero"><img src="${huisFotoDataUrl}" alt="${r.pand_naam || 'Pand'}" class="pc-hero-img"/><div class="pc-hero-gradient"></div></div>`
     : `<div class="pc-hero pc-hero-empty"><div class="pc-hero-grid"></div><div class="pc-hero-gradient"></div></div>`;
 
   el.innerHTML = `
-    <div class="pc-wrap">
+    <div class="pc-wrap pc-esg-cover-look">
       ${photoSection}
       <div class="pc-overlay">
+        <div class="pc-rule-top"></div>
         <div class="pc-top-bar">
           <div class="pc-logo-row">
             <div class="pc-logo-circle"><img src="${LOGO_IMG}" alt="MB"></div>
@@ -9189,16 +9460,22 @@ function renderPrintCover(r, today) {
         </div>
         <div class="pc-content">
           <div class="pc-eyebrow-wrap">
-            <span class="pc-accent-line"></span>
             <span class="pc-eyebrow">Verduurzamingsrapport</span>
+            <span class="pc-accent-line"></span>
           </div>
           <div class="pc-pand-title">${r.pand_naam || 'Vastgoedobject'}</div>
-          <div class="pc-pand-address">${detailParts.join(' &nbsp;·&nbsp; ')}</div>
-          ${labelTrack}
+          <div class="pc-pand-address">
+            ${detailMain}${functie ? `<br><b>${functie}</b>` : ''}
+          </div>
+          <div class="pc-cover-badges">
+            <span class="pc-cover-badge pc-cover-badge-dark">Duurzaamheidsadvies</span>
+            <span class="pc-cover-badge">Verduurzamingsrapport</span>
+            <span class="pc-cover-badge">Maatregelen · subsidies · planning</span>
+          </div>
         </div>
         <div class="pc-bottom-bar">
-          <span class="pc-bottom-left">Vertrouwelijk &nbsp;·&nbsp; Opgesteld door MB Adviesgroep</span>
-          <span class="pc-bottom-right">&#109;&#98;&#97;&#100;&#118;&#105;&#101;&#115;&#103;&#114;&#111;&#101;&#112;&#46;&#110;&#108;</span>
+          <span class="pc-bottom-left">Vertrouwelijk &nbsp;·&nbsp; Opgesteld door <b>MB Adviesgroep</b></span>
+          <span class="pc-bottom-right">mbadviesgroep.nl</span>
         </div>
       </div>
     </div>`;
