@@ -7770,7 +7770,7 @@ CONSISTENTIE-CHECK — verplicht vóór output:
 10. Als het pand commercieel/recreatief vastgoed is, formuleer alle conclusies als zakelijk financieringsdossier.
 
 ═══════════════════════════════════════════════════════════════
-NETTO INVESTERING — alleen directe subsidies
+NETTO INVESTERING — fiscale voordelen en eventuele directe subsidies
 ═══════════════════════════════════════════════════════════════
 'netto_investering' toont uitsluitend DIRECTE subsidies die het te betalen bedrag verlagen (ISDE, SEEH, SVVE, gemeentelijke subsidies).
 NOOIT EIA, MIA/Vamil, KIA of andere fiscale aftrekken in netto_investering opnemen — dit zijn belastingvoordelen op de fiscale winst, GEEN korting op de factuur.
@@ -8226,6 +8226,8 @@ function normalizeSustainabilityConsistency(r){
     .replace(/(\d+[\.,]?\d*)\s*kWh\/jr\s*door\s+verbeterde\s+isolatie/gi,'energiekosten door betere isolatie')
     .replace(/vermindert het energieverbruik met\s*€?\s*\d+[\.,]?\d*\s*kWh\/jr/gi,'vermindert het energieverbruik')
     .replace(/bespaart\s*€?\s*\d+[\.,]?\d*\s*kWh\/jr/gi,'bespaart energie')
+    .replace(/geen\s+verdere\s+verduurzamingsmaatregelen\s+nodig[^.]*\./gi,'Hoewel het pand reeds redelijk presteert, zijn aanvullende maatregelen nodig om het beoogde label en groene financierbaarheid te realiseren.')
+    .replace(/geen\s+aanvullende\s+verduurzamingsmaatregelen\s+nodig[^.]*\./gi,'Hoewel het pand reeds redelijk presteert, zijn aanvullende maatregelen nodig om het beoogde label en groene financierbaarheid te realiseren.')
     .replace(/10\s+zonnepanelen\s*\(?\s*672\s*Wp\s*\)?/gi,'10 zonnepanelen, opbrengst/vermogen nog technisch te verifiëren')
     .replace(/672\s*Wp/gi,'vermogen nog te verifiëren');
   const deep=(x)=>{
@@ -8268,6 +8270,8 @@ function normalizeSustainabilityConsistency(r){
   if(Array.isArray(r.fases) && Array.isArray(r.maatregelen)){
     const names=r.maatregelen.map(m=>String(m.naam||''));
     const norm=x=>String(x||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+    const hasVent=names.some(n=>/wtw|ventilatie|warmteterugwinning/i.test(n));
+    const hasZon=names.some(n=>/zonne|solar|pv/i.test(n));
     r.fases=r.fases.map(f=>{
       const valid=[];
       (f.maatregelen||[]).forEach(x=>{
@@ -8275,8 +8279,12 @@ function normalizeSustainabilityConsistency(r){
         if(hit && !valid.includes(hit)) valid.push(hit);
       });
       f.maatregelen=valid;
-      if(valid.length===0){
-        f.beschrijving=String(f.beschrijving||'').replace(/WTW|warmteterugwinning|mechanische ventilatie/gi,'aanvullende technische maatregelen');
+      if(!hasVent){
+        f.titel=String(f.titel||'').replace(/\s*\+?\s*(WTW|warmteterugwinning|mechanische ventilatie)[^,;.]*/gi,'');
+        f.beschrijving=String(f.beschrijving||'').replace(/(WTW|warmteterugwinning|mechanische ventilatie)[^,.]*[,.]?\s*/gi,'');
+      }
+      if(hasZon){
+        f.beschrijving=String(f.beschrijving||'').replace(/Installeer zonnepanelen zo snel mogelijk[^.]*\./gi,'Verifieer de bestaande zonnepanelenopbrengst en onderzoek uitbreiding alleen indien technisch en economisch zinvol.');
       }
       let inv=0, bes=0;
       valid.forEach(v=>{
@@ -8286,7 +8294,7 @@ function normalizeSustainabilityConsistency(r){
       if(inv>0) f.totaal_investering=euro(inv);
       if(inv>0 && bes>0) f.tvt=(inv/bes).toFixed(1).replace('.',',')+' jaar';
       return f;
-    });
+    }).filter(f=>String(f.titel||'').trim() || String(f.beschrijving||'').trim() || (f.maatregelen||[]).length);
   }
 
   return r;
@@ -8594,7 +8602,7 @@ function renderReport(r) {
   // Netto investering tabel — altijd tonen, wordt dynamisch bijgewerkt via recalcTotals
   const ni = r.netto_investering;
   const initBruto = parseEuro((ni && ni.bruto) || r.totaal_investering || '0');
-  const nettoHtml = secHead('Netto investering na subsidies') +
+  const nettoHtml = secHead('Netto investering na fiscale voordelen en eventuele subsidies') +
     `<table class="netto-table" id="nettoTable">
       <thead><tr><th>Post</th><th style="text-align:right">Bedrag</th></tr></thead>
       <tbody id="nettoTbody">
@@ -8721,7 +8729,7 @@ function renderReport(r) {
   const acties = [
     { icon: '📋', text: 'Vraag bij minimaal drie gecertificeerde installateurs offertes op en vergelijk op prijs, garantie en uitvoeringstermijn.' },
     { icon: '💰', text: 'Vraag ISDE en EIA aan vóór of direct na ondertekening van de offerte — daarna vervalt het recht op subsidie.' },
-    heeftZonnepanelen ? { icon: '☀️', text: 'Installeer zonnepanelen zo snel mogelijk — de salderingsregeling wordt jaarlijks verder afgebouwd.' } : null,
+    heeftZonnepanelen ? { icon: '☀️', text: 'Verifieer de bestaande zonnepanelenopbrengst en onderzoek uitbreiding alleen indien technisch en economisch zinvol.' } : null,
     { icon: '📞', text: 'MB Adviesgroep begeleidt u van subsidieaanvraag tot oplevering. Neem contact op voor een vrijblijvend adviesgesprek.' },
   ].filter(Boolean);
 
@@ -10032,7 +10040,7 @@ function renderMaandlastenSection(r) {
       </div>
       <div class="maandlasten-head">
         <div class="maandlasten-titel">Wat betaalt u per maand?</div>
-        <div class="maandlasten-sub">Gebaseerd op netto investering na subsidies en fiscale voordelen — kies hieronder uw eigen inbreng en looptijd</div>
+        <div class="maandlasten-sub">Gebaseerd op netto investering na fiscale voordelen en eventuele directe subsidies — kies hieronder uw eigen inbreng en looptijd</div>
       </div>
 
       <!-- Financieringsbedrag direct invoer -->
