@@ -6860,6 +6860,53 @@ select.finput {
     font-weight: 600 !important;
   }
 }
+
+
+/* =========================================================
+   COVER PRINT FIX — geen witte/lichte halo-vlakken rond tekst
+   In print kunnen text-shadows op foto's als lichte blokken renderen.
+   Daarom: covertekst zonder shadow, maar met een iets krachtiger
+   donkere onder-gradient voor leesbaarheid.
+   ========================================================= */
+@media print{
+  .pc-wrap.pc-esg-cover-look .pc-brand,
+  .pc-wrap.pc-esg-cover-look .pc-brand-sub,
+  .pc-wrap.pc-esg-cover-look .pc-date-chip,
+  .pc-wrap.pc-esg-cover-look .pc-eyebrow,
+  .pc-wrap.pc-esg-cover-look .pc-pand-title,
+  .pc-wrap.pc-esg-cover-look .pc-pand-address,
+  .pc-wrap.pc-esg-cover-look .pc-pand-address b,
+  .pc-wrap.pc-esg-cover-look .pc-bottom-bar,
+  .pc-wrap.pc-esg-cover-look .pc-bottom-left,
+  .pc-wrap.pc-esg-cover-look .pc-bottom-right,
+  .pc-wrap.pc-esg-cover-look .pc-cover-badge{
+    text-shadow:none!important;
+    box-shadow:none!important;
+    filter:none!important;
+    -webkit-text-stroke:0!important;
+    background-clip:border-box!important;
+  }
+  .pc-wrap.pc-esg-cover-look .pc-photo-overlay{
+    background:
+      linear-gradient(180deg,rgba(13,34,51,.16) 0%,rgba(13,34,51,.30) 46%,rgba(13,34,51,.66) 100%),
+      radial-gradient(ellipse at 32% 82%,rgba(8,24,36,.58) 0%,rgba(8,24,36,.46) 36%,rgba(8,24,36,.10) 72%,transparent 100%)!important;
+  }
+  .pc-wrap.pc-esg-cover-look .pc-accent-line,
+  .pc-wrap.pc-esg-cover-look .pc-cover-rule-top,
+  .pc-wrap.pc-esg-cover-look .pc-bottom-bar{
+    box-shadow:none!important;
+  }
+  .pc-wrap.pc-esg-cover-look .pc-cover-badge{
+    background:rgba(13,34,51,.34)!important;
+    border-color:rgba(255,255,255,.30)!important;
+    color:#fff!important;
+  }
+  .pc-wrap.pc-esg-cover-look .pc-cover-badge-dark{
+    background:rgba(217,98,47,.38)!important;
+    border-color:rgba(217,98,47,.52)!important;
+  }
+}
+
 </style>
 
 </head>
