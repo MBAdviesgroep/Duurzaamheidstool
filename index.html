@@ -7762,6 +7762,12 @@ CONSISTENTIE-CHECK — verplicht vóór output:
 2. Controleer: geen twee maatregelen mogen exact hetzelfde investeringsbedrag hebben tenzij aantoonbaar correct.
 3. Controleer: besparingen optellen mag NOOIT meer zijn dan de totale huidige energiekosten.
 4. Controleer: totaal_besparing = som van individuele besparingen, totaal_investering = som van investeringen.
+5. Fases mogen ALLEEN maatregelnamen bevatten die exact in de maatregelenlijst staan. Geen WTW, ventilatie of andere maatregel in fases noemen als die niet ook financieel in de maatregelenlijst staat.
+6. Houd BVO/GBO/VVO, kWh, m³ gas, Wp en opbrengst uit elkaar. Bij bestaande zonnepanelen: noem aantal panelen + jaaropbrengst (kWh/jaar) alleen als dat in de bron staat; noem vermogen (Wp/kWp) alleen als dat expliciet of logisch berekend is. Verzin geen 672 Wp bij 10 panelen.
+7. Besparing in euro's is GEEN kWh. Schrijf dus nooit dat €540 besparing gelijk is aan 540 kWh/jaar. Onderbouw warmtepomp primair via gasbesparing en zonnepanelen via opwek/zelfverbruik.
+8. Netto investering = bruto investering minus directe subsidies. Fiscale regelingen (EIA/MIA/KIA) mogen wel als fiscaal voordeel worden getoond, maar niet alsof ze directe subsidie of factuurkorting zijn.
+9. Gebruik zakelijke vastgoedtaal: pand, object, vastgoedwaarde, verhuurbaarheid, gebruikerscomfort. Vermijd particuliere woorden als woningwaarde, wooncomfort en woning, tenzij het echt om de bedrijfswoning gaat.
+10. Als het pand commercieel/recreatief vastgoed is, formuleer alle conclusies als zakelijk financieringsdossier.
 
 ═══════════════════════════════════════════════════════════════
 NETTO INVESTERING — alleen directe subsidies
@@ -8196,6 +8202,96 @@ function secHead(title) {
   return `<div class="sec-head rpt-section-head"><span class="sec-label">${title}</span><div class="sec-line"></div></div>`;
 }
 
+
+function normalizeSustainabilityConsistency(r){
+  if(!r || typeof r!=='object') return r;
+  const toN=(v)=>{
+    if(v===null || v===undefined) return 0;
+    if(typeof v==='number') return isFinite(v)?v:0;
+    const cleaned=String(v).replace(/\u00a0/g,' ').replace(/[^0-9,.-]/g,'').replace(/\.(?=\d{3}(\D|$))/g,'').replace(',','.');
+    const n=Number(cleaned);
+    return isFinite(n)?n:0;
+  };
+  const euro=(n)=>'€ '+Math.round(Number(n)||0).toLocaleString('nl-NL');
+  const cleanText=(x)=>String(x||'')
+    .replace(/woningwaarde/g,'vastgoedwaarde')
+    .replace(/Woningwaarde/g,'Vastgoedwaarde')
+    .replace(/wooncomfort/g,'gebruikerscomfort')
+    .replace(/Wooncomfort/g,'Gebruikerscomfort')
+    .replace(/\bwoning\b/g,'pand')
+    .replace(/\bWoning\b/g,'Pand')
+    .replace(/\bwoningen\b/g,'objecten')
+    .replace(/\bWoningen\b/g,'Objecten')
+    .replace(/(\d+[\.,]?\d*)\s*kWh\/jr\s*door\s+een\s+hoger[e]?\s+Rc-waarde/gi,'energiekosten door een betere isolatiewaarde')
+    .replace(/(\d+[\.,]?\d*)\s*kWh\/jr\s*door\s+verbeterde\s+isolatie/gi,'energiekosten door betere isolatie')
+    .replace(/vermindert het energieverbruik met\s*€?\s*\d+[\.,]?\d*\s*kWh\/jr/gi,'vermindert het energieverbruik')
+    .replace(/bespaart\s*€?\s*\d+[\.,]?\d*\s*kWh\/jr/gi,'bespaart energie')
+    .replace(/10\s+zonnepanelen\s*\(?\s*672\s*Wp\s*\)?/gi,'10 zonnepanelen, opbrengst/vermogen nog technisch te verifiëren')
+    .replace(/672\s*Wp/gi,'vermogen nog te verifiëren');
+  const deep=(x)=>{
+    if(typeof x==='string') return cleanText(x);
+    if(Array.isArray(x)) return x.map(deep);
+    if(x && typeof x==='object') Object.keys(x).forEach(k=>{x[k]=deep(x[k]);});
+    return x;
+  };
+  deep(r);
+
+  if(Array.isArray(r.maatregelen)){
+    r.maatregelen=r.maatregelen.filter(m=>m && m.naam).map(m=>{
+      const inv=toN(m.investering), bes=toN(m.besparing);
+      if(inv>0) m.investering=euro(inv);
+      if(bes>0) m.besparing=euro(bes);
+      if(inv>0 && bes>0) m.tvt=(inv/bes).toFixed(1).replace('.',',')+' jaar';
+      return m;
+    });
+    const invSum=r.maatregelen.reduce((a,m)=>a+toN(m.investering),0);
+    const besSum=r.maatregelen.reduce((a,m)=>a+toN(m.besparing),0);
+    if(invSum>0) r.totaal_investering=euro(invSum);
+    if(besSum>0) r.totaal_besparing=euro(besSum);
+    if(invSum>0 && besSum>0) r.gemiddelde_tvt=(invSum/besSum).toFixed(1).replace('.',',')+' jaar';
+
+    // Netto investering: label/functie zuiver houden en dubbele bruto-investering voorkomen.
+    if(!r.netto_investering || typeof r.netto_investering!=='object') r.netto_investering={};
+    r.netto_investering.bruto=euro(invSum);
+    if(Array.isArray(r.netto_investering.posten)){
+      const seen=new Set();
+      r.netto_investering.posten=r.netto_investering.posten.filter(p=>p && p.naam).filter(p=>{
+        const k=String(p.naam).toLowerCase().trim();
+        if(k.includes('bruto investering')) return false;
+        if(seen.has(k)) return false;
+        seen.add(k); return true;
+      });
+    }
+  }
+
+  // Fases: alleen maatregelen tonen die ook in de hoofdtabel staan.
+  if(Array.isArray(r.fases) && Array.isArray(r.maatregelen)){
+    const names=r.maatregelen.map(m=>String(m.naam||''));
+    const norm=x=>String(x||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+    r.fases=r.fases.map(f=>{
+      const valid=[];
+      (f.maatregelen||[]).forEach(x=>{
+        const hit=names.find(n=>norm(n)===norm(x) || norm(n).includes(norm(x)) || norm(x).includes(norm(n)));
+        if(hit && !valid.includes(hit)) valid.push(hit);
+      });
+      f.maatregelen=valid;
+      if(valid.length===0){
+        f.beschrijving=String(f.beschrijving||'').replace(/WTW|warmteterugwinning|mechanische ventilatie/gi,'aanvullende technische maatregelen');
+      }
+      let inv=0, bes=0;
+      valid.forEach(v=>{
+        const m=r.maatregelen.find(mm=>String(mm.naam)===v);
+        if(m){ inv+=toN(m.investering); bes+=toN(m.besparing); }
+      });
+      if(inv>0) f.totaal_investering=euro(inv);
+      if(inv>0 && bes>0) f.tvt=(inv/bes).toFixed(1).replace('.',',')+' jaar';
+      return f;
+    });
+  }
+
+  return r;
+}
+
 function renderReport(r) {
   // SANITY-FILTER: gooi maatregelen met absurde TVT (>25 jaar) eruit voordat de tabel wordt gerenderd.
   // Dit vangt rekenfouten en verkeerde kosten-toewijzingen op (bijv. rietdak-vervanging als isolatie-investering).
@@ -8223,6 +8319,7 @@ function renderReport(r) {
       console.info('[sanity] ' + (_origCount - r.maatregelen.length) + ' maatregelen verwijderd na plausibiliteits-check');
     }
   }
+  r = normalizeSustainabilityConsistency(r);
   _rptData = r;
   _chartInstance = null; // reset grafiek bij nieuw rapport
   const today = new Date().toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric'});
@@ -8328,7 +8425,7 @@ function renderReport(r) {
           Verduurzaming loont
         </span>
       </div>
-      <div class="kpi-sub">investering verdient zichzelf terug én verhoogt de woningwaarde</div>
+      <div class="kpi-sub">investering verdient zichzelf terug én verhoogt de vastgoedwaarde</div>
     </div>
     <div class="kpi-cell kpi-c6">
       <span class="kpi-lbl">Toekomstbestendig</span>
@@ -8373,14 +8470,14 @@ function renderReport(r) {
             <div class="vdi-icon vdi-icon-value">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             </div>
-            <div class="vdi-card-title">Hogere woningwaarde</div>
+            <div class="vdi-card-title">Hogere vastgoedwaarde</div>
             <div class="vdi-card-body">Een beter energielabel verhoogt de marktwaarde aantoonbaar. Kopers en huurders betalen meer voor een energiezuinig pand — en het is makkelijker te verhuren of verkopen.</div>
           </div>
           <div class="vdi-card">
             <div class="vdi-icon vdi-icon-comfort">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10z"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>
             </div>
-            <div class="vdi-card-title">Meer wooncomfort</div>
+            <div class="vdi-card-title">Meer gebruikerscomfort</div>
             <div class="vdi-card-body">Goede isolatie en een efficiënt ventilatiesysteem zorgen voor een aangenamer binnenklimaat: minder tocht, minder vochtige plekken en een gelijkmatigere temperatuur het hele jaar.</div>
           </div>
           <div class="vdi-card">
@@ -9355,7 +9452,7 @@ function renderChartSection() {
       </div>
       <div class="chart-uitleg-card">
         <div class="chart-uitleg-icon">🏠</div>
-        <div class="chart-uitleg-title">Effect op woningwaarde</div>
+        <div class="chart-uitleg-title">Effect op vastgoedwaarde</div>
         <div class="chart-uitleg-text">Naast directe energiebesparing verhoogt een beter energielabel de marktwaarde aantoonbaar. Dit voordeel is in de grafiek niet meegenomen, maar maakt de investering in de praktijk nóg aantrekkelijker.</div>
       </div>
     </div>`;
