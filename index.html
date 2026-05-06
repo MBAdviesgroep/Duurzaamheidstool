@@ -6580,130 +6580,6 @@ select.finput {
   /* Algemene visuele rust */
   * { text-rendering: geometricPrecision !important; }
 }
-
-
-/* ============================================================================
-   DUURZAAMHEIDSTOOL — A4-FIRST LAYOUT FIX v2
-   Doel: A4-preview is de enige rapportlayout. Oude lange rapportsecties worden
-   verborgen zodra de A4-preview is opgebouwd. Print/PDF drukt exact deze pagina's.
-============================================================================ */
-#dztA4Report{display:block;width:100%;}
-.result.a4-upgraded .body > :not(.action-row):not(#dztA4Report){display:none !important;}
-.result.a4-upgraded .rpt-footer{display:none !important;}
-.result.a4-upgraded .action-row{max-width:780px;margin:0 auto 22px;}
-.dzt-a4-stage{display:flex;flex-direction:column;gap:24px;align-items:center;background:#f4f2ef;padding:18px 0 28px;}
-.dzt-a4-page{position:relative;width:210mm;height:297mm;background:#fff;color:#141414;overflow:hidden;box-shadow:0 12px 42px rgba(0,0,0,.16);font-family:var(--f-body,'IBM Plex Sans',sans-serif);line-height:1.35;}
-.dzt-a4-page *{box-sizing:border-box;}
-.dzt-a4-top{height:16mm;background:linear-gradient(90deg,#0d3348 0%,#134460 50%,#1B597B 100%);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 13mm;border-bottom:1.5mm solid #E26836;}
-.dzt-a4-brand{display:flex;align-items:center;gap:6px;min-width:45mm;}
-.dzt-a4-brand img,.dzt-a4-logo{width:8.5mm !important;height:8.5mm !important;min-width:8.5mm !important;min-height:8.5mm !important;max-width:8.5mm !important;max-height:8.5mm !important;border-radius:50%;object-fit:contain;background:#fff;padding:.8mm;display:block;}
-.dzt-a4-brand b{display:block;font-size:8.2pt;line-height:1.05;color:#fff;font-weight:700;}
-.dzt-a4-brand small{display:block;font-size:5.7pt;line-height:1.1;color:rgba(255,255,255,.62);}
-.dzt-a4-mid{font-size:10pt;font-weight:800;letter-spacing:-.15pt;color:#fff;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:80mm;}
-.dzt-a4-conf{font-size:6.5pt;letter-spacing:2.6pt;text-transform:uppercase;color:rgba(255,255,255,.55);font-weight:700;min-width:45mm;text-align:right;}
-.dzt-a4-stamp{position:absolute;top:19mm;right:14mm;font-size:7pt;letter-spacing:2.2pt;color:#9b9b9b;font-weight:700;z-index:2;}
-.dzt-a4-body{position:absolute;left:13mm;right:13mm;top:25mm;bottom:19mm;overflow:hidden;}
-.dzt-a4-foot{position:absolute;left:0;right:0;bottom:0;height:15mm;background:linear-gradient(90deg,#0d3348 0%,#134460 50%,#1B597B 100%);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 12mm;border-top:1.1mm solid #E26836;}
-.dzt-a4-foot-left{display:flex;align-items:center;gap:6px;min-width:48mm;}
-.dzt-a4-foot-left img{width:7.6mm !important;height:7.6mm !important;max-width:7.6mm !important;max-height:7.6mm !important;border-radius:50%;object-fit:contain;background:#fff;padding:.7mm;display:block;}
-.dzt-a4-foot-left b{display:block;font-size:7pt;line-height:1.05;color:#fff;}
-.dzt-a4-foot-left small{display:block;font-size:5.4pt;line-height:1.1;color:rgba(255,255,255,.55);}
-.dzt-a4-foot-mid{font-size:6.1pt;color:rgba(255,255,255,.52);text-align:center;font-style:italic;}
-.dzt-a4-foot-right{min-width:45mm;text-align:right;font-size:6.3pt;line-height:1.2;color:rgba(255,255,255,.72);}
-.dzt-a4-foot-right b{color:#fff;font-size:6.8pt;}
-
-/* Cover */
-.dzt-cover{background:#123e59;color:#fff;}
-.dzt-cover::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(19,68,96,.95) 0%,rgba(27,89,123,.82) 55%,rgba(13,34,51,.92) 100%);z-index:0;}
-.dzt-cover::after{content:'';position:absolute;left:0;right:0;bottom:0;height:60%;background:linear-gradient(0deg,rgba(0,0,0,.32),transparent);z-index:0;}
-.dzt-cover-inner{position:relative;z-index:1;width:100%;height:100%;padding:18mm 14mm;display:flex;flex-direction:column;justify-content:space-between;}
-.dzt-cover-top{display:flex;align-items:center;justify-content:space-between;border-top:.3mm solid rgba(255,255,255,.22);padding-top:8mm;}
-.dzt-cover-brand{display:flex;align-items:center;gap:8px;}
-.dzt-cover-brand img{width:11mm !important;height:11mm !important;max-width:11mm !important;max-height:11mm !important;border-radius:50%;object-fit:contain;background:#fff;padding:1mm;}
-.dzt-cover-brand b{display:block;font-size:10pt;color:#fff;line-height:1.05;}
-.dzt-cover-brand small{display:block;font-size:6.3pt;color:rgba(255,255,255,.63);line-height:1.15;}
-.dzt-cover-date{font-size:7.5pt;color:rgba(255,255,255,.65);}
-.dzt-cover-main{margin-top:auto;margin-bottom:18mm;}
-.dzt-cover-eyebrow{display:flex;align-items:center;gap:10px;font-size:8pt;letter-spacing:3pt;text-transform:uppercase;color:#f09060;font-weight:800;margin-bottom:7mm;}
-.dzt-cover-eyebrow::after{content:'';width:32mm;height:.5mm;background:#f09060;display:inline-block;}
-.dzt-cover-title{font-size:32pt;line-height:1.02;font-weight:800;letter-spacing:-1.4pt;color:#fff;margin:0 0 5mm;}
-.dzt-cover-sub{font-size:10.5pt;line-height:1.45;color:rgba(255,255,255,.88);max-width:160mm;margin-bottom:9mm;}
-.dzt-cover-badges{display:flex;gap:5mm;flex-wrap:wrap;border-top:.3mm solid rgba(255,255,255,.20);padding-top:7mm;}
-.dzt-cover-badge{font-size:7pt;letter-spacing:1.5pt;text-transform:uppercase;color:#fff;border:.3mm solid rgba(255,255,255,.35);border-radius:99px;padding:2.1mm 4.2mm;background:rgba(255,255,255,.08);font-weight:800;}
-.dzt-cover-badge.orange{border-color:rgba(226,104,54,.65);background:rgba(226,104,54,.22);}
-.dzt-cover-foot{display:flex;justify-content:space-between;align-items:center;font-size:7.5pt;color:rgba(255,255,255,.72);border-top:.3mm solid rgba(255,255,255,.18);padding-top:5mm;}
-
-/* A4 content components */
-.dzt-eyebrow{font-size:8pt;font-weight:800;letter-spacing:2.8pt;text-transform:uppercase;color:#E26836;margin-bottom:4mm;}
-.dzt-page-title{font-size:21pt;line-height:1.08;font-weight:800;color:#123e59;letter-spacing:-.8pt;margin:0 0 2.2mm;}
-.dzt-page-sub{font-size:9pt;line-height:1.45;color:#666;margin:0 0 4.5mm;max-width:175mm;}
-.dzt-thin-rule{width:13mm;height:.55mm;background:#123e59;margin:0 0 5mm;}
-.dzt-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:4mm;}
-.dzt-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:3.6mm;}
-.dzt-card,.dzt-card-soft,.dzt-card-blue,.dzt-chart-card{border-radius:4mm;box-shadow:0 2px 10px rgba(0,0,0,.055);border:.25mm solid #e8e2dc;background:#fff;overflow:hidden;}
-.dzt-card{padding:4mm 4.5mm;}
-.dzt-card-soft{padding:4mm 4.5mm;background:#f1f8fc;border-color:#d9e8f0;}
-.dzt-card-blue{padding:5mm;background:linear-gradient(135deg,#15506f,#1e7199);color:#fff;border:none;}
-.dzt-chart-card{padding:4mm 4.5mm;}
-.dzt-section-h{font-size:7.3pt;letter-spacing:2pt;text-transform:uppercase;color:#E26836;font-weight:900;margin-bottom:2.8mm;}
-.dzt-kpi-label{font-size:7.1pt;letter-spacing:1.5pt;text-transform:uppercase;color:#9b9b9b;font-weight:800;margin-bottom:2mm;}
-.dzt-kpi-val{font-size:19pt;line-height:1;font-weight:850;color:#123e59;letter-spacing:-.6pt;}
-.dzt-kpi-val.green,.green{color:#2A7A50 !important;}.dzt-kpi-val.orange,.orange{color:#E26836 !important;}
-.dzt-kpi-sub{font-size:7.4pt;color:#666;line-height:1.3;margin-top:2mm;}
-.dzt-score-big{font-size:30pt;line-height:1;font-weight:900;color:#fff;letter-spacing:-1.1pt;}
-.dzt-score-big small{font-size:13pt;color:rgba(255,255,255,.68);font-weight:600;}
-.dzt-score-bar{height:2mm;border-radius:99px;background:rgba(255,255,255,.16);overflow:hidden;margin:3.5mm 0;}
-.dzt-score-fill{height:100%;background:#ff7b4d;border-radius:99px;}
-.dzt-label-row{display:grid;grid-template-columns:repeat(11,1fr);gap:1.2mm;margin:4mm 0;align-items:end;}
-.dzt-label-box{height:7mm;border-radius:1mm;color:#fff;font-size:6.2pt;font-weight:900;display:flex;align-items:center;justify-content:center;position:relative;}
-.dzt-label-box.dim{opacity:.32;}
-.dzt-label-box.current,.dzt-label-box.target{height:8.8mm;box-shadow:0 2px 5px rgba(0,0,0,.16);}
-.dzt-label-box.current::after{content:'HUIDIG';position:absolute;bottom:-4.1mm;font-size:4.5pt;color:#7b7b7b;letter-spacing:.6pt;}
-.dzt-label-box.target::after{content:'DOEL';position:absolute;bottom:-4.1mm;font-size:4.5pt;color:#E26836;letter-spacing:.6pt;}
-.dzt-mini-table{width:100%;border-collapse:collapse;font-size:8pt;margin-top:5mm;}
-.dzt-mini-table td{padding:2.1mm 0;border-bottom:.25mm solid #e7e1dc;color:#444;}
-.dzt-mini-table td:last-child{text-align:right;font-weight:800;color:#123e59;}
-.dzt-bullets{list-style:none;margin:0;padding:0;}
-.dzt-bullets li{font-size:8.2pt;line-height:1.42;color:#333;padding:1.3mm 0 1.3mm 4mm;border-bottom:.25mm solid rgba(0,0,0,.055);position:relative;}
-.dzt-bullets li::before{content:'';position:absolute;left:0;top:3.3mm;width:1.3mm;height:1.3mm;border-radius:50%;background:#E26836;}
-.dzt-bullets li:last-child{border-bottom:0;}
-.dzt-total-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:4mm;border:.25mm solid #dce9f1;border-radius:3.3mm;overflow:hidden;}
-.dzt-total-cell{background:#f1f8fc;padding:3.2mm 4mm;border-right:.25mm solid #dce9f1;}
-.dzt-total-cell:last-child{border-right:0;}
-.dzt-total-cell .l{font-size:6.7pt;text-transform:uppercase;letter-spacing:1.3pt;color:#888;font-weight:800;margin-bottom:1.2mm;}
-.dzt-total-cell .v{font-size:15pt;line-height:1;font-weight:900;color:#123e59;}
-.dzt-measure-table{width:100%;border-collapse:collapse;font-size:8pt;}
-.dzt-measure-table th{font-size:6.8pt;text-transform:uppercase;letter-spacing:1.1pt;color:#888;text-align:left;border-bottom:.5mm solid #123e59;padding:0 2mm 2.2mm;}
-.dzt-measure-table td{padding:2.3mm 2mm;border-bottom:.25mm solid #e7e1dc;color:#333;vertical-align:middle;}
-.dzt-measure-table td.name{font-weight:800;color:#123e59;}
-.dzt-measure-table td.num{font-weight:800;color:#2A7A50;}
-.dzt-svg{display:block;width:100%;height:auto;max-height:60mm;}
-.dzt-sub-list{display:grid;grid-template-columns:1fr 1fr;gap:3mm;}
-.dzt-sub-card{border:.25mm solid #e7e1dc;border-radius:3mm;background:#fff;padding:3mm 3.5mm;min-height:22mm;}
-.dzt-sub-code{display:inline-flex;align-items:center;background:#123e59;color:#fff;font-size:6.3pt;font-weight:900;padding:1mm 2.1mm;border-radius:99px;margin-right:2mm;}
-.dzt-sub-name{display:inline;font-size:8.5pt;font-weight:900;color:#123e59;line-height:1.2;}
-.dzt-sub-text{font-size:7.6pt;color:#444;line-height:1.35;margin-top:1.7mm;}
-.dzt-phase-grid{display:grid;grid-template-columns:1fr 1fr;gap:4mm;}
-.dzt-phase{border:.25mm solid #e4ded8;border-radius:3.4mm;background:#fff;overflow:hidden;}
-.dzt-phase-head{display:flex;align-items:center;gap:3mm;background:#f4f2ef;padding:3mm 3.5mm;border-bottom:.25mm solid #e4ded8;}
-.dzt-phase-num{width:7mm;height:7mm;border-radius:50%;background:#E26836;color:#fff;font-size:8pt;font-weight:900;display:flex;align-items:center;justify-content:center;}
-.dzt-phase-title{font-size:9.2pt;font-weight:900;color:#123e59;}
-.dzt-phase-body{font-size:8pt;line-height:1.45;color:#444;padding:3mm 3.5mm;}
-
-@media (max-width:900px){.dzt-a4-stage{transform-origin:top center}.dzt-a4-page{width:100%;height:auto;aspect-ratio:210/297}.dzt-a4-body{overflow:hidden}}
-
-@page{size:A4 portrait;margin:0;}
-@media print{
-  html,body{margin:0 !important;padding:0 !important;background:#fff !important;overflow:visible !important;}
-  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
-  .trust-bar,.hdr,.loading-state,.disclaimer,.toc-rail,.ai-fab,.ai-panel,.action-row,.form-error,.mb-pf,.rpt-footer,.print-cover-page{display:none !important;}
-  .page-wrap,.card,.result,.result .body{display:block !important;width:100% !important;max-width:none !important;margin:0 !important;padding:0 !important;background:#fff !important;box-shadow:none !important;border:0 !important;border-radius:0 !important;overflow:visible !important;}
-  .result.a4-upgraded .body > :not(#dztA4Report){display:none !important;}
-  #dztA4Report{display:block !important;margin:0 !important;padding:0 !important;background:#fff !important;}
-  .dzt-a4-stage{display:block !important;margin:0 !important;padding:0 !important;background:#fff !important;}
-  .dzt-a4-page{width:210mm !important;height:297mm !important;margin:0 !important;padding:0 !important;box-shadow:none !important;border-radius:0 !important;overflow:hidden !important;break-after:page !important;page-break-after:always !important;}
-  .dzt-a4-page:last-child{break-after:auto !important;page-break-after:auto !important;}
-}
 </style>
 
 </head>
@@ -8443,47 +8319,6 @@ function renderReport(r) {
   renderMaandlastenSection(r);
   renderScenarioSection(r);
   renderTocRail();
-  dztBuildA4Report(r);
-}
-
-
-// ============================================================================
-// A4-FIRST REPORT GENERATOR - Duurzaamheidstool upgrade
-// Bouwt na renderReport(r) een aparte, vaste A4-preview op. Deze preview is ook
-// de enige printbron, waardoor de oude zware @media print-layout niet meer hoeft
-// te bepalen hoe het rapport eruitziet.
-// ============================================================================
-function dztLogoSrc(){const img=document.querySelector('.hdr-logo img,.rpt-footer-brand img,.rpt-logo img');return img?img.src:'';}
-function dztEsc(v){return String(v==null?'':v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
-function dztFirst(v,fallback='—'){v=(v==null?'':String(v).trim());return v||fallback;}
-function dztMoney(v){if(v==null||v==='')return '—'; if(typeof fmtEuro==='function' && typeof v==='number')return fmtEuro(v); return dztEsc(v);}
-function dztNum(v){const n=parseEuro(v);return isFinite(n)?n:0;}
-function dztLabelColor(l){l=normLabel(l||'');return ({G:'#CC2222',F:'#E55A0A',E:'#F0970A',D:'#F0D20A',C:'#C8C923',B:'#6DB33F',A:'#2E7D32','A+':'#2AB82A','A++':'#009910','A+++':'#006400','A++++':'#004d00'})[l]||'#1B597B';}
-function dztScoreFromFin(r){const f=(r.financierbaarheid||'').toLowerCase(); if(f.includes('hoog'))return 82; if(f.includes('gem'))return 68; if(f.includes('laag'))return 48; return 74;}
-function dztSumMeasures(ms){let inv=0,save=0,co2=0; (ms||[]).forEach(m=>{inv+=dztNum(m.investering);save+=dztNum(m.besparing); let c=String(m.co2||'').replace(',','.').match(/-?[0-9]+(?:\.[0-9]+)?/); if(c) co2+=parseFloat(c[0]);}); return {inv,save,co2};}
-function dztHeader(title,page,total){return `<div class="dzt-a4-top"><div class="dzt-a4-brand"><img class="dzt-a4-logo" src="${dztLogoSrc()}"><div><b>MB Adviesgroep</b><small>Verduurzamings- & vastgoedadvies</small></div></div><div class="dzt-a4-mid">${dztEsc(title)}</div><div class="dzt-a4-conf">Vertrouwelijk</div></div><div class="dzt-a4-stamp">${String(page).padStart(2,'0')} · ${String(total).padStart(2,'0')}</div>`;}
-function dztFooter(){return `<div class="dzt-a4-foot"><div class="dzt-a4-foot-left"><img src="${dztLogoSrc()}"><div><b>MB Adviesgroep</b><small>Verduurzamings- & vastgoedadvies</small></div></div><div class="dzt-a4-foot-mid">Duurzaamheidsrapport · subsidies · financiering · uitvoering</div><div class="dzt-a4-foot-right"><b>info@mbadviesgroep.nl</b><br>mbadviesgroep.nl</div></div>`;}
-function dztPage(title,page,total,body,cls=''){return `<article class="dzt-a4-page ${cls}">${dztHeader(title,page,total)}<div class="dzt-a4-body">${body}</div>${dztFooter()}</article>`;}
-function dztSec(title){return `<div class="dzt-section-h">${title}</div>`;}
-function dztBullets(items){return `<ul class="dzt-bullets">${items.filter(Boolean).map(x=>`<li>${x}</li>`).join('')}</ul>`;}
-function dztLabelScale(cur,tgt){const scale=['G','F','E','D','C','B','A','A+','A++','A+++','A++++'];cur=normLabel(cur);tgt=normLabel(tgt);const ci=scale.indexOf(cur),ti=scale.indexOf(tgt);return `<div class="dzt-label-row">${scale.map((l,i)=>`<div class="dzt-label-box ${i===ci?'current':''} ${i===ti?'target':''} ${(ci>=0&&ti>=0&&i<Math.min(ci,ti)||i>Math.max(ci,ti))?'dim':''}" style="background:${dztLabelColor(l)}">${l}</div>`).join('')}</div>`;}
-function dztCashflowSvg(inv,save){inv=Math.max(0,inv||0);save=Math.max(0,save||0);const W=640,H=210,p=30;let pts=[];for(let y=0;y<=15;y++){pts.push({x:p+(W-2*p)*y/15,y:H-p-(H-2*p)*(save*y)/(Math.max(inv,save*15,1))});}const investY=H-p-(H-2*p)*inv/(Math.max(inv,save*15,1));const be=save>0?Math.ceil(inv/save):null;return `<svg class="dzt-svg" viewBox="0 0 ${W} ${H}" aria-label="Cumulatieve besparing"><rect x="0" y="0" width="${W}" height="${H}" fill="#fff"/><g stroke="#E5DFDA" stroke-width="1">${[0,1,2,3].map(i=>`<line x1="${p}" x2="${W-p}" y1="${p+i*(H-2*p)/3}" y2="${p+i*(H-2*p)/3}"/>`).join('')}</g><line x1="${p}" x2="${W-p}" y1="${investY}" y2="${investY}" stroke="#E26836" stroke-width="2" stroke-dasharray="7 5"/><path d="M${pts.map(q=>`${q.x.toFixed(1)},${q.y.toFixed(1)}`).join(' L')}" fill="none" stroke="#2A7A50" stroke-width="3"/><path d="M${p},${H-p} L${pts.map(q=>`${q.x.toFixed(1)},${q.y.toFixed(1)}`).join(' L')} L${W-p},${H-p} Z" fill="rgba(42,122,80,.11)"/><g font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#6B6B6B"><text x="${p}" y="${H-8}">Y0</text><text x="${p+(W-2*p)*.4}" y="${H-8}">Y6</text><text x="${p+(W-2*p)*.8}" y="${H-8}">Y12</text><text x="${W-p-16}" y="${H-8}">Y15</text><text x="${W-p-116}" y="${investY-6}" fill="#E26836">investering</text>${be&&be<=15?`<text x="${p+(W-2*p)*be/15-18}" y="${Math.max(20,pts[be].y-12)}" fill="#2A7A50">break-even jaar ${be}</text>`:''}</g></svg>`;}
-function dztBarSvg(ms){ms=(ms||[]).slice(0,8);const W=640,H=Math.max(190,ms.length*28+35),left=150,right=30;const max=Math.max(1,...ms.map(m=>dztNum(m.besparing)));return `<svg class="dzt-svg" viewBox="0 0 ${W} ${H}" aria-label="Besparing per maatregel"><rect width="${W}" height="${H}" fill="#fff"/>${ms.map((m,i)=>{const y=24+i*28,w=(W-left-right)*dztNum(m.besparing)/max;return `<text x="0" y="${y+12}" font-size="10" font-family="IBM Plex Sans" fill="#3A3A3A">${dztEsc(String(m.naam||'').slice(0,22))}</text><rect x="${left}" y="${y}" width="${w}" height="16" rx="4" fill="#1B597B"/><text x="${Math.min(W-right-55,left+w+7)}" y="${y+12}" font-size="10" font-family="IBM Plex Sans" fill="#134460" font-weight="700">${dztEsc(m.besparing||'')}</text>`}).join('')}</svg>`;}
-function dztMiniMeasureRows(ms,limit=10){return (ms||[]).slice(0,limit).map(m=>`<tr><td class="name">${dztEsc(m.naam)}</td><td class="num">${dztEsc(m.besparing||'—')}</td><td class="num">${dztEsc(m.investering||'—')}</td><td>${dztEsc(m.tvt||'—')}</td><td>${dztEsc(m.co2||'—')}</td></tr>`).join('');}
-function dztSubsidies(r){let list=[];try{list=[...matchSubsidies(r.maatregelen||[],r.__aanvrager_type||'ondernemer')];}catch(e){};(r.subsidies||[]).forEach(s=>{if(!list.some(x=>(x.code||'').toUpperCase()===(s.code||'').toUpperCase()))list.push(s);});return list.slice(0,6);}
-function dztBuildA4Report(r){
-  const result=document.getElementById('result'); if(!result) return; result.classList.add('a4-upgraded');
-  const body=result.querySelector('.body'); if(!body) return;
-  let mount=document.getElementById('dztA4Report'); if(!mount){mount=document.createElement('div'); mount.id='dztA4Report'; const ar=body.querySelector('.action-row'); body.insertBefore(mount, ar?ar.nextSibling:body.firstChild);}
-  const ms=r.maatregelen||[]; const totals=dztSumMeasures(ms); const inv=totals.inv || dztNum(r.totaal_investering); const save=totals.save || dztNum(r.besparing_jaar); const co2=totals.co2; const score=dztScoreFromFin(r); const totalPages=6;
-  const pand=dztFirst(r.object_naam||r.pandnaam||r.naam,'Verduurzamingsrapport'); const adres=dztFirst(r.adres,''); const cur=dztFirst(r.huidig_label,'—'); const target=dztFirst(r.streef_label,'—'); const today=new Date().toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric'});
-  const cover=`<article class="dzt-a4-page dzt-cover"><div class="dzt-cover-inner"><div class="dzt-cover-top"><div class="dzt-cover-brand"><img src="${dztLogoSrc()}"><div><b>MB Adviesgroep</b><small>Verduurzamings- & vastgoedadvies</small></div></div><div class="dzt-cover-date">${today}</div></div><div class="dzt-cover-main"><div class="dzt-cover-eyebrow">Verduurzamingsrapport</div><h1 class="dzt-cover-title">${dztEsc(pand)}</h1><div class="dzt-cover-sub">${dztEsc(adres)}${adres?' · ':''}Energielabel ${dztEsc(cur)} naar ${dztEsc(target)} · maatregelen, subsidies en financieringsindicatie.</div><div class="dzt-cover-badges"><span class="dzt-cover-badge orange">MB Adviesgroep</span><span class="dzt-cover-badge">A4-printklaar</span><span class="dzt-cover-badge">Subsidies & planning</span></div></div><div class="dzt-cover-foot"><span>Vertrouwelijk · opgesteld door <b>MB Adviesgroep</b></span><b>mbadviesgroep.nl</b></div></div></article>`;
-  const p2=`<div class="dzt-eyebrow">Samenvatting & financierbaarheid</div><h2 class="dzt-page-title">Verduurzaming — in één oogopslag</h2><p class="dzt-page-sub">Deze pagina vat de belangrijkste uitkomsten samen: labelverbetering, investering, besparing, terugverdientijd en de reden waarom verduurzaming financieel interessant kan zijn.</p><div class="dzt-thin-rule"></div><div class="dzt-grid-3" style="margin-bottom:12px"><div class="dzt-card"><div class="dzt-kpi-label">Investering</div><div class="dzt-kpi-val">${fmtEuro(inv)}</div><div class="dzt-kpi-sub">Bruto pakket, exclusief subsidies</div></div><div class="dzt-card"><div class="dzt-kpi-label">Besparing / jaar</div><div class="dzt-kpi-val green">${fmtEuro(save)}</div><div class="dzt-kpi-sub">Indicatieve verlaging energielasten</div></div><div class="dzt-card"><div class="dzt-kpi-label">CO₂-reductie</div><div class="dzt-kpi-val orange">${dztFirst(r.co2_reductie_pct, co2?co2.toFixed(1)+' t':'—')}</div><div class="dzt-kpi-sub">Gebaseerd op geselecteerde maatregelen</div></div></div><div class="dzt-grid-2" style="margin-bottom:14px"><div class="dzt-card-blue"><div class="dzt-kpi-label" style="color:rgba(255,255,255,.55)">Financierbaarheid</div><div class="dzt-score-big">${score}<small>/100</small></div><div class="dzt-score-bar"><div class="dzt-score-fill" style="width:${score}%"></div></div><div style="font-size:13px;font-weight:800">${dztEsc(dztFirst(r.financierbaarheid,'Kansrijk voor groene financiering'))}</div><div style="font-size:10.5px;color:rgba(255,255,255,.72);margin-top:5px">Score op basis van labelverbetering, investering, besparing en uitvoerbaarheid.</div></div><div class="dzt-card"><div class="dzt-section-h">Energielabel-traject</div><div style="font-size:13px;font-weight:800;color:var(--blue-deep)">${dztEsc(cur)} → ${dztEsc(target)}</div>${dztLabelScale(cur,target)}<table class="dzt-mini-table"><tr><td>Huidig energielabel</td><td>${dztEsc(cur)}</td></tr><tr><td>Streeflabel</td><td>${dztEsc(target)}</td></tr><tr><td>Terugverdientijd</td><td>${save?Math.ceil(inv/save)+' jaar':'—'}</td></tr></table></div></div><div class="dzt-card-soft"><div class="dzt-section-h">Managementsamenvatting</div><p style="font-size:12px;line-height:1.6;margin-bottom:10px;color:var(--ink-2)">${dztEsc(dztFirst(r.samenvatting,'De voorgestelde maatregelen verlagen het energieverbruik, verbeteren het energielabel en maken het pand toekomstbestendiger.'))}</p>${dztBullets([`Het pand verbetert naar verwachting van energielabel ${dztEsc(cur)} naar ${dztEsc(target)}.`,`De totale investering bedraagt circa ${fmtEuro(inv)} met een indicatieve besparing van ${fmtEuro(save)} per jaar.`,`Offertes, technische controle en subsidievoorwaarden moeten vóór uitvoering definitief worden bevestigd.`])}</div>`;
-  const p3=`<div class="dzt-eyebrow">Maatregelenpakket</div><h2 class="dzt-page-title">Welke maatregelen leveren het meeste op?</h2><p class="dzt-page-sub">Overzicht van de geadviseerde maatregelen met investering, jaarlijkse besparing, terugverdientijd en CO₂-effect.</p><div class="dzt-thin-rule"></div><div class="dzt-total-strip"><div class="dzt-total-cell"><div class="l">Totaal investering</div><div class="v">${fmtEuro(inv)}</div></div><div class="dzt-total-cell"><div class="l">Besparing / jaar</div><div class="v" style="color:var(--green)">${fmtEuro(save)}</div></div><div class="dzt-total-cell"><div class="l">Gem. TVT</div><div class="v">${save?Math.ceil(inv/save)+' jaar':'—'}</div></div><div class="dzt-total-cell"><div class="l">Aantal maatregelen</div><div class="v">${ms.length}</div></div></div><div class="dzt-card" style="padding:14px 16px;margin-bottom:14px"><table class="dzt-measure-table"><thead><tr><th style="width:34%">Maatregel</th><th>Besparing</th><th>Investering</th><th>TVT</th><th>CO₂</th></tr></thead><tbody>${dztMiniMeasureRows(ms,10)}</tbody></table>${ms.length>10?`<div style="font-size:10px;color:var(--ink-4);margin-top:8px">+ ${ms.length-10} extra maatregel(en) opgenomen in de berekening.</div>`:''}</div><div class="dzt-chart-card"><div class="dzt-section-h">Besparing per maatregel</div>${dztBarSvg(ms)}</div>`;
-  const p4=`<div class="dzt-eyebrow">Financieel effect</div><h2 class="dzt-page-title">Wat levert de investering op?</h2><p class="dzt-page-sub">De grafiek toont hoe de energiebesparing zich over tijd opstapelt ten opzichte van de investering.</p><div class="dzt-thin-rule"></div><div class="dzt-grid-3" style="margin-bottom:14px"><div class="dzt-card"><div class="dzt-kpi-label">Break-even</div><div class="dzt-kpi-val orange">${save?`Jaar ${Math.ceil(inv/save)}`:'—'}</div><div class="dzt-kpi-sub">Zonder waardestijging woning</div></div><div class="dzt-card"><div class="dzt-kpi-label">15 jaar besparing</div><div class="dzt-kpi-val green">${fmtEuro(save*15)}</div><div class="dzt-kpi-sub">Bij gelijkblijvende prijzen</div></div><div class="dzt-card"><div class="dzt-kpi-label">Netto voordeel 15 jaar</div><div class="dzt-kpi-val">${fmtEuro(save*15-inv)}</div><div class="dzt-kpi-sub">Besparing minus investering</div></div></div><div class="dzt-chart-card" style="margin-bottom:14px"><div class="dzt-section-h">Cumulatieve cashflow</div>${dztCashflowSvg(inv,save)}</div><div class="dzt-grid-2"><div class="dzt-card-soft"><div class="dzt-section-h">Interpretatie</div>${dztBullets([`Bij een jaarlijkse besparing van ${fmtEuro(save)} is de investering indicatief terugverdiend rond jaar ${save?Math.ceil(inv/save):'—'}.`,`Subsidies en fiscale regelingen kunnen de netto investering verder verlagen.`,`Een beter energielabel kan daarnaast de waarde en verhuurbaarheid verbeteren.`])}</div><div class="dzt-card"><div class="dzt-section-h">Netto investering</div><table class="dzt-mini-table"><tr><td>Bruto investering</td><td>${fmtEuro(inv)}</td></tr><tr><td>Subsidies / regelingen</td><td>${dztFirst(r.netto_investering&&r.netto_investering.subsidies,'te toetsen')}</td></tr><tr><td>Indicatie netto</td><td>${dztFirst(r.netto_investering&&r.netto_investering.netto, 'na controle')}</td></tr></table></div></div>`;
-  const subsidies=dztSubsidies(r); const p5=`<div class="dzt-eyebrow">Subsidies & voorwaarden</div><h2 class="dzt-page-title">Welke regelingen zijn relevant?</h2><p class="dzt-page-sub">Deze pagina geeft een compacte toets van de belangrijkste subsidie- en financieringsaandachtspunten. Definitieve toepassing blijft afhankelijk van actuele voorwaarden en offertes.</p><div class="dzt-thin-rule"></div><div class="dzt-sub-list" style="margin-bottom:16px">${subsidies.map(s=>`<div class="dzt-sub-card"><span class="dzt-sub-code">${dztEsc(s.code||'SUB')}</span><div class="dzt-sub-name">${dztEsc(s.naam||s.type||'Regeling')}</div><div class="dzt-sub-text">${dztEsc(s.voordeel||s.type||s.toelichting||'Controleer de actuele voorwaarden vóór opdrachtverlening.')}</div></div>`).join('')||'<div class="dzt-card-soft">Geen specifieke subsidies gevonden. Controleer actuele RVO- en gemeentelijke regelingen vóór uitvoering.</div>'}</div><div class="dzt-grid-2"><div class="dzt-card-soft"><div class="dzt-section-h">Voor financiering</div>${dztBullets([`Vraag offertes per maatregel op, uitgesplitst naar materiaal en arbeid.`,`Controleer subsidieaanvragen vóór opdracht of binnen de geldende termijn.`,`Leg technische uitgangspunten vast voor bank, subsidie en uitvoering.`])}</div><div class="dzt-card"><div class="dzt-section-h">Aandachtspunten</div>${dztBullets(((r.aandachtspunten||[]).slice(0,5).map(a=>`<strong>${dztEsc(a.punt||'Aandachtspunt')}:</strong> ${dztEsc(a.toelichting||'')}`)).concat((r.aandachtspunten||[]).length?[]:['Controleer vergunningen, constructie en uitvoerbaarheid vóór start.']))}</div></div>`;
-  const phaseHtml=(r.fases||[]).slice(0,4).map((f,i)=>`<div class="dzt-phase"><div class="dzt-phase-head"><div class="dzt-phase-num">${i+1}</div><div class="dzt-phase-title">${dztEsc(f.titel||('Fase '+(i+1)))}</div></div><div class="dzt-phase-body">${dztEsc(f.beschrijving||'Uit te werken in overleg met installateur en adviseur.')}</div></div>`).join(''); const p6=`<div class="dzt-eyebrow">Uitvoering & vervolg</div><h2 class="dzt-page-title">Aanpak in duidelijke stappen</h2><p class="dzt-page-sub">Een gefaseerde aanpak voorkomt onnodige kosten, beperkt uitvoeringsrisico’s en maakt subsidie- en financieringsaanvragen beter onderbouwd.</p><div class="dzt-thin-rule"></div><div class="dzt-phase-grid" style="margin-bottom:16px">${phaseHtml||'<div class="dzt-card-soft">Faseplanning nog te bepalen na technische opname.</div>'}</div><div class="dzt-card-soft" style="margin-bottom:14px"><div class="dzt-section-h">Concrete vervolgstappen</div>${dztBullets([`Plan een technische opname en laat maatregel-specifieke offertes opstellen.`,`Controleer subsidies, vergunningen en eventuele financieringsvoorwaarden vóór opdrachtverlening.`,`Leg na uitvoering bewijs vast: facturen, foto's, garanties en eventueel nieuw energielabel.`,`Gebruik dit dossier als basis voor gesprek met bank, accountant of subsidieadviseur.`])}</div><div class="dzt-grid-3"><div class="dzt-card"><div class="dzt-kpi-label">Adviseur</div><div class="dzt-kpi-val" style="font-size:18px">MB Adviesgroep</div><div class="dzt-kpi-sub">Begeleiding van analyse tot uitvoering</div></div><div class="dzt-card"><div class="dzt-kpi-label">Rapportstatus</div><div class="dzt-kpi-val green" style="font-size:18px">A4-gereed</div><div class="dzt-kpi-sub">Vaste pagina-indeling voor print/PDF</div></div><div class="dzt-card"><div class="dzt-kpi-label">Contact</div><div class="dzt-kpi-val" style="font-size:15px">info@mbadviesgroep.nl</div><div class="dzt-kpi-sub">mbadviesgroep.nl</div></div></div>`;
-  mount.innerHTML=`<div class="dzt-a4-stage">${cover}${dztPage(pand,2,totalPages,p2)}${dztPage(pand,3,totalPages,p3)}${dztPage(pand,4,totalPages,p4)}${dztPage(pand,5,totalPages,p5)}${dztPage(pand,6,totalPages,p6)}</div>`;
 }
 
 function renderBronSection(r) {
@@ -10126,6 +9961,10 @@ function printRapport() {
   const orig = document.title;
   document.title = 'Verduurzamingsrapport — ' + pandNaam;
 
+  // Zet de bestaande rapportsecties terug in de originele flow vóór PDF/print.
+  // Zo blijft de inhoud/output exact gelijk aan de oorspronkelijke Duurzaamheidstool.
+  if (window.restoreDztOriginalReportFlow) window.restoreDztOriginalReportFlow();
+
   // Bereid grafieken voor (beforeprint event is niet altijd betrouwbaar in Chrome PDF-dialoog)
   prepareChartsForPrint();
 
@@ -10135,9 +9974,133 @@ function printRapport() {
     setTimeout(() => {
       document.title = orig;
       restoreChartsAfterPrint();
+      if (window.buildDztA4Preview) setTimeout(window.buildDztA4Preview, 50);
     }, 1000);
   }, 250);
 }
 </script>
+
+
+<!-- =============================================================
+     CONTENT-SAFE A4 SCREEN PREVIEW
+     - Verandert géén rapportinhoud en géén berekeningen.
+     - Op scherm worden de bestaande rapportsecties alleen visueel in A4-bladen gezet.
+     - Vóór print/PDF worden de secties teruggezet naar de oorspronkelijke DOM-volgorde,
+       zodat de bestaande Duurzaamheidstool-output inhoudelijk exact gelijk blijft.
+============================================================== -->
+<style id="dztA4ScreenPreviewCss">
+  .dzt-a4-preview{display:none;}
+  .result.on .dzt-a4-preview{display:flex;flex-direction:column;align-items:center;gap:22px;margin:0 auto 26px;padding:8px 0 22px;background:var(--page);}
+  .result.on > .body.dzt-a4-source{display:block!important;padding:0!important;background:var(--page)!important;}
+  .result.on > .body.dzt-a4-source > .action-row{max-width:780px;margin:0 auto 18px;padding:0 20px;}
+  .result.on > .body.dzt-a4-source > *:not(.action-row):not(.dzt-a4-preview){display:none!important;}
+  .result.on > .rpt-footer{display:none!important;}
+  .dzt-a4-page{width:210mm;height:297mm;background:#fff;position:relative;overflow:hidden;box-shadow:0 18px 60px rgba(0,0,0,.12);}
+  .dzt-a4-page .dzt-page-head{position:absolute;left:0;top:0;right:0;height:14mm;background:linear-gradient(90deg,#0d2233 0%,#134460 55%,#1B597B 100%);color:#fff;display:flex;align-items:center;padding:0 13mm;z-index:3;border-bottom:2px solid var(--orange);}
+  .dzt-page-head-left{display:flex;align-items:center;gap:7px;min-width:170px;}
+  .dzt-page-head-logo{width:18px;height:18px;border-radius:50%;background:#fff;object-fit:cover;flex-shrink:0;}
+  .dzt-page-head-brand{display:flex;flex-direction:column;line-height:1.1;}
+  .dzt-page-head-name{font-size:9px;font-weight:700;}
+  .dzt-page-head-sub{font-size:7px;color:rgba(255,255,255,.55);}
+  .dzt-page-head-title{position:absolute;left:0;right:0;text-align:center;font-size:9px;font-weight:600;color:rgba(255,255,255,.92);}
+  .dzt-page-head-conf{margin-left:auto;font-size:7px;letter-spacing:3px;color:rgba(255,255,255,.45);text-transform:uppercase;}
+  .dzt-a4-page .dzt-page-foot{position:absolute;left:0;right:0;bottom:0;height:15mm;background:linear-gradient(90deg,#0d3348 0%,#134460 50%,#1B597B 100%);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 13mm;z-index:3;border-top:2px solid var(--orange);}
+  .dzt-page-foot-left{display:flex;align-items:center;gap:7px;}
+  .dzt-page-foot-logo{width:19px;height:19px;border-radius:50%;background:#fff;object-fit:cover;}
+  .dzt-page-foot-brand{display:flex;flex-direction:column;line-height:1.2;}
+  .dzt-page-foot-name{font-size:8px;font-weight:700;}
+  .dzt-page-foot-sub{font-size:6px;color:rgba(255,255,255,.55);}
+  .dzt-page-foot-mid{font-size:6px;color:rgba(255,255,255,.48);text-align:center;line-height:1.35;max-width:320px;}
+  .dzt-page-foot-right{font-size:7px;color:rgba(255,255,255,.82);font-weight:600;text-align:right;line-height:1.25;}
+  .dzt-page-foot-right span{display:block;color:rgba(255,255,255,.55);font-size:6.5px;font-weight:500;}
+  .dzt-page-no{position:absolute;top:17mm;right:13mm;font-size:8px;letter-spacing:3px;color:#a9a9a9;z-index:4;}
+  .dzt-page-content{position:absolute;left:8mm;right:8mm;top:18mm;bottom:18mm;overflow:hidden;z-index:1;}
+  .dzt-a4-cover .dzt-page-content{inset:0;}
+  .dzt-a4-cover .dzt-page-head,.dzt-a4-cover .dzt-page-foot,.dzt-a4-cover .dzt-page-no{display:none;}
+  .dzt-a4-cover #printCover{display:block!important;width:210mm!important;height:297mm!important;min-height:297mm!important;max-height:297mm!important;margin:0!important;overflow:hidden!important;}
+  .dzt-a4-page #printCover{display:block!important;}
+  .dzt-a4-page .rpt-hdr{display:block!important;}
+  .dzt-a4-page .sec-head{margin-top:0;}
+  .dzt-a4-page #labelVisSection{margin-bottom:12px;}
+  .dzt-a4-page #introSection{margin-bottom:10px;}
+  .dzt-a4-page #verduurzamingInfoSection{margin-top:8px;}
+  .dzt-a4-page #measuresSection,.dzt-a4-page #maatregelenChartSection,.dzt-a4-page #chartSection,.dzt-a4-page #subsidiesSection,.dzt-a4-page #nettoSection,.dzt-a4-page #maandlastenSection,.dzt-a4-page #phasesSection,.dzt-a4-page #aandachtSection,.dzt-a4-page #vervolgSection{page-break-before:auto!important;break-before:auto!important;page-break-after:auto!important;break-after:auto!important;}
+  .dzt-a4-page #subsidiesSection .sub-list{margin-bottom:0;}
+  @media print{
+    .dzt-a4-preview{display:none!important;height:0!important;overflow:hidden!important;}
+    .result.on > .body.dzt-a4-source{padding:0!important;background:white!important;}
+    .result.on > .body.dzt-a4-source > *:not(.action-row):not(.dzt-a4-preview){display:block!important;}
+  }
+</style>
+<script id="dztA4ScreenPreviewScript">
+(function(){
+  if (window.__DZT_A4_SCREEN_PREVIEW__) return;
+  window.__DZT_A4_SCREEN_PREVIEW__ = true;
+  const nodeOrder = ['rptHdr','kpiPanel','labelVisSection','wachtenBanner','introSection','verduurzamingInfoSection','geenActieSection','measuresSection','scenarioSection','maatregelenChartSection','chartSection','subsidiesSection','nettoSection','maandlastenSection','nettoInfoSection','phasesSection','aandachtSection','vervolgSection','adviseurSection','bronSection'];
+  const pageDefs = [
+    {key:'cover', cover:true, nodes:['printCover']},
+    {key:'summary', title:'Samenvatting', nodes:['rptHdr','kpiPanel','labelVisSection','wachtenBanner','introSection','verduurzamingInfoSection','geenActieSection']},
+    {key:'measures', title:'Maatregelen', nodes:['measuresSection']},
+    {key:'charts', title:'Besparing', nodes:['maatregelenChartSection','chartSection','scenarioSection']},
+    {key:'subsidies', title:'Subsidies', nodes:['subsidiesSection']},
+    {key:'finance', title:'Financiering', nodes:['nettoSection','maandlastenSection','nettoInfoSection']},
+    {key:'followup', title:'Vervolg', nodes:['phasesSection','aandachtSection','vervolgSection','adviseurSection','bronSection']}
+  ];
+  function logoSrc(){ try { return (typeof LOGO_IMG !== 'undefined' && LOGO_IMG) ? LOGO_IMG : ''; } catch(e){ return ''; } }
+  function reportTitle(){ try { return (window._rptData && window._rptData.pand_naam) || 'Verduurzamingsrapport'; } catch(e){ return 'Verduurzamingsrapport'; } }
+  function makeHead(){
+    const src=logoSrc(); const div=document.createElement('div'); div.className='dzt-page-head';
+    div.innerHTML='<div class="dzt-page-head-left">'+(src?'<img class="dzt-page-head-logo" src="'+src+'" alt="MB">':'')+'<div class="dzt-page-head-brand"><span class="dzt-page-head-name">MB Adviesgroep</span><span class="dzt-page-head-sub">Verduurzamings- &amp; vastgoedadvies</span></div></div><div class="dzt-page-head-title">'+reportTitle()+'</div><div class="dzt-page-head-conf">Vertrouwelijk</div>';
+    return div;
+  }
+  function makeFoot(){
+    const src=logoSrc(); const div=document.createElement('div'); div.className='dzt-page-foot';
+    div.innerHTML='<div class="dzt-page-foot-left">'+(src?'<img class="dzt-page-foot-logo" src="'+src+'" alt="MB">':'')+'<div class="dzt-page-foot-brand"><span class="dzt-page-foot-name">MB Adviesgroep</span><span class="dzt-page-foot-sub">Verduurzamings- &amp; vastgoedadvies</span></div></div><div class="dzt-page-foot-mid">Alle bedragen zijn exclusief btw en ter indicatie op basis van kengetallen per maatregel.<br>Definitieve bedragen volgen na inspectie en offertes.</div><div class="dzt-page-foot-right">info@mbadviesgroep.nl<span>mbadviesgroep.nl</span></div>';
+    return div;
+  }
+  function ensurePreview(){
+    const body=document.querySelector('#result > .body'); if(!body) return null;
+    body.classList.add('dzt-a4-source');
+    let p=document.getElementById('dztA4Preview');
+    if(!p){ p=document.createElement('div'); p.id='dztA4Preview'; p.className='dzt-a4-preview'; body.appendChild(p); }
+    return p;
+  }
+  function makePage(def,idx,total){
+    const page=document.createElement('section'); page.className='dzt-a4-page'+(def.cover?' dzt-a4-cover':''); page.dataset.page=def.key;
+    if(!def.cover){ page.appendChild(makeHead()); const no=document.createElement('div'); no.className='dzt-page-no'; no.textContent=String(idx).padStart(2,'0')+' · '+String(total).padStart(2,'0'); page.appendChild(no); }
+    const content=document.createElement('div'); content.className='dzt-page-content'; page.appendChild(content);
+    if(!def.cover) page.appendChild(makeFoot());
+    return {page,content};
+  }
+  function build(){
+    const preview=ensurePreview(); if(!preview) return;
+    const pool=document.createDocumentFragment();
+    ['printCover'].concat(nodeOrder).forEach(id=>{ const n=document.getElementById(id); if(n) pool.appendChild(n); });
+    preview.innerHTML='';
+    const activeDefs=pageDefs.filter(def=>def.nodes.some(id=>pool.querySelector('#'+CSS.escape(id))));
+    const total=activeDefs.length;
+    activeDefs.forEach((def,i)=>{ const pc=makePage(def,i+1,total); def.nodes.forEach(id=>{ const node=pool.querySelector('#'+CSS.escape(id)); if(!node) return; if(!def.cover && !node.textContent.trim() && !node.querySelector('canvas,img,table,.rpt-hdr')) return; pc.content.appendChild(node); }); preview.appendChild(pc.page); });
+  }
+  function restoreForPrint(){
+    const result=document.getElementById('result'); const body=document.querySelector('#result > .body'); if(!result||!body) return;
+    body.classList.remove('dzt-a4-source');
+    const cover=document.getElementById('printCover'); if(cover) result.insertBefore(cover, body);
+    const action=body.querySelector('.action-row'); let anchor=action||null;
+    nodeOrder.forEach(id=>{ const n=document.getElementById(id); if(n){ if(anchor) anchor.after(n), anchor=n; else body.appendChild(n); } });
+  }
+  window.buildDztA4Preview=build; window.restoreDztOriginalReportFlow=restoreForPrint;
+  function wrapRender(){
+    if(typeof window.renderReport==='function' && !window.renderReport.__dztA4ScreenWrapped){
+      const original=window.renderReport;
+      const wrapped=function(){ const ret=original.apply(this,arguments); setTimeout(build,0); setTimeout(build,250); setTimeout(build,900); return ret; };
+      wrapped.__dztA4ScreenWrapped=true; window.renderReport=wrapped;
+    }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',wrapRender); else wrapRender();
+  window.addEventListener('beforeprint', restoreForPrint);
+  window.addEventListener('afterprint', function(){ setTimeout(build,50); });
+})();
+</script>
+
 </body>
 </html>
