@@ -7550,9 +7550,11 @@ Als werkelijke kosten >10% afwijken van de bankscan-schatting: meld dit explicie
 
 Verder:
 - Als de brochure investeringskosten of offerte-bedragen voor een maatregel bevat: gebruik die WERKELIJKE bedragen in plaats van kengetallen.
-- Als werkelijke besparing per maatregel uit een eerdere offerte/scan blijkt: gebruik die.
-- Pas alleen kengetallen/schattingen toe waar geen werkelijke cijfers beschikbaar zijn.
+- Besparingen uit de BANKSCAN/duurzaamheidstool NOOIT klakkeloos overnemen — die zijn vaak fysiek onmogelijk hoog. Herbereken de besparing ALTIJD zelf met het rekenmodel uit Categorie B op basis van het werkelijke verbruik (m³ gas, kWh elektra) van DIT pand. Dit geldt óók voor maatregelen die met een besparingsbedrag in de bankscan staan (gevelisolatie, dakisolatie, enz.).
+- Alleen een besparing uit een ECHTE installateursofferte of meting van dit specifieke pand mag direct worden gebruikt — en ook die is onderworpen aan de energiebalans-cap hieronder.
 - Herbereken besparingspercentages en terugverdientijd op basis van de werkelijke huidige kosten — anders kloppen tvt en jaarlijkse besparing niet.
+
+⚠️ FYSIEKE GRENS PER MAATREGEL — een gasbesparende maatregel (isolatie, warmtepomp, kierdichting, radiatorfolie, glas, ventilatie) kan NOOIT meer gas besparen dan er aan gas wordt verbruikt. Toets elk besparingsbedrag aan: besparing ≤ (aandeel in warmteverlies × totale gasrekening). Eén isolatiemaatregel bespaart in de praktijk 4–28% van de gasrekening — nooit 60–80%. Komt je berekening hoger uit: het is fout, corrigeer naar beneden.
 
 ═══════════════════════════════════════════════════════════════
 EIGEN INZICHT — proactief aanvullen waar logisch
@@ -7788,7 +7790,11 @@ REKENMODEL PER MAATREGEL:
 CONSISTENTIE-CHECK — verplicht vóór output:
 1. Bereken voor ELKE maatregel: investering ÷ besparing = tvt. Als tvt > 25 jaar → weglaten.
 2. Controleer: geen twee maatregelen mogen exact hetzelfde investeringsbedrag hebben tenzij aantoonbaar correct.
-3. Controleer: besparingen optellen mag NOOIT meer zijn dan de totale huidige energiekosten.
+3. ⚠️ ENERGIEBALANS-CAP — HARDE EIS, controleer dit expliciet en corrigeer vóór output:
+   a. Splits het verbruik: gasrekening = m³ gas × gasprijs; elektrarekening = kWh × stroomprijs. (Som ≈ huidige_kosten.)
+   b. Som van ALLE gasbesparende maatregelen (isolatie dak/gevel/vloer, glas, kierdichting, radiatorfolie, hybride/elektrische warmtepomp, WTW) mag NOOIT hoger zijn dan de gasrekening. In de praktijk max ~70% daarvan.
+   c. Som van ALLE elektrabesparende maatregelen (zonnepanelen zelfverbruik, LED, slimme sturing) mag NOOIT hoger zijn dan de elektrarekening (zonnepanelen-teruglevering apart, tegen salderingstarief).
+   d. totaal_besparing (som van alle maatregelen) mag NOOIT hoger zijn dan huidige_kosten. Komt het hoger uit → schaal de individuele besparingen naar beneden tot de som past, en herbereken alle tvt's. Toon NOOIT een "surplus" of besparing boven de energierekening.
 4. Controleer: totaal_besparing = som van individuele besparingen, totaal_investering = som van investeringen.
 5. Fases mogen ALLEEN maatregelnamen bevatten die exact in de maatregelenlijst staan. Geen WTW, ventilatie of andere maatregel in fases noemen als die niet ook financieel in de maatregelenlijst staat.
 6. Houd BVO/GBO/VVO, kWh, m³ gas, Wp en opbrengst uit elkaar. Bij bestaande zonnepanelen: noem aantal panelen + jaaropbrengst (kWh/jaar) alleen als dat in de bron staat; noem vermogen (Wp/kWp) alleen als dat expliciet of logisch berekend is. Verzin geen 672 Wp bij 10 panelen.
@@ -9976,8 +9982,7 @@ function renderMaandlastenSection(r) {
       set('mlDirect', `<span style="font-size:20px;color:var(--green);">Volledig gedekt</span>`);
       set('mlDirectDet',
         `<div class="ml-detail-row"><span class="lbl">Energie/jr</span><span class="val">${fmtEuro(restEnergie)}</span></div>
-         <div class="ml-detail-row"><span class="lbl">Bespaard/jr</span><span class="val" style="color:var(--green)">${fmtEuro(huidigLive)}</span></div>
-         <div class="ml-detail-row"><span class="lbl">Surplus</span><span class="val" style="color:var(--ink-4);font-style:italic;">+ ${fmtEuro(besparing - huidigLive)}/jr</span></div>`);
+         <div class="ml-detail-row"><span class="lbl">Bespaard/jr</span><span class="val" style="color:var(--green)">${fmtEuro(huidigLive)}</span></div>`);
     } else {
       set('mlDirect', `${fmtEuro(directMnd)}<span class="ml-eenheid">/mnd</span>`);
       set('mlDirectDet',
