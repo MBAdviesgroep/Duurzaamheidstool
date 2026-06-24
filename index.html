@@ -8280,6 +8280,23 @@ function normalizeSustainabilityConsistency(r){
       if(inv>0 && bes>0) m.tvt=(inv/bes).toFixed(1).replace('.',',')+' jaar';
       return m;
     });
+    // === HARDE CAP (deterministisch, onafhankelijk van de AI) ===
+    // De som van alle jaarlijkse besparingen mag nooit hoger zijn dan de totale
+    // jaarlijkse energiekosten. Komt het hoger uit: schaal elke besparing
+    // evenredig terug tot 95% van de energiekosten en herbereken de tvt.
+    const huidigeKostenNum = toN(r.huidige_kosten);
+    if (huidigeKostenNum > 0) {
+      const besTot = r.maatregelen.reduce((a,m)=>a+toN(m.besparing),0);
+      if (besTot > huidigeKostenNum * 0.98) {
+        const factor = (huidigeKostenNum * 0.95) / besTot;
+        r.maatregelen.forEach(m=>{
+          const bes = Math.round(toN(m.besparing) * factor);
+          const inv = toN(m.investering);
+          if (bes>0) m.besparing = euro(bes);
+          if (inv>0 && bes>0) m.tvt = (inv/bes).toFixed(1).replace('.',',')+' jaar';
+        });
+      }
+    }
     const invSum=r.maatregelen.reduce((a,m)=>a+toN(m.investering),0);
     const besSum=r.maatregelen.reduce((a,m)=>a+toN(m.besparing),0);
     if(invSum>0) r.totaal_investering=euro(invSum);
