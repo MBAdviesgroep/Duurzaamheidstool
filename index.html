@@ -6937,6 +6937,21 @@ select.finput {
   /* 'Besparing per maatregel'-grafiek is slecht leesbaar en dubbelop met de
      maatregelentabel → in print weglaten (blijft wel interactief op scherm) */
   #maatregelenChartSection { display: none !important; }
+
+  /* ── PAGINA-VERLICHTING — voorkom te volle pagina's ───────────────────
+     Pagina 2 (banner + KPI + label + samenvatting + uitgangspunten) liep
+     over door de generieke 'Waarom verduurzamen'-kaarten; die zijn pure
+     marketing en niet pand-specifiek → in print weglaten. Geeft p2 lucht. */
+  #verduurzamingInfoSection { display: none !important; }
+
+  /* 'Cumulatieve besparing over tijd' (KPI's + grafiek + uitleg) hoort bij
+     elkaar op één eigen pagina i.p.v. gesplitst over twee pagina's. */
+  #chartSection {
+    page-break-before: always !important;
+    break-before: page !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
 }
 
 </style>
