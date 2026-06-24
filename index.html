@@ -7577,6 +7577,8 @@ De maatregelen-array MOET ALLE relevante kansen bevatten — zowel die uit de ba
 - Als geen aantal is opgegeven: MINIMUM 8 MAATREGELEN. Een advies met 5, 6 of 7 maatregelen is ALTIJD onvoldoende — er zijn ALTIJD meer kansen in een gebouw.
 - Tel expliciet: schrijf intern "Maatregel 1: ..., Maatregel 2: ..., Maatregel 3: ..." tot je het gevraagde aantal hebt bereikt. Dan pas genereer je de JSON output.
 - Kom je tekort? Gebruik de checklist verderop (spouwmuur, dak, vloer, glas, warmtepomp, zonnepanelen, ventilatie, thermostaat, deuren, LED, zonneboiler) en voeg de meest relevante toe.
+- VARIATIE — VERPLICHT: kies NIET elke keer dezelfde standaard-set maatregelen. Stem de mix af op DIT specifieke pand (bouwjaar, daktype, bestaande installaties, verbruik, type aanvrager). Twee verschillende panden horen een merkbaar andere maatregelmix te krijgen.
+- Vraagt de adviseur in het notitieveld letterlijk om méér of andere maatregelen ("verzin extra maatregelen", "geef meer opties", "ook minder voor de hand liggende maatregelen", "maak het uitgebreider/sterker"): behandel dat als een HARDE, bindende opdracht. Voeg dan daadwerkelijk aanvullende, pandspecifieke maatregelen toe — herhaal NIET je standaardlijst en zeg nooit dat er geen verdere kansen zijn. Er zijn altijd extra zinvolle maatregelen (kierdichting, leidingisolatie, zonering, warmtepompboiler, slimme aansturing, deuren, koeling/zonwering, laadinfra, monitoring).
 
 ⚠️ TVT-FILTER — geen onrealistische maatregelen in de hoofdtabel:
 Een maatregel met een terugverdientijd van >25 jaar hoort NIET thuis in de hoofdtabel met geadviseerde maatregelen. Concreet:
@@ -7623,9 +7625,12 @@ BEDRAGEN — hoe je ze bepaalt, STRIKT aanhouden
 Er zijn twee categorieën maatregelen. Behandel ze ANDERS:
 
 CATEGORIE A — Maatregelen die EXPLICIET in de bankscan staan met een bedrag:
-→ Neem de investering en besparing EXACT over zoals de scan ze noemt.
-→ Pas NOOIT aan op basis van eigen inschatting of kengetallen.
-→ Herbereken alleen de tvt: tvt = investering ÷ besparing.
+⚠️ De duurzaamheidstool/bankscan van de bank rekent stelselmatig met TE LAGE, achterhaalde investeringsbedragen. Neem die bedragen daarom NOOIT klakkeloos over.
+→ Gebruik de bankscan alleen voor de STRUCTUUR (welke maatregel relevant is), NIET voor het bedrag.
+→ Bepaal voor elke maatregel de ACTUELE, MARKTCONFORME investering naar prijspeil 2025/2026, inclusief materiaal én installatie (incl. btw voor particulieren/VvE, excl. btw voor zakelijk). Gebruik daarvoor de marktprijzen/kengetallen uit Categorie B hieronder. Als je toegang hebt tot een internet-/zoekfunctie: verifieer het bedrag met actuele Nederlandse installateurs- en offerteprijzen voor die specifieke maatregel en dat type pand.
+→ Het bankbedrag is uitsluitend een ONDERGRENS: ligt de bank lager dan de marktprijs (vrijwel altijd het geval) → gebruik de hogere marktprijs. Ligt de bank toevallig al hoger → gebruik het bankbedrag.
+→ HERBEREKEN daarna ALTIJD zowel de jaarlijkse besparing als de terugverdientijd op basis van de gecorrigeerde investering: besparing via het rekenmodel uit Categorie B (verbruik × aandeel in warmteverlies × actueel tarief), en tvt = gecorrigeerde investering ÷ herberekende besparing. Neem de besparing dus NIET ongewijzigd uit de bankscan over.
+→ Toon in de output altijd de gecorrigeerde (hogere, realistische) bedragen. Benoem de correctie of de oorspronkelijke bankbedragen NIET in het rapport.
 
 De Rabobank-scan gebruikt deze vaste maatregelnamen — herken ze en neem hun bedragen 1-op-1 over:
   • "Zonnepanelen" → zonnepanelen plaatsen of uitbreiden
@@ -7640,7 +7645,7 @@ De Rabobank-scan gebruikt deze vaste maatregelnamen — herken ze en neem hun be
   • "HR107 ketel" → hoog-rendement CV-ketel (HR107)
   • "LED verlichting ipv PL" → LED-verlichting ter vervanging van PL-lampen
   • "Vloerisolatie" → vloer- of bodemisolatie
-  Als de scan een van bovenstaande noemt met investering én besparing: gebruik die bedragen exact.
+  Als de scan een van bovenstaande noemt: gebruik de NAAM/structuur, maar bepaal het bedrag marktconform (zie hierboven) en herbereken besparing + tvt. Het bankbedrag geldt alleen als ondergrens.
   Als de scan een maatregel noemt zónder bedrag: gebruik dan het rekenmodel uit Categorie B.
 
 CATEGORIE B — Maatregelen die JIJ zelf toevoegt (niet in de scan):
