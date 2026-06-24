@@ -7533,6 +7533,35 @@ In 'notities' staat het TYPE AANVRAGER (particulier, ondernemer of VvE) plus opt
 Negeer NOOIT iets uit het notitieveld. Bij twijfel: leg uit in aandachtspunten hoe je het hebt geïnterpreteerd.
 
 ═══════════════════════════════════════════════════════════════
+CUMULATIEVE BESPARING — maatregelen overlappen, niet plat optellen
+═══════════════════════════════════════════════════════════════
+Meerdere maatregelen besparen deels op HETZELFDE gasverbruik. Tel besparingen NOOIT zomaar bij elkaar op. Reken in deze volgorde en trek telkens af van het RESTERENDE verbruik:
+1. Isolatie eerst (dak, gevel, vloer, glas, kierdichting) — elke volgende isolatiemaatregel werkt op het al verlaagde warmteverlies.
+2. Daarna installatietechniek (hybride/elektrische warmtepomp) — bereken op het gasverbruik DAT NA isolatie resteert, niet op het oorspronkelijke.
+3. Daarna opwek (zonnepanelen) — werkt op elektra, los van gas.
+Resultaat: de som van de individuele besparingen is doorgaans 10–25% lager dan een platte optelling. De totale besparing mag NOOIT boven de totale energiekosten uitkomen (zie energiebalans-cap). Voeg in de samenvatting of aandachtspunten deze nuance toe: "De genoemde besparingen zijn indicatief en afhankelijk van bewonersgedrag, energieprijzen, technische staat en daadwerkelijke uitvoering."
+
+═══════════════════════════════════════════════════════════════
+BESTAANDE MAATREGELEN — status expliciet maken
+═══════════════════════════════════════════════════════════════
+Classificeer elke relevante maatregel in één van vier statussen en verwerk dat in de naam/toelichting:
+• REEDS AANWEZIG → niet als nieuwe maatregel opnemen; alleen als aandachtspunt vermelden.
+• CONTROLEREN/VERIFIËREN → bv. "Bestaande zonnepanelenopbrengst controleren" i.p.v. "zonnepanelen plaatsen".
+• UITBREIDEN → alleen als technisch én financieel zinvol, met vermelding van het huidige niveau.
+• NIEUW TE ADVISEREN → reguliere nieuwe maatregel.
+Voorbeeld: zijn er al zonnepanelen, toon dan NOOIT "zonnepanelen plaatsen" maar "bestaande zonnepanelenopbrengst controleren en uitbreiding alleen beoordelen indien technisch en financieel zinvol".
+
+═══════════════════════════════════════════════════════════════
+TOON — zakelijk en genuanceerd, geen harde commerciële claims
+═══════════════════════════════════════════════════════════════
+Vermijd stellige claims. Gebruik genuanceerde formuleringen:
+• niet "verduurzaming loont" → wel "kan financieel aantrekkelijk zijn"
+• niet "investering verdient zichzelf terug" → wel "kan bijdragen aan lagere energielasten"
+• niet "verhoogt vastgoedwaarde aantoonbaar" → wel "kan de marktwaarde en verkoopbaarheid positief beïnvloeden"
+• niet "label A haalbaar" → wel "streeflabel indicatief; definitief vast te stellen door een erkend energieadviseur"
+Is de terugverdientijd lang of de besparing onzeker, benoem dat eerlijk in de toelichting en de conclusie. De conclusie/samenvatting mag NIET altijd positief zijn — bouw hem op uit de werkelijke uitkomsten.
+
+═══════════════════════════════════════════════════════════════
 BESTAANDE INSTALLATIES & EERDERE MAATREGELEN — niet dubbel adviseren
 ═══════════════════════════════════════════════════════════════
 Doorzoek brochure, energielabel, inspectierapport én notities op bestaande/uitgevoerde maatregelen, zoals:
@@ -7796,7 +7825,12 @@ REKENMODEL PER MAATREGEL:
     • Gasverbruik ruimteverwarming = totaal gasverbruik − warmwater (schat 500m³/jr voor warm tapwater)
     • Reductie ruimteverwarming gas: 55–70% (warmtepomp dekt dit deel, ketel springt bij bij <-5°C)
     • Extra elektrakosten: opgewekte warmte ÷ COP (3,2) × stroomprijs — trek dit af van besparing
-  - Alleen zinvol als: schil enigszins op orde (Rc dak >2, gevel >1,0) EN gasverbruik >1.200m³/jr
+  - Alleen opnemen MÉT expliciete voorwaarden in de toelichting (adviseer niet te stellig). Toets vóór opname:
+    • schil enigszins op orde (Rc dak >2, gevel >1,0) EN gasverbruik >1.200m³/jr
+    • geschikt afgiftesysteem en haalbare lage aanvoertemperatuur
+    • beschikbare plek voor de buitenunit, plus aandacht voor geluid/buren
+    • bestaande cv-ketel geschikt of recent
+  - Is de terugverdientijd lang: benoem dat eerlijk, bv. "Financieel niet altijd de kortste terugverdienmaatregel, maar draagt bij aan gasreductie en toekomstbestendigheid."
   - Voorbeeld: 2.200m³ gas totaal, 1.700m³ voor verwarming, gasprijs €1,05, stroomprijs €0,32
     → Gasbesparing: 1.700 × 65% × €1,05 = €1.160/jr
     → Extra elektra: (1.700 × 65% × 9,8 kWh/m³) ÷ 3,2 × €0,32 = €1.080 ÷ 3,2 × €0,32 = €108/jr
@@ -7865,10 +7899,12 @@ Retourneer exact het volgende JSON-schema — verzin niets, extraheer alles uit 
   "huidig_label_indicatief": "boolean (true als het huidige label een indicatief/geschat label is en NIET officieel geregistreerd staat in het EP-online register; false of weglaten als het label wel officieel geregistreerd is)",
   "streef_label": "string (VERPLICHT invullen — het beoogde energielabel NA uitvoering van alle voorgestelde maatregelen, in de notatie 'A', 'A+', 'A++', 'A+++' enz. Mag NOOIT leeg zijn en mag NOOIT gelijk zijn aan huidig_label. Als de bankscan een streeflabel noemt: gebruik dat. Anders: bepaal zelf realistisch op basis van het maatregelenpakket — een schil-aanpak van label C levert doorgaans label A of A+ op; volledige verduurzaming inclusief warmtepomp en zonnepanelen meestal A++ of A+++.)",
   "functie": "string",
+  "gasverbruik": "string (jaarlijks gasverbruik incl. eenheid, bijv. '1.638 m³' — uit jaarafrekening/energielabel/bankscan; leeg als onbekend, verzin niet)",
+  "stroomverbruik": "string (jaarlijks elektraverbruik incl. eenheid, bijv. '2.918 kWh' — uit jaarafrekening/energielabel/bankscan; leeg als onbekend, verzin niet)",
   "huidige_kosten": "string (werkelijk jaartotaal energiekosten in € op basis van jaarafrekening / jaarnota / werkelijk verbruik. NOOIT de indicatieve schatting uit de bankscan als er werkelijke cijfers zijn.)",
   "bron_tool": "string (naam van de duurzaamheidstool zoals die in de energiescan genoemd wordt, bijv. 'ING Duurzaam Zakelijk Advies', 'Rabobank Duurzame Bedrijfsscan', 'ABN AMRO Verduurzamingstool' — exact zoals in de scan; leeg als onbekend)",
   "bron_bank": "string (naam van de bank die de tool aanbiedt, bijv. 'ING', 'Rabobank', 'ABN AMRO' — leeg als onbekend)",
-  "samenvatting": "string (2-3 professionele zinnen)",
+  "samenvatting": "string (2-3 professionele zinnen; als je een energiekosten-bedrag noemt MOET dat exact gelijk zijn aan huidige_kosten — nooit een afwijkend jaarbedrag noemen dan in de KPI's staat)",
   "maatregelen": [{"naam":"string","omschrijving":"string (2-3 zinnen: wat houdt deze maatregel in voor dit pand, waarom is hij zinvol gegeven de huidige situatie, en wat levert het concreet op)","toelichting":"string (1-2 zinnen: praktische uitvoering, aandachtspunten of combinatievoordelen specifiek voor dit pand — bijv. welk type product, welke uitvoerder, combineren met andere maatregel)","besparing":"string (jaarlijkse euro-besparing, bijv. '€ 1.250'. NOOIT leeg, NOOIT €0, NOOIT €1 of €2 — gebruik realistische kengetallen als de scan het niet expliciet noemt)","investering":"string (eenmalige euro-investering, bijv. '€ 8.500'. NOOIT leeg, NOOIT €0)","tvt":"string (terugverdientijd in jaren, bijv. '6,8 jaar')","co2":"string","subsidies":"string"}],
   "totaal_besparing": "string",
   "totaal_investering": "string",
@@ -8347,6 +8383,24 @@ function normalizeSustainabilityConsistency(r){
     if(besSum>0) r.totaal_besparing=euro(besSum);
     if(invSum>0 && besSum>0) r.gemiddelde_tvt=(invSum/besSum).toFixed(1).replace('.',',')+' jaar';
 
+    // === AUTOMATISCHE CONTROLEPUNTEN (P6) — signaleer opvallende uitkomsten ===
+    if(!Array.isArray(r.aandachtspunten)) r.aandachtspunten=[];
+    const addPunt=(punt,toel)=>{ if(!r.aandachtspunten.some(a=>a&&a.punt===punt)) r.aandachtspunten.push({punt:punt,toelichting:toel}); };
+    const kostenNum=(typeof huidigeKostenNum!=='undefined'?huidigeKostenNum:toN(r.huidige_kosten));
+    if(kostenNum>0 && besSum>kostenNum*0.70){
+      addPunt('Besparing relatief hoog t.o.v. huidige energiekosten','De geschatte totale besparing benadert de huidige energiekosten. Indicatief — laat dit vóór uitvoering toetsen aan werkelijk verbruik en offertes.');
+    }
+    // Zonnepanelen-advies terwijl ze mogelijk al aanwezig zijn
+    const pvNieuw=r.maatregelen.some(m=>/zonnepane/i.test(m.naam||'')&&/(plaats|nieuw)/i.test(m.naam||''));
+    const pvAanwezig=(JSON.stringify(r.aandachtspunten)+' '+(r.samenvatting||'')).match(/zonnepanelen.{0,30}(aanwezig|reeds|bestaand)/i);
+    if(pvNieuw&&pvAanwezig){ addPunt('Zonnepanelen mogelijk al aanwezig','Controleer of er al zonnepanelen zijn; beoordeel uitbreiding alleen indien technisch en financieel zinvol.'); }
+    // EIA bij particulier
+    if((r.__aanvrager_type==='particulier')&&Array.isArray(r.subsidies)&&r.subsidies.some(s=>/\bEIA\b/i.test((s.code||'')+(s.naam||'')))){
+      addPunt('Fiscale regeling controleren','EIA is een zakelijke regeling en is bij een particuliere woning doorgaans niet van toepassing. Te controleren vóór opdrachtverstrekking.');
+    }
+    // Altijd: indicatief-nuance
+    addPunt('Besparingen zijn indicatief','De genoemde besparingen en bedragen zijn indicatief en afhankelijk van bewonersgedrag, energieprijzen, technische staat en daadwerkelijke uitvoering. Definitieve bedragen volgen na inspectie en offertes.');
+
     // Netto investering: label/functie zuiver houden en dubbele bruto-investering voorkomen.
     if(!r.netto_investering || typeof r.netto_investering!=='object') r.netto_investering={};
     r.netto_investering.bruto=euro(invSum);
@@ -8525,10 +8579,10 @@ function renderReport(r) {
       <div style="margin:10px 0 6px;">
         <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(42,122,80,0.10);color:var(--green);border:1px solid rgba(42,122,80,0.2);border-radius:20px;padding:5px 14px;font-family:var(--f-head);font-size:15px;font-weight:700;letter-spacing:0.2px;">
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 8 6 11 13 4"/></svg>
-          Verduurzaming loont
+          Kan financieel aantrekkelijk zijn
         </span>
       </div>
-      <div class="kpi-sub">investering verdient zichzelf terug én verhoogt de vastgoedwaarde</div>
+      <div class="kpi-sub">kan bijdragen aan lagere energielasten en betere verkoopbaarheid</div>
     </div>
     <div class="kpi-cell kpi-c6">
       <span class="kpi-lbl">Toekomstbestendig</span>
@@ -8542,8 +8596,26 @@ function renderReport(r) {
   // Intro tekst — sla originele huidige kosten op als data-attribuut voor live-update
   if (r.samenvatting) {
     const origBedrag = r.huidige_kosten || '';
+    const btwNote = (r.__aanvrager_type==='particulier'||r.__aanvrager_type==='vve') ? 'inclusief btw' : 'exclusief btw';
+    const ug=[
+      ['Type pand', r.functie],
+      ['Bouwjaar', r.bouwjaar],
+      ['Oppervlakte', r.oppervlakte],
+      ['Huidig energielabel', r.huidig_label],
+      ['Huidige energiekosten', r.huidige_kosten ? r.huidige_kosten + ' / jaar' : ''],
+      ['Gasverbruik', r.gasverbruik],
+      ['Stroomverbruik', r.stroomverbruik],
+    ].filter(x=>x[1] && String(x[1]).trim());
+    const ugHtml = ug.length ? `
+      <div class="uitgangspunten-block" style="margin-top:14px;border:1px solid var(--rule);border-radius:var(--r-md);padding:14px 16px;background:var(--blue-faint);page-break-inside:avoid;">
+        <div style="font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--blue);margin-bottom:10px;">Uitgangspunten van deze berekening</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 24px;">
+          ${ug.map(x=>`<div style="display:flex;justify-content:space-between;gap:12px;font-size:12.5px;border-bottom:1px dotted var(--rule);padding-bottom:4px;"><span style="color:var(--ink-3);">${x[0]}</span><span style="color:var(--ink);font-weight:600;text-align:right;">${x[1]}</span></div>`).join('')}
+        </div>
+        <div style="font-size:11px;color:var(--ink-4);line-height:1.5;margin-top:10px;">Bedragen ${btwNote} en indicatief op basis van kengetallen en marktprijzen; definitieve bedragen volgen na inspectie en offertes.</div>
+      </div>` : '';
     document.getElementById('introSection').innerHTML =
-      `<div class="intro-text" id="introText" data-orig-kosten="${origBedrag}">${r.samenvatting}</div>`;
+      `<div class="intro-text" id="introText" data-orig-kosten="${origBedrag}">${r.samenvatting}</div>` + ugHtml;
   } else {
     document.getElementById('introSection').innerHTML = '';
   }
@@ -8574,7 +8646,7 @@ function renderReport(r) {
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             </div>
             <div class="vdi-card-title">Hogere vastgoedwaarde</div>
-            <div class="vdi-card-body">Een beter energielabel verhoogt de marktwaarde aantoonbaar. Kopers en huurders betalen meer voor een energiezuinig pand — en het is makkelijker te verhuren of verkopen.</div>
+            <div class="vdi-card-body">Een beter energielabel kan de marktwaarde positief beïnvloeden. Kopers en huurders betalen meer voor een energiezuinig pand — en het is makkelijker te verhuren of verkopen.</div>
           </div>
           <div class="vdi-card">
             <div class="vdi-icon vdi-icon-comfort">
@@ -8765,6 +8837,7 @@ function renderReport(r) {
   const subsHtml = initAllSubs.map(renderSubCard).join('');
   document.getElementById('subsidiesSection').innerHTML = subsHtml
     ? secHead('Subsidies &amp; fiscale regelingen') +
+      `<div class="sub-caveat" style="font-size:11.5px;color:var(--ink-4);line-height:1.5;margin:-2px 0 12px;">Onderstaande regelingen zijn <strong>indicatief</strong> en afhankelijk van actuele RVO-voorwaarden en het type aanvrager (particulier, zakelijk, VvE of verhuurd vastgoed). Te controleren vóór opdrachtverstrekking.</div>` +
       `<div class="sub-list">${subsHtml}</div>` : '';
 
   // VOLGORDE: 1) Aandachtspunten, 2) Fases + acties, 3) Adviseur + bron direct erna
@@ -9243,7 +9316,7 @@ function updateSubsidies() {
   const allSubs = [...dbSubs, ...extraSubs];
   const subsHtml = allSubs.map(window._renderSubCard).join('');
   subEl.innerHTML = subsHtml
-    ? secHead('Subsidies &amp; fiscale regelingen') + `<div class="sub-list">${subsHtml}</div>` : '';
+    ? secHead('Subsidies &amp; fiscale regelingen') + `<div class="sub-caveat" style="font-size:11.5px;color:var(--ink-4);line-height:1.5;margin:-2px 0 12px;">Onderstaande regelingen zijn <strong>indicatief</strong> en afhankelijk van actuele RVO-voorwaarden en het type aanvrager. Te controleren vóór opdrachtverstrekking.</div>` + `<div class="sub-list">${subsHtml}</div>` : '';
 }
 
 function selectAllMeasures(val) {
@@ -9561,7 +9634,7 @@ function renderChartSection() {
       <div class="chart-uitleg-card">
         <div class="chart-uitleg-icon">🏠</div>
         <div class="chart-uitleg-title">Effect op vastgoedwaarde</div>
-        <div class="chart-uitleg-text">Naast directe energiebesparing verhoogt een beter energielabel de marktwaarde aantoonbaar. Dit voordeel is in de grafiek niet meegenomen, maar maakt de investering in de praktijk nóg aantrekkelijker.</div>
+        <div class="chart-uitleg-text">Naast directe energiebesparing kan een beter energielabel de marktwaarde positief beïnvloeden. Dit voordeel is in de grafiek niet meegenomen, maar maakt de investering in de praktijk nóg aantrekkelijker.</div>
       </div>
     </div>`;
 }
